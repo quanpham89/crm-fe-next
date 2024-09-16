@@ -22,7 +22,7 @@ const AdminSideBar = () => {
 
         {
             key: 'grp',
-            label: 'Hỏi Dân IT',
+            label: 'Sidebar Menu',
             type: 'group',
             children: [
                 {
