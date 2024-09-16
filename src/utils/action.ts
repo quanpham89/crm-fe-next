@@ -11,11 +11,25 @@ export async function authenticate(email: string, password: string) {
         })
         return r
     } catch (error) {
-        return {"error": "Incorrect username or password"}
-        // if (error.cause.err instanceof InvalidLoginError) {
-        //     return {"error": "Incorrect username or password"}
-        // } else {
-        //     throw new Error("Failed to authenticate")
-        // }
+        switch((error as any).name){
+            case "InvalidEmailPasswordError": 
+                return {
+                    error: (error as any).type,
+                    code: 1
+                }
+            case "InActiveAccount": 
+                return {
+                    error: (error as any).type,
+                    code: 2
+                }
+            default: 
+            return {
+                error: "Internal server error !",
+                code: 0
+            }
+
+        }
+        
+       
     }
 }
