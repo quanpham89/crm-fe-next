@@ -4,6 +4,7 @@ import { InActiveAccount, InvalidEmailPasswordError } from "./utils/errorCustomi
 import { sendRequest } from "./utils/api"
 import { access } from "fs"
 import { IUser } from "./types/next-auth"
+import passage from "next-auth/providers/passage"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -11,20 +12,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // You can specify which fields should be submitted, by adding keys to the `credentials` object.
         // e.g. domain, username, password, 2FA token, etc.
         credentials: {
-          email: {},
+          username: {},
           password: {},
         },
         authorize: async (credentials) => {
             const res = await sendRequest<IBackendRes<ILogin>>({
                 method: "POST",
-                url: "http://localhost:8080/api/v1/auth/login",
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login`,
                 body: {
-                    ...credentials
+                    username: credentials.username,
+                    password: credentials.password
                 }                
             })
 
-            if(!res.statusCode ){
-                console.log("res", res)
+            if(res.statusCode === 201){
                 return {
                     _id: res.data?.user?._id,
                     name: res.data?.user?.name,
