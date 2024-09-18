@@ -1,7 +1,10 @@
 'use client'
 import { Button, Table } from "antd"
+import ModalCreateUser from "./user.create";
+import { useState } from "react";
 
 const UserTable = () => {
+    const [isOpenModal, setIsOpenModal] = useState(false)
     const dataSource = [
         {
             key: '1',
@@ -43,12 +46,16 @@ const UserTable = () => {
                 marginBottom: 20
             }}>
                 <span>Manager Users</span>
-                <Button>Create User</Button>
+                <Button onClick={() => setIsOpenModal(true)}>Create User</Button>
             </div>
             <Table
                 bordered
                 dataSource={dataSource}
                 columns={columns}
+            />
+            <ModalCreateUser
+                isOpenModal = {isOpenModal}
+                setIsOpenModal = {setIsOpenModal}
             />
         </>
     )
