@@ -8,31 +8,27 @@ import { useHasMounted } from "@/utils/customHook";
 import { Select, Space } from 'antd';
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
+import { auth } from "@/auth";
 
-const ModalCreateUser =  (props: any) => {
-    const { isOpenModal, setIsOpenModal } = props
+const ModalUpdateUser =  (props: any) => {
+    const { isOpenModalUpdateUser, setIsOpenUpdateUser, currentUser } = props
     const [form] = Form.useForm()
-    const [dataCreateUser, setDataCreateUser]= useState({})
     const router = useRouter()
 
-    const createUser =  async(values : any) =>{
-        // let dateString = values.birthday.$d;
-        // let formatdate =  dayjs(dateString).format('DD/MM/YYYY');
-       
-        // values.birthday = formatdate
+    const updateUser =  async(values : any) =>{
 
-        console.log(values)
         const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
-            method: "POST",
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/update`,
+            method: "PATCH",
             body: {
                 ...values
             },
         },)
+        console.log(res)
         if(res?.data){
             notification.success({
                 message: "Thành công",
-                description: "Tạo người dùng thành công."
+                description: "Cập nhập người dùng thành công."
             })
             // router.push("/dashboard/user")
             window.location.reload()
@@ -43,29 +39,58 @@ const ModalCreateUser =  (props: any) => {
             })
         }
     }
+    useEffect(()=>{
+        form.setFieldValue("_id", currentUser._id)
+        form.setFieldValue("email", currentUser.email)
+        form.setFieldValue("phone", currentUser.phone)
+        form.setFieldValue("name", currentUser.name)
+        form.setFieldValue("address", currentUser.address)
+        form.setFieldValue("accountType", currentUser.accountType)
+        form.setFieldValue("role", currentUser.role)
+        form.setFieldValue("sex", currentUser.sex)
+
+
+
+        
+    }, [currentUser])
     const hasMounted = useHasMounted();
     if (!hasMounted) return <></>;
     return (
         <>
             <Modal title="Tạo mới người dùng"
-                open={isOpenModal}
-                onOk={() => setIsOpenModal(false)}
-                onCancel={() => setIsOpenModal(false)}
+                open={isOpenModalUpdateUser}
+                onOk={() => setIsOpenUpdateUser(false)}
+                onCancel={() => setIsOpenUpdateUser(false)}
                 maskClosable={false}
                 footer={null}
                 forceRender={true}
 
             >
                 <Form
-                    name = "verify" 
+                    name = "update" 
                     autoComplete="off"
                     layout="vertical"
                     form = {form}
-                    onFinish={createUser}
+                    onFinish={updateUser}
                     >
                         <Form.Item
+                            label="Id"
+                            name="_id"
+                            hidden
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Id không được để trống!',
+                                },
+                            ]}
+                        >
+                            <Input  disabled/>
+                        </Form.Item>
+                        <Form.Item
+                        
                             label="Email"
                             name="email"
+                            
                             rules={[
                                 {
                                     required: true,
@@ -92,14 +117,9 @@ const ModalCreateUser =  (props: any) => {
                         <Form.Item
                             label="Mật khẩu"
                             name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Mật khẩu không được để trống!',
-                                },
-                            ]}
+                            
                         >
-                            <Input.Password  />
+                            <Input.Password  disabled/>
                         </Form.Item>
 
                         <Form.Item
@@ -163,22 +183,10 @@ const ModalCreateUser =  (props: any) => {
                                 ]}
                                 />
                         </Form.Item>
-
-                        {/* <Form.Item
-                            label="Ngày sinh"
-                            name="birthday"
-                        >
-                            <DatePicker
-                                format={{
-                                    format: 'YYYY-MM-DD',
-                                    type: 'mask',
-                                }}
-                                />
-                        </Form.Item> */}
                         </div>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">
-                                Tạo người dùng
+                                Cập nhập người dùng
                             </Button>
                         </Form.Item>
                 </Form>
@@ -191,4 +199,4 @@ const ModalCreateUser =  (props: any) => {
 
 }
 
-export default ModalCreateUser
+export default ModalUpdateUser

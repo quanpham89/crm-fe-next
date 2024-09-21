@@ -38,4 +38,20 @@ declare global {
         access_token: string
     }
 
+    interface IUserPerPage {
+        results:{
+            _id: string,
+            name: string,
+            email: string
+            accountType: string,
+            role: string,
+            sex: string,
+            phone: string,
+            isActive: boolean
+        },
+        totalItems: string
+        totalPages: string
+
+    }
+
 }
