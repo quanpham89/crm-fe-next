@@ -25,7 +25,7 @@ const AdminHeader = (props : any) => {
         {
             key: '4',
             danger: true,
-            label: <span onClick={() => signOut({ callbackUrl: '/' })}>Đăng xuất</span>,
+            label: <span onClick={() => signOut({ callbackUrl: '/auth/login' })}>Đăng xuất</span>,
         },
     ];
 
@@ -55,7 +55,7 @@ const AdminHeader = (props : any) => {
                         style={{ color: "unset", lineHeight: "0 !important", marginRight: 20 }}
                     >
                         <Space>
-                            Welcome Admin
+                            Welcome {props.userName}
                             <DownOutlined />
                         </Space>
                     </a>

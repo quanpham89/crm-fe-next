@@ -12,11 +12,13 @@
     "@ant-design/icons": "5.4.0",
     "@ant-design/nextjs-registry": "1.0.0",
     "antd": "5.19.3",
+    "chart.js": "4.4.4",
     "dayjs": "1.11.12",
     "next": "14.2.5",
     "next-auth": "5.0.0-beta.20",
     "query-string": "9.1.0",
     "react": "^18.3.1",
+    "react-chartjs-2": "5.2.0",
     "react-dom": "^18.3.1",
     "react-paginate": "^8.1.0",
     "sass": "1.48.0"

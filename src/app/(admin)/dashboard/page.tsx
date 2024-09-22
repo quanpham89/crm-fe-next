@@ -1,14 +1,18 @@
-'use client'
-
+import { auth } from "@/auth";
 import AdminCard from "@/components/admin/admin.card";
+import { useState } from "react";
 
-const DashboardPage = () => {
-
+const DashboardPage = async () => {
+    
+    const session  = await auth()
+    let role = session?.user?.role as string
     return (
         <div>
-            <AdminCard />
+            <AdminCard role = {role} />
         </div>
     )
+    
+    
 }
 
 export default DashboardPage;

@@ -12,11 +12,16 @@ import React, { useContext } from 'react';
 import { AdminContext } from "@/library/admin.context";
 import type { MenuProps } from 'antd';
 import Link from 'next/link'
+import { usePathname } from "next/navigation";
+
 
 type MenuItem = Required<MenuProps>['items'][number];
 const AdminSideBar = () => {
     const { Sider } = Layout;
     const { collapseMenu } = useContext(AdminContext)!;
+    const pathName = usePathname();
+    console.log(pathName)
+    const selectedKey = pathName.split('/').pop() || 'dashboard';
 
     const items: MenuItem[] = [
 
@@ -31,7 +36,7 @@ const AdminSideBar = () => {
                     icon: <AppstoreOutlined />,
                 },
                 {
-                    key: "users",
+                    key: "user",
                     label: <Link href={"/dashboard/user"}>Manage Users</Link>,
                     icon: <TeamOutlined />,
                 },
@@ -102,7 +107,7 @@ const AdminSideBar = () => {
 
             <Menu
                 mode="inline"
-                defaultSelectedKeys={['dashboard']}
+                defaultSelectedKeys={[selectedKey]}
                 items={items}
                 style={{ height: '100vh' }}
             />

@@ -184,7 +184,7 @@ const ModalUpdateUser =  (props: any) => {
                                 />
                         </Form.Item>
                         </div>
-                        <Form.Item>
+                        <Form.Item style={{display: "flex", justifyContent: "flex-end"}}>
                             <Button type="primary" htmlType="submit">
                                 Cập nhập người dùng
                             </Button>

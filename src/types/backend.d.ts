@@ -34,6 +34,8 @@ declare global {
             _id: string,
             name: string,
             email: string
+            role: string,
+            accountType: string
         },
         access_token: string
     }

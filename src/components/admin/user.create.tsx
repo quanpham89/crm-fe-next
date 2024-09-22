@@ -1,12 +1,10 @@
 "use client"
 import { Modal, Steps, Form, Button, Input, message, notification, DatePicker } from "antd"
-import { CheckCircleOutlined, LoadingOutlined, SmileOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
-import { Select, Space } from 'antd';
-import dayjs from "dayjs";
+import { Select } from 'antd';
 import { useRouter } from "next/navigation";
 
 const ModalCreateUser =  (props: any) => {
@@ -16,10 +14,6 @@ const ModalCreateUser =  (props: any) => {
     const router = useRouter()
 
     const createUser =  async(values : any) =>{
-        // let dateString = values.birthday.$d;
-        // let formatdate =  dayjs(dateString).format('DD/MM/YYYY');
-       
-        // values.birthday = formatdate
 
         console.log(values)
         const res = await sendRequest<IBackendRes<any>>({
@@ -176,7 +170,7 @@ const ModalCreateUser =  (props: any) => {
                                 />
                         </Form.Item> */}
                         </div>
-                        <Form.Item>
+                        <Form.Item style={{display: "flex", justifyContent: "flex-end"}}>
                             <Button type="primary" htmlType="submit">
                                 Tạo người dùng
                             </Button>

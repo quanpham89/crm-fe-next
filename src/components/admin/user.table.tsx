@@ -1,5 +1,5 @@
 'use client'
-import { Button, notification, Pagination, Table } from "antd"
+import { Button, notification, Pagination, Spin, Table } from "antd"
 import ModalCreateUser from "./user.create";
 import { useEffect, useState } from "react";
 import { sendRequest } from "@/utils/api";
@@ -7,8 +7,10 @@ import ReactPaginate from "react-paginate";
 import "./User.scss"
 import { EditOutlined } from "@ant-design/icons";
 import ModalUpdateUser from "./user.update";
+import { auth } from "@/auth";
 
-const UserTable = () => {
+const UserTable = (props: any) => {
+    const {role} = props
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [isOpenModalUpdateUser, setIsOpenUpdateUser] = useState(false)
     const [dataSource, setDataSource] = useState<any>([]);
@@ -16,6 +18,9 @@ const UserTable = () => {
     const [currentLimit, setCurrentLimit] = useState(3)
     const [totalPages, setTotalPages] = useState<number>(1) 
     const [currentUser, setCurrentUser] = useState({})
+    const [isLoading, setLoading] = useState(true)
+
+    
 
     const fetchUserPerPage = async (page : number , limit : number) =>{
         const res = await sendRequest<IBackendRes<IUserPerPage>>({
@@ -26,6 +31,7 @@ const UserTable = () => {
         if(res?.data?.results){            
             setDataSource(res?.data?.results)
             setTotalPages(+res?.data?.totalPages)
+            setLoading(false)
         }else{
             notification.error({
                 message: "Call APIs error",
@@ -92,63 +98,71 @@ const UserTable = () => {
         },
         
     ];
-
-    return (
-        <>
-            <div style={{
-                display: "flex", 
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 20
-            }}>
-                <span>Manager Users</span>
-                <Button onClick={() => setIsOpenModal(true)}>Create User</Button>
+    if(role === "ADMIN") {
+        
+        return (isLoading ?
+            <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <Spin />
             </div>
-            <div style={{minHeight: "50vh"}}>
-                <Table
-                    bordered
-                    dataSource={dataSource}
-                    columns={columns}
-                    pagination = {false}
-                    rowKey= "_id"
-                />
-
-            </div>
-            {totalPages && totalPages > 0 &&
-                <div className="user-footer">
-                    <ReactPaginate
-                        nextLabel=">"
-                        onPageChange={handlePageClick}
-                        pageRangeDisplayed={3}
-                        marginPagesDisplayed={2}
-                        pageCount={totalPages}
-                        previousLabel="<"
-                        pageClassName="page-item"
-                        pageLinkClassName="page-link"
-                        previousClassName="page-item"
-                        previousLinkClassName="page-link"
-                        nextClassName="page-item"
-                        nextLinkClassName="page-link"
-                        breakLabel="..."
-                        breakClassName="page-item"
-                        breakLinkClassName="page-link"
-                        containerClassName="pagination"
-                        activeClassName="active"
-                        renderOnZeroPageCount={null}
-                    />
+            :
+            <>
+                <div style={{
+                    display: "flex", 
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 20
+                }}>
+                    <span>Manager Users</span>
+                    <Button onClick={() => setIsOpenModal(true)}>Create User</Button>
                 </div>
-                }
-            <ModalCreateUser
-                isOpenModal = {isOpenModal}
-                setIsOpenModal = {setIsOpenModal}
-            />
-            <ModalUpdateUser
-                isOpenModalUpdateUser = {isOpenModalUpdateUser}
-                setIsOpenUpdateUser = {setIsOpenUpdateUser}
-                currentUser = {currentUser}
-            />
-        </>
-    )
+                <div style={{minHeight: "50vh"}}>
+                    <Table
+                        bordered
+                        dataSource={dataSource}
+                        columns={columns}
+                        pagination = {false}
+                        rowKey= "_id"
+                    />
+    
+                </div>
+                {totalPages && totalPages > 0 &&
+                    <div className="user-footer">
+                        <ReactPaginate
+                            nextLabel=">"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={3}
+                            marginPagesDisplayed={2}
+                            pageCount={totalPages}
+                            previousLabel="<"
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            breakLabel="..."
+                            breakClassName="page-item"
+                            breakLinkClassName="page-link"
+                            containerClassName="pagination"
+                            activeClassName="active"
+                            renderOnZeroPageCount={null}
+                        />
+                    </div>
+                    }
+                <ModalCreateUser
+                    isOpenModal = {isOpenModal}
+                    setIsOpenModal = {setIsOpenModal}
+                />
+                <ModalUpdateUser
+                    isOpenModalUpdateUser = {isOpenModalUpdateUser}
+                    setIsOpenUpdateUser = {setIsOpenUpdateUser}
+                    currentUser = {currentUser}
+                />
+            </> 
+        )
+    }else{
+        return <>Bạn không có quyền truy cập vào chức năng này.</>
+    }
 }
 
 export default UserTable;

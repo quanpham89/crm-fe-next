@@ -5,6 +5,7 @@ import { sendRequest } from "./utils/api"
 import { access } from "fs"
 import { IUser } from "./types/next-auth"
 import passage from "next-auth/providers/passage"
+import { cookies } from "next/headers"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -26,11 +27,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             })
 
             if(res.statusCode === 201){
+                console.log(res?.data)
                 return {
                     _id: res.data?.user?._id,
                     name: res.data?.user?.name,
                     email: res.data?.user?.email,
                     access_token: res.data?.access_token,
+                    role: res.data?.user?.role,
+                    accountType: res.data?.user?.accountType
                 }    
             }
             // sai mat khau 401
@@ -53,6 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     jwt({token, user}){
         if(user){
+            
             token.user = (user as IUser)
         }
         return token

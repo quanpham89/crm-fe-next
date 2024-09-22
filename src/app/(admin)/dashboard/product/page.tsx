@@ -1,8 +1,10 @@
-const ManageProductPage = () => {
+import { auth } from "@/auth";
+import CreateProduct from "@/components/product/product.create";
+
+const ManageProductPage = async() => {
+    const session = await auth()
     return (
-        <div>
-            ManageProductPage page
-        </div>
+        <CreateProduct user = {session?.user}/>
     )
 }
 
