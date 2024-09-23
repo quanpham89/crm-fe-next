@@ -5,6 +5,7 @@ import {
     AppstoreOutlined,
     MailOutlined,
     SettingOutlined,
+    ShopOutlined,
     TeamOutlined,
 
 } from '@ant-design/icons';
@@ -20,7 +21,6 @@ const AdminSideBar = () => {
     const { Sider } = Layout;
     const { collapseMenu } = useContext(AdminContext)!;
     const pathName = usePathname();
-    console.log(pathName)
     const selectedKey = pathName.split('/').pop() || 'dashboard';
 
     const items: MenuItem[] = [
@@ -41,29 +41,29 @@ const AdminSideBar = () => {
                     icon: <TeamOutlined />,
                 },
                 {
-                    key: 'sub1',
-                    label: 'Navigation One',
-                    icon: <MailOutlined />,
-                    children: [
-                        {
-                            key: 'g1',
-                            label: 'Item 1',
-                            type: 'group',
-                            children: [
-                                { key: '1', label: 'Option 1' },
-                                { key: '2', label: 'Option 2' },
-                            ],
-                        },
-                        {
-                            key: 'g2',
-                            label: 'Item 2',
-                            type: 'group',
-                            children: [
-                                { key: '3', label: 'Option 3' },
-                                { key: '4', label: 'Option 4' },
-                            ],
-                        },
-                    ],
+                    key: 'restaurant',
+                    label: <Link href={"/dashboard/restaurant"}>Manage Restaurant</Link>,
+                    icon: <ShopOutlined />,
+                    // children: [
+                    //     {
+                    //         key: 'g1',
+                    //         label: 'Item 1',
+                    //         type: 'group',
+                    //         children: [
+                    //             { key: '1', label: 'Option 1' },
+                    //             { key: '2', label: 'Option 2' },
+                    //         ],
+                    //     },
+                    //     {
+                    //         key: 'g2',
+                    //         label: 'Item 2',
+                    //         type: 'group',
+                    //         children: [
+                    //             { key: '3', label: 'Option 3' },
+                    //             { key: '4', label: 'Option 4' },
+                    //         ],
+                    //     },
+                    // ],
                 },
                 {
                     key: 'sub2',
