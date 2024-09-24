@@ -1,6 +1,6 @@
 "use client"
 import { Modal, Steps, Form, Button, Input, message, notification, DatePicker } from "antd"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
@@ -10,25 +10,44 @@ import { useRouter } from "next/navigation";
 const ModalCreateRestaurant =  (props: any) => {
     const { isOpenModal, setIsOpenModal } = props
     const [form] = Form.useForm()
-    const [dataCreateUser, setDataCreateUser]= useState({})
+    const [dataUser, setDataUser] = useState([])
     const router = useRouter()
 
-    const createUser =  async(values : any) =>{
+    useEffect(()=>{
+        fetchUserId();
+    },[])
 
-        console.log(values)
+    const fetchUserId = async() =>{
         const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/get-all-users`,
+            method: "GET",
+        })
+        if(res?.data){
+            const formatdata = res?.data.map((item : any) =>{
+                return {
+                    value: item._id,
+                    label: item.name
+                }
+            })
+            setDataUser(formatdata)
+           
+        }
+
+    }
+    
+    const createRestaurants =  async(values : any) =>{
+        const res = await sendRequest<IBackendRes<any>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants`,
             method: "POST",
             body: {
-                ...values
+              ...values
             },
         },)
         if(res?.data){
             notification.success({
                 message: "Thành công",
-                description: "Tạo người dùng thành công."
+                description: "Tạo thành công."
             })
-            // router.push("/dashboard/user")
             window.location.reload()
         }else{
             notification.error({
@@ -41,7 +60,7 @@ const ModalCreateRestaurant =  (props: any) => {
     if (!hasMounted) return <></>;
     return (
         <>
-            <Modal title="Tạo mới người dùng"
+            <Modal title="Create Restaurant"
                 open={isOpenModal}
                 onOk={() => setIsOpenModal(false)}
                 onCancel={() => setIsOpenModal(false)}
@@ -55,15 +74,15 @@ const ModalCreateRestaurant =  (props: any) => {
                     autoComplete="off"
                     layout="vertical"
                     form = {form}
-                    onFinish={createUser}
+                    onFinish={createRestaurants}
                     >
                         <Form.Item
-                            label="Email"
-                            name="email"
+                            label="Name's restaurant"
+                            name="restaurantName"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Email không được để trống!',
+                                    message: "Name's restaurant can't be blank!",
                                 },
                             ]}
                         >
@@ -71,12 +90,12 @@ const ModalCreateRestaurant =  (props: any) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Số điện thoại"
+                            label="Phone number"
                             name="phone"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Số điện thoại không được để trống!',
+                                    message: "Phone number can't be blank!",
                                 },
                             ]}
                         >
@@ -84,95 +103,72 @@ const ModalCreateRestaurant =  (props: any) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Mật khẩu"
-                            name="password"
+                            label="Address's restaurant"
+                            name="address"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Mật khẩu không được để trống!',
+                                    message: "Address's restaurant can't be blank!",
                                 },
                             ]}
-                        >
-                            <Input.Password  />
+                            >
+                            <Input  />
                         </Form.Item>
 
                         <Form.Item
-                            label="Tên"
-                            name="name"
+                            label="Description's restaurant"
+                            name="description"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Tên không được để trống!',
+                                    message: "Description's restaurant can't be blank!",
+                                },
+                            ]}
+                            >
+                            <Input  />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Product's type"
+                            name="productType"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Product's type can't be blank!",
                                 },
                             ]}
                         >
-                            <Input  />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Địa chỉ"
-                            name="address">
-                            <Input  />
-                        </Form.Item>
-
-                        <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <Form.Item
-                            label="Loại tài khoản"
-                            name="accountType"
-                        >
                             <Select
-                                style={{ width: 140 }}
-                                options={[
-                                    { value: 'FREE', label: 'Miễn phí' },
-                                    { value: 'PREMIUM', label: 'Cao cấp' },
-                                    { value: 'BUSINESS', label: 'Kinh Doanh' },
-                                ]}
-                                />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Phân quyền"
-                            name="role"
-                        >
-                            <Select
-                                style={{ width: 140 }}
-                                options={[
-                                    { value: 'ADMIN', label: 'Quản trị viên' },
-                                    { value: 'USER', label: 'Người dùng' },
                                 
-                                ]}
+                                options={[
+                                    { value: 'FOOD', label: 'Đồ ăn' },
+                                    { value: 'DRINK', label: 'Đồ uống' },
+                                    { value: 'FASTFOOD', label: 'Đồ ăn nhanh' },
+                                    { value: 'FASTFOOD + DRINK', label: 'Đồ ăn nhanh + Đồ uống' },
+                                 ]}
                                 />
                         </Form.Item>
 
                         <Form.Item
-                            label="Giới tính"
-                            name="sex"
+                            label="Owner"
+                            name="userId"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Owner can't be blank!",
+                                },
+                            ]}
                         >
                             <Select
-                                style={{ width: 140 }}
-                                options={[
-                                    { value: 'MALE', label: 'Nam' },
-                                    { value: 'FEMALE', label: 'Nữ' },
                                 
-                                ]}
+                                options={dataUser}
                                 />
                         </Form.Item>
 
-                        {/* <Form.Item
-                            label="Ngày sinh"
-                            name="birthday"
-                        >
-                            <DatePicker
-                                format={{
-                                    format: 'YYYY-MM-DD',
-                                    type: 'mask',
-                                }}
-                                />
-                        </Form.Item> */}
-                        </div>
-                        <Form.Item style={{display: "flex", justifyContent: "flex-end"}}>
+                        
+                        <Form.Item style={{display: "flex", justifyContent: "flex-end", marginTop: 20, marginBottom: 0}}>
                             <Button type="primary" htmlType="submit">
-                                Tạo người dùng
+                                CREATE
                             </Button>
                         </Form.Item>
                 </Form>

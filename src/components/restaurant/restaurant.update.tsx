@@ -11,26 +11,65 @@ import { useRouter } from "next/navigation";
 import { auth } from "@/auth";
 
 const ModalUpdateRestaurant =  (props: any) => {
+    const {access_token} = props
     const { isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant, currentRestaurant } = props
     const [form] = Form.useForm()
+    const [dataUser, setDataUser] = useState([])
+
     const router = useRouter()
 
-    const updateUser =  async(values : any) =>{
+    useEffect(()=>{
+        fetchUserId();
+    },[])
+
+    const fetchUserId = async() =>{
+        const res = await sendRequest<IBackendRes<any>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/get-all-users`,
+            method: "GET",
+        })
+        if(res?.data){
+            const formatdata = res?.data.map((item : any) =>{
+                return {
+                    value: item._id,
+                    label: item.name
+                }
+            })
+            setDataUser(formatdata)
+           
+        }
+
+    }
+
+    useEffect(()=>{
+        form.setFieldValue("_id", currentRestaurant._id)
+        form.setFieldValue("phone", currentRestaurant.phone)
+        form.setFieldValue("restaurantName", currentRestaurant.restaurantName)
+        form.setFieldValue("address", currentRestaurant.address)
+        form.setFieldValue("description", currentRestaurant.description)
+        form.setFieldValue("productType", currentRestaurant.productType)
+        form.setFieldValue("userId", currentRestaurant.userId)
+
+        
+    }, [currentRestaurant])
+
+    const updateRestaurant =  async(values : any) =>{
+        console.log(values)
 
         const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/update`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/update`,
             method: "PATCH",
             body: {
                 ...values
             },
+            headers: {
+                'Authorization': `Bearer ${access_token}`
+            }
         },)
-        console.log(res)
         if(res?.data){
             notification.success({
                 message: "Thành công",
                 description: "Cập nhập người dùng thành công."
             })
-            // router.push("/dashboard/user")
             window.location.reload()
         }else{
             notification.error({
@@ -39,25 +78,11 @@ const ModalUpdateRestaurant =  (props: any) => {
             })
         }
     }
-    useEffect(()=>{
-        form.setFieldValue("_id", currentRestaurant._id)
-        form.setFieldValue("email", currentRestaurant.email)
-        form.setFieldValue("phone", currentRestaurant.phone)
-        form.setFieldValue("name", currentRestaurant.name)
-        form.setFieldValue("address", currentRestaurant.address)
-        form.setFieldValue("accountType", currentRestaurant.accountType)
-        form.setFieldValue("role", currentRestaurant.role)
-        form.setFieldValue("sex", currentRestaurant.sex)
-
-
-
-        
-    }, [currentRestaurant])
     const hasMounted = useHasMounted();
     if (!hasMounted) return <></>;
     return (
         <>
-            <Modal title="Tạo mới người dùng"
+            <Modal title="Update restaurant"
                 open={isOpenModalUpdateRestaurant}
                 onOk={() => setIsOpenUpdateRestaurant(false)}
                 onCancel={() => setIsOpenUpdateRestaurant(false)}
@@ -67,11 +92,11 @@ const ModalUpdateRestaurant =  (props: any) => {
 
             >
                 <Form
-                    name = "update" 
+                    name = "verify" 
                     autoComplete="off"
                     layout="vertical"
                     form = {form}
-                    onFinish={updateUser}
+                    onFinish={updateRestaurant}
                     >
                         <Form.Item
                             label="Id"
@@ -80,21 +105,19 @@ const ModalUpdateRestaurant =  (props: any) => {
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Id không được để trống!',
+                                    message: '_id không được để trống!',
                                 },
                             ]}
                         >
                             <Input  disabled/>
                         </Form.Item>
                         <Form.Item
-                        
-                            label="Email"
-                            name="email"
-                            
+                            label="Name's restaurant"
+                            name="restaurantName"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Email không được để trống!',
+                                    message: "Name's restaurant can't be blank!",
                                 },
                             ]}
                         >
@@ -102,12 +125,12 @@ const ModalUpdateRestaurant =  (props: any) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Số điện thoại"
+                            label="Phone number"
                             name="phone"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Số điện thoại không được để trống!',
+                                    message: "Phone number can't be blank!",
                                 },
                             ]}
                         >
@@ -115,78 +138,72 @@ const ModalUpdateRestaurant =  (props: any) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Mật khẩu"
-                            name="password"
-                            
-                        >
-                            <Input.Password  disabled/>
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Tên"
-                            name="name"
+                            label="Address's restaurant"
+                            name="address"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Tên không được để trống!',
+                                    message: "Address's restaurant can't be blank!",
+                                },
+                            ]}
+                            >
+                            <Input  />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Description's restaurant"
+                            name="description"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Description's restaurant can't be blank!",
+                                },
+                            ]}
+                            >
+                            <Input  />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Product's type"
+                            name="productType"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Product's type can't be blank!",
                                 },
                             ]}
                         >
-                            <Input  />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Địa chỉ"
-                            name="address">
-                            <Input  />
-                        </Form.Item>
-
-                        <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <Form.Item
-                            label="Loại tài khoản"
-                            name="accountType"
-                        >
                             <Select
-                                style={{ width: 140 }}
-                                options={[
-                                    { value: 'FREE', label: 'Miễn phí' },
-                                    { value: 'PREMIUM', label: 'Cao cấp' },
-                                    { value: 'BUSINESS', label: 'Kinh Doanh' },
-                                ]}
-                                />
-                        </Form.Item>
-
-                        <Form.Item
-                            label="Phân quyền"
-                            name="role"
-                        >
-                            <Select
-                                style={{ width: 140 }}
-                                options={[
-                                    { value: 'ADMIN', label: 'Quản trị viên' },
-                                    { value: 'USER', label: 'Người dùng' },
                                 
-                                ]}
+                                options={[
+                                    { value: 'FOOD', label: 'Đồ ăn' },
+                                    { value: 'DRINK', label: 'Đồ uống' },
+                                    { value: 'FASTFOOD', label: 'Đồ ăn nhanh' },
+                                    { value: 'FASTFOOD + DRINK', label: 'Đồ ăn nhanh + Đồ uống' },
+                                 ]}
                                 />
                         </Form.Item>
 
                         <Form.Item
-                            label="Giới tính"
-                            name="sex"
+                            label="Owner"
+                            name="userId"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Owner can't be blank!",
+                                },
+                            ]}
                         >
                             <Select
-                                style={{ width: 140 }}
-                                options={[
-                                    { value: 'MALE', label: 'Nam' },
-                                    { value: 'FEMALE', label: 'Nữ' },
                                 
-                                ]}
+                                options={dataUser}
                                 />
                         </Form.Item>
-                        </div>
-                        <Form.Item style={{display: "flex", justifyContent: "flex-end"}}>
+
+                        
+                        <Form.Item style={{display: "flex", justifyContent: "flex-end", marginTop: 20, marginBottom: 0}}>
                             <Button type="primary" htmlType="submit">
-                                Cập nhập người dùng
+                                UPDATE
                             </Button>
                         </Form.Item>
                 </Form>

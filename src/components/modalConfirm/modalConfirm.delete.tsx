@@ -1,0 +1,111 @@
+"use client"
+import { Modal, Form, Button, Input, message, notification } from "antd"
+import { sendRequest } from "@/utils/api";
+import { useHasMounted } from "@/utils/customHook";
+
+const ModalConfirmDelete =  (props: any) => {
+    const {isOpenModalConfirmDelete, setOpenModalConfirmDelete, title, currentRestaurant, access_token, type} = props
+    const hasMounted = useHasMounted();
+    if (!hasMounted) return <></>;
+
+    const confirmDelete  = async() =>{
+        switch(type){
+            case "USER": 
+                const resUser = await sendRequest<IBackendRes<any>>({
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/remove-user?_id=${currentRestaurant._id}`,
+                    method: "DELETE",
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                    
+                })
+        
+                if(resUser?.data){          
+                    notification.success({
+                        message: "Xóa người dùng thành công.",
+                        description: resUser?.message
+                    })
+                    window.location.reload()
+                }else{
+                    notification.error({
+                        message: "Call APIs error",
+                        description: resUser?.message
+                    })
+                }
+            break;
+            case "RESTAURANTS":
+                const resRestaurant = await sendRequest<IBackendRes<any>>({
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/remove-restaurant?_id=${currentRestaurant._id}`,
+                    method: "DELETE",
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                    
+                })
+        
+                if(resRestaurant?.data){          
+                    notification.success({
+                        message: "Xóa tài khoản thành công.",
+                        description: resRestaurant?.message
+                    })
+                    window.location.reload()
+                }else{
+                    notification.error({
+                        message: "Call APIs error",
+                        description: resRestaurant?.message
+                    })
+                }
+            break;
+            default:
+                
+
+        }
+       
+
+    }
+    return (
+        <Modal title= {title}
+                open={isOpenModalConfirmDelete}
+                onOk={() => setOpenModalConfirmDelete(false)}
+                onCancel={() => setOpenModalConfirmDelete(false)}
+                maskClosable={false}
+                footer={null}
+                forceRender={true}
+
+            >
+                <Form
+                    name = "delete" 
+                    autoComplete="off"
+                    layout="vertical"
+                    >
+                        <Form.Item
+                            label="Id"
+                            name="_id"
+                            hidden
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Chưa xác nhận id của người dùng.',
+                                },
+                            ]}
+                        >
+                            <Input  disabled/>
+                        </Form.Item>
+                        <Form.Item style={{display: "flex", justifyContent: "flex-end", alignItems: "flex-end", marginTop: 40, marginBottom: 0}}>
+                        <Button type="primary" htmlType="submit"  onClick={()=>setOpenModalConfirmDelete(false)} style={{marginRight: 20}} >
+                                Đóng
+                            </Button>
+                            <Button type="primary" htmlType="submit"  onClick={confirmDelete} style={{background: "red"}}>
+                                Xoá
+                            </Button>
+                            
+                        </Form.Item>
+                    </Form>
+
+                    
+            </Modal>
+    )
+
+}
+
+export default ModalConfirmDelete

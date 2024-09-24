@@ -44,34 +44,15 @@ const AdminSideBar = () => {
                     key: 'restaurant',
                     label: <Link href={"/dashboard/restaurant"}>Manage Restaurant</Link>,
                     icon: <ShopOutlined />,
-                    // children: [
-                    //     {
-                    //         key: 'g1',
-                    //         label: 'Item 1',
-                    //         type: 'group',
-                    //         children: [
-                    //             { key: '1', label: 'Option 1' },
-                    //             { key: '2', label: 'Option 2' },
-                    //         ],
-                    //     },
-                    //     {
-                    //         key: 'g2',
-                    //         label: 'Item 2',
-                    //         type: 'group',
-                    //         children: [
-                    //             { key: '3', label: 'Option 3' },
-                    //             { key: '4', label: 'Option 4' },
-                    //         ],
-                    //     },
-                    // ],
+                    
                 },
                 {
-                    key: 'sub2',
-                    label: 'Navigation Two',
+                    key: 'Promotion',
+                    label: 'Promotion',
                     icon: <AppstoreOutlined />,
                     children: [
-                        { key: '5', label: 'Option 5' },
-                        { key: '6', label: 'Option 6' },
+                        { key: '1', label: 'Voucher' },
+                        { key: '2', label: 'Coupon' },
                         {
                             key: 'sub3',
                             label: 'Submenu',

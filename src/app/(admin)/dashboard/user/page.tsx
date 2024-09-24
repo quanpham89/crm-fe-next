@@ -4,9 +4,10 @@ import UserTable from "@/components/admin/user.table";
 const ManageUserPage = async () => {
     const session  = await auth()
     let role = session?.user?.role as string
+    let access_token = session?.user?.access_token as string
     return (
         <div>
-            <UserTable role= {role}/>
+            <UserTable role= {role} access_token = {access_token}/>
         </div>
     )
 }

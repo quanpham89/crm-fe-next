@@ -14,8 +14,6 @@ const ModalCreateUser =  (props: any) => {
     const router = useRouter()
 
     const createUser =  async(values : any) =>{
-
-        console.log(values)
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
             method: "POST",
@@ -138,7 +136,8 @@ const ModalCreateUser =  (props: any) => {
                                 style={{ width: 140 }}
                                 options={[
                                     { value: 'ADMIN', label: 'Quản trị viên' },
-                                    { value: 'USER', label: 'Người dùng' },
+                                    { value: 'CUSTOMER', label: 'khách hàng' },
+                                    { value: 'BUSINESSMAN', label: 'Người bán hàng' },
                                 
                                 ]}
                                 />

@@ -1,14 +1,11 @@
 "use client"
 import { Modal, Steps, Form, Button, Input, message, notification, DatePicker } from "antd"
-import { CheckCircleOutlined, LoadingOutlined, SmileOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
 import { Select, Space } from 'antd';
-import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { auth } from "@/auth";
 
 const ModalUpdateUser =  (props: any) => {
     const { isOpenModalUpdateUser, setIsOpenUpdateUser, currentUser } = props
@@ -24,7 +21,6 @@ const ModalUpdateUser =  (props: any) => {
                 ...values
             },
         },)
-        console.log(res)
         if(res?.data){
             notification.success({
                 message: "Thành công",
@@ -164,8 +160,8 @@ const ModalUpdateUser =  (props: any) => {
                                 style={{ width: 140 }}
                                 options={[
                                     { value: 'ADMIN', label: 'Quản trị viên' },
-                                    { value: 'USER', label: 'Người dùng' },
-                                
+                                    { value: 'CUSTOMER', label: 'khách hàng' },
+                                    { value: 'BUSINESSMAN', label: 'Người bán hàng' },
                                 ]}
                                 />
                         </Form.Item>
