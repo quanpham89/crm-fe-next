@@ -23,8 +23,8 @@ const ModalCreateUser =  (props: any) => {
         },)
         if(res?.data){
             notification.success({
-                message: "Thành công",
-                description: "Tạo người dùng thành công."
+                message: "Success",
+                description: "Create user success."
             })
             // router.push("/dashboard/user")
             window.location.reload()

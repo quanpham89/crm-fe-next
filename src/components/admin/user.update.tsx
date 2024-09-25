@@ -23,14 +23,14 @@ const ModalUpdateUser =  (props: any) => {
         },)
         if(res?.data){
             notification.success({
-                message: "Thành công",
-                description: "Cập nhập người dùng thành công."
+                message: "Success",
+                description: "Update user successfull."
             })
             // router.push("/dashboard/user")
             window.location.reload()
         }else{
             notification.error({
-                message: "Thất bại",
+                message: "Error",
                 description: res.message
             })
         }
@@ -53,7 +53,7 @@ const ModalUpdateUser =  (props: any) => {
     if (!hasMounted) return <></>;
     return (
         <>
-            <Modal title="Tạo mới người dùng"
+            <Modal title="Update user"
                 open={isOpenModalUpdateUser}
                 onOk={() => setIsOpenUpdateUser(false)}
                 onCancel={() => setIsOpenUpdateUser(false)}
@@ -76,7 +76,7 @@ const ModalUpdateUser =  (props: any) => {
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Id không được để trống!',
+                                    message: "Id can't be blank!",
                                 },
                             ]}
                         >
@@ -90,7 +90,7 @@ const ModalUpdateUser =  (props: any) => {
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Email không được để trống!',
+                                    message: "Email can't be blank!",
                                 },
                             ]}
                         >
@@ -98,12 +98,12 @@ const ModalUpdateUser =  (props: any) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Số điện thoại"
+                            label="Phone number"
                             name="phone"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Số điện thoại không được để trống!',
+                                    message: "Phone number can't be blank!",
                                 },
                             ]}
                         >
@@ -111,7 +111,7 @@ const ModalUpdateUser =  (props: any) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Mật khẩu"
+                            label="Password"
                             name="password"
                             
                         >
@@ -119,12 +119,12 @@ const ModalUpdateUser =  (props: any) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Tên"
+                            label="Name"
                             name="name"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Tên không được để trống!',
+                                    message: "Name can't be blank!",
                                 },
                             ]}
                         >
@@ -132,57 +132,57 @@ const ModalUpdateUser =  (props: any) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Địa chỉ"
+                            label="Address"
                             name="address">
                             <Input  />
                         </Form.Item>
 
                         <div style={{display: "flex", justifyContent: "space-between"}}>
                         <Form.Item
-                            label="Loại tài khoản"
+                            label="Account type"
                             name="accountType"
                         >
                             <Select
                                 style={{ width: 140 }}
                                 options={[
-                                    { value: 'FREE', label: 'Miễn phí' },
-                                    { value: 'PREMIUM', label: 'Cao cấp' },
-                                    { value: 'BUSINESS', label: 'Kinh Doanh' },
+                                    { value: 'FREE', label: 'Free' },
+                                    { value: 'PREMIUM', label: 'Premium' },
+                                    { value: 'BUSINESS', label: 'Bussiness' },
                                 ]}
                                 />
                         </Form.Item>
 
                         <Form.Item
-                            label="Phân quyền"
+                            label="Role"
                             name="role"
                         >
                             <Select
                                 style={{ width: 140 }}
                                 options={[
-                                    { value: 'ADMIN', label: 'Quản trị viên' },
-                                    { value: 'CUSTOMER', label: 'khách hàng' },
-                                    { value: 'BUSINESSMAN', label: 'Người bán hàng' },
+                                    { value: 'ADMIN', label: 'Admin' },
+                                    { value: 'CUSTOMER', label: 'Customer' },
+                                    { value: 'BUSINESSMAN', label: 'Businessman' },
                                 ]}
                                 />
                         </Form.Item>
 
                         <Form.Item
-                            label="Giới tính"
+                            label="Sex"
                             name="sex"
                         >
                             <Select
                                 style={{ width: 140 }}
                                 options={[
-                                    { value: 'MALE', label: 'Nam' },
-                                    { value: 'FEMALE', label: 'Nữ' },
-                                
+                                    { value: 'MALE', label: 'Male' },
+                                    { value: 'FEMALE', label: 'Female' },
+                                    { value: 'OTHER', label: 'Other' },
                                 ]}
                                 />
                         </Form.Item>
                         </div>
                         <Form.Item style={{display: "flex", justifyContent: "flex-end"}}>
                             <Button type="primary" htmlType="submit">
-                                Cập nhập người dùng
+                                Update user
                             </Button>
                         </Form.Item>
                 </Form>

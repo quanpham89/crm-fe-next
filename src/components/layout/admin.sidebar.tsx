@@ -51,8 +51,8 @@ const AdminSideBar = () => {
                     label: 'Promotion',
                     icon: <AppstoreOutlined />,
                     children: [
-                        { key: '1', label: 'Voucher' },
-                        { key: '2', label: 'Coupon' },
+                        { key: 'voucher', label: <Link href={"/dashboard/promotion/voucher"}>Voucher</Link> },
+                        { key: 'coupon', label: <Link href={"/dashboard/promotion/coupon"}>Coupon</Link> },
                         {
                             key: 'sub3',
                             label: 'Submenu',

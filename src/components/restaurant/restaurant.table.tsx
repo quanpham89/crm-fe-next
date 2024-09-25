@@ -9,6 +9,7 @@ import ModalUpdateRestaurant from "./restaurant.update";
 import ModalCreateRestaurant from "./restaurant.create";
 import "./Restaurant.scss"
 import ModalConfirmDelete from "../modalConfirm/modalConfirm.delete";
+import ModalConfirmHidden from "../modalConfirm/modalConfirm.hidden";
 
 const RestaurantTable = (props: any) => {
     const {role, access_token} = props
@@ -21,9 +22,7 @@ const RestaurantTable = (props: any) => {
     const [currentRestaurant, setCurrentRestaurant] = useState({})
     const [isLoading, setLoading] = useState(true)
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
-
-
-    
+    const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
 
     const fetchRestaurantPerPage = async (page : number , limit : number) =>{
         const res = await sendRequest<IBackendRes<IUserPerPage>>({
@@ -69,32 +68,8 @@ const RestaurantTable = (props: any) => {
     }
 
     const handleUnActiveRestaurant = async(record : any) =>{
-        if(!record.isShow){
-            notification.success({
-                message: "Ẩn tài khoản bán hàng",
-                description: "Tài khoản hiện đang không kích hoạt."
-            })
-            return
-        }
-        const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/soft-delete?_id=${record._id}`,
-            method: "PATCH",
-            headers: {
-                'Authorization': `Bearer ${access_token}`
-            }
-        })
-        if(res?.data){          
-            notification.success({
-                message: "Hủy kích hoạt tài khoản thành công.",
-                description: res?.message
-            })
-            window.location.reload()
-        }else{
-            notification.error({
-                message: "Call APIs error",
-                description: res?.message
-            })
-        }
+        setOpenModalConfirmHidden(true)
+        setCurrentRestaurant(record)
     }
     
 
@@ -236,6 +211,14 @@ const RestaurantTable = (props: any) => {
                 setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 
                 title = {`Bạn chắc chắn muốn xóa tài khoản bán hàng này vĩnh viễn ?`} 
                 currentRestaurant= {currentRestaurant} 
+                access_token = {access_token}
+                type="RESTAURANTS"
+                />
+                <ModalConfirmHidden
+                isOpenModalConfirmHidden = {isOpenModalConfirmHidden} 
+                setOpenModalConfirmHidden= {setOpenModalConfirmHidden} 
+                title = {`Bạn chắc chắn muốn ẩn khoản bán hàng này?`} 
+                currentItem= {currentRestaurant} 
                 access_token = {access_token}
                 type="RESTAURANTS"
                 />

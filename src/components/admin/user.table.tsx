@@ -9,6 +9,7 @@ import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlin
 import ModalUpdateUser from "./user.update";
 import { auth } from "@/auth";
 import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete";
+import ModalConfirmHidden from "../modalConfirm/modalConfirm.hidden";
 
 const UserTable = (props: any) => {
     const {role, access_token} = props
@@ -21,6 +22,7 @@ const UserTable = (props: any) => {
     const [currentUser, setCurrentUser] = useState({})
     const [isLoading, setLoading] = useState(true)
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
+    const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
 
     const fetchUserPerPage = async (page : number , limit : number) =>{
         const res = await sendRequest<IBackendRes<IUserPerPage>>({
@@ -62,34 +64,9 @@ const UserTable = (props: any) => {
     }
 
     const handleUnActiveUser = async (record : any) =>{
-        if(!record.isActive){
-            notification.success({
-                message: "Hủy kích hoạt tài khoản",
-                description: "Tài khoản hiện đang không kích hoạt."
-            })
-            return
-        }
-        const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/soft-delete?_id=${record._id}`,
-            method: "PATCH",
-            headers: {
-                'Authorization': `Bearer ${access_token}`
-            }
-            
-        })
-
-        if(res?.data){          
-            notification.success({
-                message: "Hủy kích hoạt tài khoản thành công.",
-                description: res?.message
-            })
-            window.location.reload()
-        }else{
-            notification.error({
-                message: "Call APIs error",
-                description: res?.message
-            })
-        }
+        setOpenModalConfirmHidden(true)
+        setCurrentUser(record)
+        
     }
 
     const handleConfirmDeleteUser = (record: any) =>{
@@ -219,12 +196,20 @@ const UserTable = (props: any) => {
                 access_token = {access_token}
                 type="USER"
                 />
+                 <ModalConfirmHidden
+                isOpenModalConfirmHidden = {isOpenModalConfirmHidden} 
+                setOpenModalConfirmHidden= {setOpenModalConfirmHidden} 
+                title = {`Bạn chắc chắn muốn ẩn hủy kích hoạt người dùng này?`} 
+                currentItem= {currentUser} 
+                access_token = {access_token}
+                type="USER"
+                />
 
 
             </> 
         )
     }else{
-        return <>Bạn không có quyền truy cập vào chức năng này.</>
+        return <>Permission denied.</>
     }
 }
 
