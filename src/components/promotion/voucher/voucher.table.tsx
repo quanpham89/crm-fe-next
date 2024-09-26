@@ -1,24 +1,76 @@
 'use client'
 
-import { Button, Col, Form, Input, Row, Select, Table } from "antd";
+import { sendRequest } from "@/utils/api";
+import { CheckOutlined } from "@ant-design/icons";
+import { Button, Col, DatePicker, Form, Input, notification, Row, Select, Table } from "antd";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { useEffect, useState } from "react";
+
+
+
 
 const VoucherTable = (props: any) => {
     const [form] = Form.useForm()
+    const {role, access_token} = props
+    const [loading, setLoading] = useState(true)
+    const [totalPage, setTotalPages] = useState(1)
+    const [dataSource, setDataSource] = useState<any>([])
+    const [totalItems, setTotalItems] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [currentLimit, setCurrentLimit] = useState(3)
 
-    const dataSource = [
-        {
-            key: '1',
-            name: 'Mike',
-            age: 32,
-            address: '10 Downing Street',
-        },
-        {
-            key: '2',
-            name: 'John',
-            age: 42,
-            address: '10 Downing Street',
-        },
-    ];
+
+    const fetchVouchersPerPage = async (page : number , limit : number) =>{
+        const res = await sendRequest<IBackendRes<IUserPerPage>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers?current=${page}&pageSize=${limit}`,
+            method: "GET",
+            headers: {
+                "Authorization" : `Bearer ${access_token}`
+            }
+            
+        })
+        if(res?.data?.results){    
+            const vouchers = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
+            console.log(vouchers)
+
+            const formatData = vouchers.map(item =>{ 
+                return ({
+                ...item,
+                activeIcon: item.status ? <CheckOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "green"}}/> : <CloseOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "red"}}/>
+            })});
+            setDataSource(formatData)
+            setTotalPages(+res?.data?.totalPages)
+            setTotalItems(+res?.data?.totalItems)
+            setLoading(false)
+        }else{
+            notification.error({
+                message: "Call APIs error",
+                description: res?.message
+            })
+        }
+
+    }
+
+    useEffect(()=>{
+        fetchVouchersPerPage(+currentPage, +currentLimit)
+
+    }, [currentPage])
+
+    // const dataSource = [
+    //     {
+    //         key: '1',
+    //         name: 'Mike',
+    //         age: 32,
+    //         address: '10 Downing Street',
+    //     },
+    //     {
+    //         key: '2',
+    //         name: 'John',
+    //         age: 42,
+    //         address: '10 Downing Street',
+    //     },
+    // ];
 
     const columns = [
         {
@@ -38,12 +90,20 @@ const VoucherTable = (props: any) => {
         },
     ];
 
-    const search = () => {
+    const search = (values: any) => {
+        console.log(values.time[0].$d)
+        console.log(values.time[1].$d)
+
+        dayjs.extend(utc);
+
+        const convertedLocalDate = dayjs(values.time[0].$d).utc().format();
+        console.log(convertedLocalDate)        
+      
 
     }
 
 
-    return (
+    return (role ==="ADMIN" ?
         <div >
             <div style={{
                 display: "flex",
@@ -63,13 +123,13 @@ const VoucherTable = (props: any) => {
                     layout="vertical"
                     form={form}
                     onFinish={search}
-                    
+
                 >
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
                                 label="Name's voucher"
-                                name="restaurantName"
+                                name="nameVoucher"
                             >
                                 <Input />
                             </Form.Item>
@@ -82,8 +142,6 @@ const VoucherTable = (props: any) => {
                                 <Input />
                             </Form.Item>
                         </Col>
-
-                       
                     </Row>
 
                     <Row gutter={16}>
@@ -98,14 +156,29 @@ const VoucherTable = (props: any) => {
                         <Col span={12}>
                             <Form.Item
                                 label="For"
-                                name="for"
+                                name="forAge"
                             >
                                 <Input />
                             </Form.Item>
                         </Col>
-
-                        
                     </Row>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Range Time"
+                                name="time"
+                            >
+                                <DatePicker.RangePicker
+                                    placeholder={['From', 'To']}
+                                    allowEmpty={[false, true]}
+                                    onChange={(date, dateString) => {
+                                        console.log(date, dateString);
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
 
                     <Form.Item style={{ display: "flex", justifyContent: "flex-end", marginTop: 20, marginBottom: 20 }}>
                         <Button type="primary" htmlType="submit">
@@ -128,6 +201,8 @@ const VoucherTable = (props: any) => {
             </div>
 
         </div>
+        :
+        <div> You must have permission to access this function.</div>
     )
 }
 
