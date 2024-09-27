@@ -3,55 +3,24 @@ import { Modal, Form, Button, Input, message, notification } from "antd"
 import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
 
-const ModalConfirmHidden =  (props: any) => {
-    const {isOpenModalConfirmHidden, setOpenModalConfirmHidden, title, access_token, type, currentItem} = props
+const ModalConfirmActive =  (props: any) => {
+    const {isOpenModalConfirmActive, setOpenModalConfirmActive, title, access_token, type, currentItem} = props
     const hasMounted = useHasMounted();
     if (!hasMounted) return <></>;
 
     const confirmHidden  = async() =>{
         switch(type){
-            case "USER": 
-                if(!currentItem.isActive){
-                    notification.success({
-                        message: "Hủy kích hoạt tài khoản",
-                        description: "Tài khoản hiện đang không kích hoạt."
-                    })
-                    setOpenModalConfirmHidden(false)
-                    return
-                }
-                const resUser = await sendRequest<IBackendRes<any>>({
-                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/soft-delete?_id=${currentItem._id}`,
-                    method: "PATCH",
-                    headers: {
-                        'Authorization': `Bearer ${access_token}`
-                    }
-                    
-                })
-        
-                if(resUser?.data){          
-                    notification.success({
-                        message: "Hủy kích hoạt tài khoản thành công.",
-                        description: resUser?.message
-                    })
-                    window.location.reload()
-                }else{
-                    notification.error({
-                        message: "Call APIs error",
-                        description: resUser?.message
-                    })
-                }
-            break;
             case "RESTAURANTS":
                 if(!currentItem.isShow){
                     notification.success({
                         message: "Ẩn tài khoản bán hàng",
                         description: "Tài khoản hiện đang không kích hoạt."
                     })
-                    setOpenModalConfirmHidden(false)
+                    setOpenModalConfirmActive(false)
                     return
                 }
                 const res = await sendRequest<IBackendRes<any>>({
-                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/soft-delete?_id=${currentItem._id}`,
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/active-restaurant?_id=${currentItem._id}`,
                     method: "PATCH",
                     headers: {
                         'Authorization': `Bearer ${access_token}`
@@ -72,16 +41,16 @@ const ModalConfirmHidden =  (props: any) => {
             break;
 
             case "VOUCHER":
-                if( currentItem.status === "HIDDEN"){
+                if(currentItem.status === "PUBLIC"){
                     notification.success({
-                        message: "Ẩn voucher",
-                        description: "Voucher hiện đang không kích hoạt."
+                        message: "Kích hoạt voucher",
+                        description: "Voucher hiện đang được kích hoạt."
                     })
-                    setOpenModalConfirmHidden(false)
+                    setOpenModalConfirmActive(false)
                     return
                 }
                 const voucher = await sendRequest<IBackendRes<any>>({
-                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/soft-delete?_id=${currentItem._id}`,
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/active-voucher?_id=${currentItem._id}`,
                     method: "PATCH",
                     headers: {
                         'Authorization': `Bearer ${access_token}`
@@ -89,7 +58,7 @@ const ModalConfirmHidden =  (props: any) => {
                 })
                 if(voucher?.data){          
                     notification.success({
-                        message: "Hủy kích hoạt voucher thành công.",
+                        message: "Kích hoạt voucher thành công.",
                         description: voucher?.message
                     })
                     window.location.reload()
@@ -109,9 +78,9 @@ const ModalConfirmHidden =  (props: any) => {
     }
     return (
         <Modal title= {title}
-                open={isOpenModalConfirmHidden}
-                onOk={() => setOpenModalConfirmHidden(false)}
-                onCancel={() => setOpenModalConfirmHidden(false)}
+                open={isOpenModalConfirmActive}
+                onOk={() => setOpenModalConfirmActive(false)}
+                onCancel={() => setOpenModalConfirmActive(false)}
                 maskClosable={false}
                 footer={null}
                 forceRender={true}
@@ -136,11 +105,11 @@ const ModalConfirmHidden =  (props: any) => {
                             <Input  disabled/>
                         </Form.Item>
                         <Form.Item style={{display: "flex", justifyContent: "flex-end", alignItems: "flex-end", marginTop: 40, marginBottom: 0}}>
-                        <Button type="primary" htmlType="submit"  onClick={()=>setOpenModalConfirmHidden(false)} style={{marginRight: 20}} >
+                        <Button type="primary" htmlType="submit"  onClick={()=>setOpenModalConfirmActive(false)} style={{marginRight: 20}} >
                                 CANCLE
                             </Button>
-                            <Button type="primary" htmlType="submit"  onClick={confirmHidden} style={{background: "red"}}>
-                                HIDDEN
+                            <Button type="primary" htmlType="submit"  onClick={confirmHidden} style={{background: "green"}}>
+                                ACTIVE
                             </Button>
                             
                         </Form.Item>
@@ -152,4 +121,4 @@ const ModalConfirmHidden =  (props: any) => {
 
 }
 
-export default ModalConfirmHidden
+export default ModalConfirmActive

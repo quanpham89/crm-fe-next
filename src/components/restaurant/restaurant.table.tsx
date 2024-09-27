@@ -131,7 +131,7 @@ const RestaurantTable = (props: any) => {
             key: 'activeIcon',
         },
         {
-            title: 'Aaction',
+            title: 'Action',
             dataIndex: '',
             key: '',
             render: (text : string, record: any) =>
@@ -210,14 +210,14 @@ const RestaurantTable = (props: any) => {
                 isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
                 setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 
                 title = {`Bạn chắc chắn muốn xóa tài khoản bán hàng này vĩnh viễn ?`} 
-                currentRestaurant= {currentRestaurant} 
+                currentItem= {currentRestaurant} 
                 access_token = {access_token}
                 type="RESTAURANTS"
                 />
                 <ModalConfirmHidden
                 isOpenModalConfirmHidden = {isOpenModalConfirmHidden} 
                 setOpenModalConfirmHidden= {setOpenModalConfirmHidden} 
-                title = {`Bạn chắc chắn muốn ẩn khoản bán hàng này?`} 
+                title = {`Bạn chắc chắn muốn ẩn tài khoản bán hàng này?`} 
                 currentItem= {currentRestaurant} 
                 access_token = {access_token}
                 type="RESTAURANTS"

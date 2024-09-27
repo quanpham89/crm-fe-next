@@ -4,7 +4,7 @@ import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
 
 const ModalConfirmDelete =  (props: any) => {
-    const {isOpenModalConfirmDelete, setOpenModalConfirmDelete, title, currentRestaurant, access_token, type} = props
+    const {isOpenModalConfirmDelete, setOpenModalConfirmDelete, title, currentItem, access_token, type} = props
     const hasMounted = useHasMounted();
     if (!hasMounted) return <></>;
 
@@ -12,7 +12,7 @@ const ModalConfirmDelete =  (props: any) => {
         switch(type){
             case "USER": 
                 const resUser = await sendRequest<IBackendRes<any>>({
-                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/remove-user?_id=${currentRestaurant._id}`,
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/remove-user?_id=${currentItem._id}`,
                     method: "DELETE",
                     headers: {
                         'Authorization': `Bearer ${access_token}`
@@ -35,7 +35,7 @@ const ModalConfirmDelete =  (props: any) => {
             break;
             case "RESTAURANTS":
                 const resRestaurant = await sendRequest<IBackendRes<any>>({
-                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/remove-restaurant?_id=${currentRestaurant._id}`,
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/remove-restaurant?_id=${currentItem._id}`,
                     method: "DELETE",
                     headers: {
                         'Authorization': `Bearer ${access_token}`
@@ -53,6 +53,30 @@ const ModalConfirmDelete =  (props: any) => {
                     notification.error({
                         message: "Call APIs error",
                         description: resRestaurant?.message
+                    })
+                }
+            break;
+            case "VOUCHER":
+                const voucher = await sendRequest<IBackendRes<any>>({
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/remove?_id=${currentItem._id}`,
+                    method: "DELETE",
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                    
+                })
+                console.log(voucher)
+        
+                if(voucher?.data){          
+                    notification.success({
+                        message: "Xóa voucher thành công.",
+                        description: voucher?.message
+                    })
+                    window.location.reload()
+                }else{
+                    notification.error({
+                        message: "Call APIs error",
+                        description: voucher?.message
                     })
                 }
             break;
