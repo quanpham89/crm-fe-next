@@ -33,6 +33,7 @@ const VoucherTable = (props: any) => {
     const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
     const [currentVoucher, setCurrentVoucher] = useState<any>("")
     const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState<boolean>(false)
+    const [typeAction, setTypeAction] = useState<string>("NORMAL")
 
     const fetchVouchersPerPage = async (page: number, limit: number) => {
         const res = await sendRequest<IBackendRes<IUserPerPage>>({
@@ -56,7 +57,6 @@ const VoucherTable = (props: any) => {
             setTotalPages(+res?.data?.totalPages)
             setTotalItems(+res?.data?.totalItems)
             setLoading(false)
-            console.log(loading)
         } else {
             notification.error({
                 message: "Call APIs error",
@@ -93,26 +93,10 @@ const VoucherTable = (props: any) => {
     }
 
     const handleShowDetail = async (values: any) => {
-        console.log(values)
         setCurrentVoucher(values)
         router.push(`/dashboard/promotion/voucher/${values._id}`)
 
     }
-
-    // const dataSource = [
-    //     {
-    //         key: '1',
-    //         name: 'Mike',
-    //         age: 32,
-    //         address: '10 Downing Street',
-    //     },
-    //     {
-    //         key: '2',
-    //         name: 'John',
-    //         age: 42,
-    //         address: '10 Downing Street',
-    //     },
-    // ];
 
     const columns = [
         {
@@ -166,21 +150,58 @@ const VoucherTable = (props: any) => {
                     <PlusOutlined onClick={() => handleActiveVoucher(record)} />
                     <DeleteOutlined onClick={() => handleConfirmDeleteVoucher(record)} />
                 </div>
-
-
         },
     ];
 
-    const search = (values: any) => {
-        console.log(values.time[0].$d)
-        console.log(values.time[1].$d)
+    const search = async (values: any) => {
+        setLoading(true)
 
-        dayjs.extend(utc);
+        let {time, ...rest} = values
+        let formatvalue = {                
+            ...rest,
+        }
 
-        const convertedLocalDate = dayjs(values.time[0].$d).utc().format();
-        console.log(convertedLocalDate)
+        if(values?.time){
+            dayjs.extend(utc);
+            const convertStartedDate = dayjs(values.time[0].$d).utc().format();
+            const convertEndedDate = dayjs(values.time[1].$d).utc().format();
+            formatvalue = {
+                ...rest,
+                startedTime: convertStartedDate,
+                endedTime: convertEndedDate
+            }
 
+        }
+    
+        const res = await sendRequest<IBackendRes<any>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/search?searchValue=${JSON.stringify(formatvalue)}`,
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${access_token}`
+            }
 
+        })
+        if (res?.data) {
+            const voucher = Array.isArray(res.data.vouchers) ? res.data.vouchers : [res.data.vouchers];
+
+            const formatData = voucher.map((item : any) => {
+                return ({
+                    ...item,
+                    activeIcon: item.status === "PUBLIC" ? <CheckOutlined style={{ fontSize: "16px", display: "flex", justifyContent: "center", color: "green" }} /> : <CloseOutlined style={{ fontSize: "16px", display: "flex", justifyContent: "center", color: "red" }} />
+                })
+            });
+            notification.success({
+                message: "Success",
+                description: `Có ${formatData.length} kết quả ứng với giá trị tìm kiếm.`
+            })
+            setDataSource(formatData)
+            setLoading(false)
+        } else {
+            notification.error({
+                message: "Call APIs error",
+                description: res?.message
+            })
+        }
     }
 
     if (role === "ADMIN") {
@@ -279,7 +300,7 @@ const VoucherTable = (props: any) => {
                         pagination={false}
                         rowKey="_id"
                     />
-                    {totalPages && totalPages > 0 &&
+                    {totalPages && totalPages > 0 && typeAction !== "SEARCH" &&
                         <div className="footer">
                             <ReactPaginate
                                 nextLabel=">"

@@ -26,12 +26,13 @@ const VoucherDetail = (props: any) =>{
         if (res?.data) {
             setLoading(false)
             const result = res?.data[0].voucherItems
-            console.log(res?.data[0].voucherItems)
             const formatResult = result.map((item : any) =>{
-                let expiredTime = dayjs(item.codeExpired).format("DD-MM-YYYY")
+                let startDate = dayjs(item.startedDate).format("DD-MM-YYYY")
+                let endDate = dayjs(item.endedDate).format("DD-MM-YYYY") 
                 return {
                     ...item,
-                    codeExpired : expiredTime
+                    startedDate: startDate,
+                    endedDate: endDate
                 }
             })
             setDataVoucherItem(formatResult)
@@ -89,9 +90,14 @@ const VoucherDetail = (props: any) =>{
         },
 
         {
-            title: 'Expire',
-            dataIndex: 'codeExpired',
-            key: 'codeExpired',
+            title: 'Start Date',
+            dataIndex: 'startedDate',
+            key: 'startedDate',
+        },
+        {
+            title: 'End Date',
+            dataIndex: 'endedDate',
+            key: 'endedDate',
         },
         {
             title: 'Status',
@@ -129,7 +135,7 @@ const VoucherDetail = (props: any) =>{
                     alignContent: "center"
                 }}>
                     <span>Information Voucher</span>
-                    <span>{dataVoucherItem.length}</span>
+                    <span>Total: {dataVoucherItem.length}</span>
                 </div>
                 
                 <div style={{ minHeight: "50vh" }}>
