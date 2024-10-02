@@ -7,20 +7,20 @@ import { Button, notification, Spin, Table } from "antd"
 import dayjs from "dayjs"
 import { useContext, useEffect, useState } from "react"
 
-const VoucherDetail = (props: any) =>{
+const CouponDetail = (props: any) =>{
     const {id, role, access_token } = props
-    const [dataVoucherItem, setDataVoucherItem] = useState<any>([])
+    const [dataCouponItem, setDataCouponItem] = useState<any>([])
     const [loading, setLoading] = useState<boolean> (true)
-    const [currentVoucher, setCurrentVoucher] =  useState("")
+    const [currentCoupon, setCurrentCoupon] =  useState("")
     const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState(false)
     const [isOpenModalConfirmUnActive, setOpenModalConfirmUnActive] = useState(false)
     const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
     setRoleUser(role)
 
 
-    const fetchVoucherItem = async () => {
+    const fetchCouponItem = async () => {
         const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/get-voucher-by-id?_id=${id}`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons/get-coupon-by-id?_id=${id}`,
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${access_token}`
@@ -28,7 +28,7 @@ const VoucherDetail = (props: any) =>{
         })
         if (res?.data) {
             setLoading(false)
-            const result = res?.data[0].voucherItems
+            const result = res?.data[0].couponItems
             const formatResult = result.map((item : any) =>{
                 let startDate = dayjs(item.startedDate).format("DD-MM-YYYY")
                 let endDate = dayjs(item.endedDate).format("DD-MM-YYYY") 
@@ -38,7 +38,7 @@ const VoucherDetail = (props: any) =>{
                     endedDate: endDate
                 }
             })
-            setDataVoucherItem(formatResult)
+            setDataCouponItem(formatResult)
 
             
         } else {
@@ -51,16 +51,16 @@ const VoucherDetail = (props: any) =>{
     }
 
     useEffect(()=>{
-        fetchVoucherItem()
+        fetchCouponItem()
     },[])
 
-    const handleUnActiveVoucher = async (values: any) => {
-        setCurrentVoucher(values)
+    const handleUnActiveCoupon = async (values: any) => {
+        setCurrentCoupon(values)
         setOpenModalConfirmUnActive(true)
     }
 
-    const handleActiveVoucher = async (values: any) => {
-        setCurrentVoucher(values)
+    const handleActiveCoupon = async (values: any) => {
+        setCurrentCoupon(values)
         setOpenModalConfirmActive(true)
     }
 
@@ -73,8 +73,8 @@ const VoucherDetail = (props: any) =>{
         },
         {
             title: 'Belong To',
-            dataIndex: 'nameVoucher',
-            key: 'nameVoucher',
+            dataIndex: 'nameCoupon',
+            key: 'nameCoupon',
         },
         {
             title: 'Code Id',
@@ -82,14 +82,14 @@ const VoucherDetail = (props: any) =>{
             key: 'codeId',
         },
         {
-            title: 'Customer Id - userUse',
-            dataIndex: 'customerId',
-            key: 'customerId',
-        },
-        {
             title: 'Item Id - itemUse',
             dataIndex: 'itemId',
             key: 'itemId',
+        },
+        {
+            title: 'Customer Id - userUse',
+            dataIndex: 'customerId',
+            key: 'customerId',
         },
 
         {
@@ -118,8 +118,8 @@ const VoucherDetail = (props: any) =>{
             key: '',
             render: (text: string, record: any) =>
                 <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 40, fontSize: 20 }}>
-                    <MinusOutlined onClick={() => handleUnActiveVoucher(record)} />
-                    <PlusOutlined onClick={() => handleActiveVoucher(record)} />
+                    <MinusOutlined onClick={() => handleUnActiveCoupon(record)} />
+                    <PlusOutlined onClick={() => handleActiveCoupon(record)} />
                 </div>
 
 
@@ -137,14 +137,14 @@ const VoucherDetail = (props: any) =>{
                     marginBottom: 20,
                     alignContent: "center"
                 }}>
-                    <span>Information Voucher</span>
-                    <span>Total: {dataVoucherItem.length}</span>
+                    <span>Information Coupon</span>
+                    <span>Total: {dataCouponItem.length}</span>
                 </div>
                 
-                <div style={{ height: "50vh", overflowY: "scroll" }}>
+                <div style={{height: "50vh", overflowY: "scroll" }}>
                     <Table
                         bordered
-                        dataSource={dataVoucherItem}
+                        dataSource={dataCouponItem}
                         columns={columns}
                         pagination={false}
                         rowKey="_id"
@@ -172,4 +172,4 @@ const VoucherDetail = (props: any) =>{
     
 }
 
-export default VoucherDetail
+export default CouponDetail

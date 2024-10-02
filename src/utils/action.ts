@@ -1,5 +1,6 @@
 'use server'
 import { signIn} from "@/auth";
+import { sendRequest } from "./api";
 
 export async function authenticate(username: string, password: string) {
     try {
@@ -32,4 +33,32 @@ export async function authenticate(username: string, password: string) {
         
        
     }
+}
+
+export async function handleGetData(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<IUserPerPage>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+    
+}
+
+
+export async function handleGetDataPerPage(path:string, access_token: string, nextOptions : any) {
+    const res = await sendRequest<IBackendRes<IUserPerPage>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        },
+        nextOption:{
+            ...nextOptions
+        }
+    })
+    return res
+    
 }

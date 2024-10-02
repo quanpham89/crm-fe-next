@@ -5,7 +5,7 @@ import Icon, { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, Minus
 import { Button, Col, DatePicker, Form, Input, notification, Row, Select, Spin, Table } from "antd";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { use, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 
 import "../Pagination.scss"
@@ -14,13 +14,11 @@ import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete";
 import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden";
 import ModalConfirmActive from "@/components/modalConfirm/modalConfirm.active";
 import { useRouter } from "next/navigation";
-
-
-
+import { AdminContext } from "@/library/admin.context";
 
 const VoucherTable = (props: any) => {
     const [form] = Form.useForm()
-    const { role, access_token } = props
+    const { role, access_token, user } = props
     const router = useRouter()
     const [loading, setLoading] = useState<boolean>(true)
     const [totalPages, setTotalPages] = useState(1)
@@ -34,6 +32,8 @@ const VoucherTable = (props: any) => {
     const [currentVoucher, setCurrentVoucher] = useState<any>("")
     const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState<boolean>(false)
     const [typeAction, setTypeAction] = useState<string>("NORMAL")
+    const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
+    setRoleUser(role)
 
     const fetchVouchersPerPage = async (page: number, limit: number) => {
         const res = await sendRequest<IBackendRes<IUserPerPage>>({
@@ -42,7 +42,6 @@ const VoucherTable = (props: any) => {
             headers: {
                 "Authorization": `Bearer ${access_token}`
             }
-
         })
         if (res?.data?.results) {
             const vouchers = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
@@ -155,6 +154,7 @@ const VoucherTable = (props: any) => {
 
     const search = async (values: any) => {
         setLoading(true)
+        setTypeAction("SEARCH")
 
         let {time, ...rest} = values
         let formatvalue = {                
@@ -197,6 +197,7 @@ const VoucherTable = (props: any) => {
             setDataSource(formatData)
             setLoading(false)
         } else {
+            setLoading(false)
             notification.error({
                 message: "Call APIs error",
                 description: res?.message
@@ -204,7 +205,7 @@ const VoucherTable = (props: any) => {
         }
     }
 
-    if (role === "ADMIN") {
+    if (roleUsers.includes(roleUser)) {
 
         return (!loading ?
             <div >
@@ -292,7 +293,7 @@ const VoucherTable = (props: any) => {
 
                 </div>
 
-                <div style={{ minHeight: "50vh" }}>
+                <div style={{ height: "50vh", overflowY: "scroll" }}>
                     <Table
                         bordered
                         dataSource={dataSource}
@@ -328,6 +329,7 @@ const VoucherTable = (props: any) => {
                         isOpenModal={isOpenCreateModal}
                         setIsOpenModal={setOpenCreateModal}
                         access_token={access_token}
+                        user = {user}
                     />
                     <ModalConfirmDelete
                         isOpenModalConfirmDelete={isOpenModalConfirmDelete}

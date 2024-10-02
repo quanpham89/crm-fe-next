@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, Col, Row, Spin } from "antd";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Bar, Doughnut, Line, Radar } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -11,6 +11,7 @@ import {
     registerables
 } from 'chart.js';
 import "./AdminCard.scss"
+import { AdminContext } from "@/library/admin.context";
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(...registerables);
 
@@ -19,7 +20,8 @@ ChartJS.register(...registerables);
 const AdminCard = (props: any) => {
     const { role } = props;
     const [isLoading, setLoading] = useState(true);
-
+    const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
+    setRoleUser(role)
     // Dữ liệu cho biểu đồ
     const dataDoughnut = {
         datasets: [{
@@ -65,7 +67,7 @@ const AdminCard = (props: any) => {
         }, 1000);
     }, []);
 
-    if (role === "ADMIN") {
+    if (roleUsers.includes(roleUser)) {
         return (
             !isLoading ?
                 <Row gutter={16}>

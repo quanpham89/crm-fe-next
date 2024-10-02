@@ -80,6 +80,30 @@ const ModalConfirmDelete =  (props: any) => {
                     })
                 }
             break;
+            case "COUPON":
+                const coupon = await sendRequest<IBackendRes<any>>({
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons/remove?_id=${currentItem._id}`,
+                    method: "DELETE",
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                    
+                })
+                console.log(coupon)
+        
+                if(coupon?.data){          
+                    notification.success({
+                        message: "Xóa coupon thành công.",
+                        description: coupon?.message
+                    })
+                    window.location.reload()
+                }else{
+                    notification.error({
+                        message: "Call APIs error",
+                        description: coupon?.message
+                    })
+                }
+            break;
             default:
                 
 

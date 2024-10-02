@@ -100,6 +100,36 @@ const ModalConfirmHidden =  (props: any) => {
                     })
                 }
             break;
+
+            case "COUPON":
+                if( currentItem.status === "HIDDEN"){
+                    notification.success({
+                        message: "Ẩn coupon",
+                        description: "Coupon hiện đang không kích hoạt."
+                    })
+                    setOpenModalConfirmHidden(false)
+                    return
+                }
+                const coupon = await sendRequest<IBackendRes<any>>({
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons/soft-delete?_id=${currentItem._id}`,
+                    method: "PATCH",
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                })
+                if(coupon?.data){          
+                    notification.success({
+                        message: "Hủy kích hoạt coupon thành công.",
+                        description: coupon?.message
+                    })
+                    window.location.reload()
+                }else{
+                    notification.error({
+                        message: "Call APIs error",
+                        description: coupon?.message
+                    })
+                }
+            break;
             default:
                 
 

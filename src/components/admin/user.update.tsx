@@ -8,6 +8,7 @@ import { Select, Space } from 'antd';
 import { useRouter } from "next/navigation";
 
 const ModalUpdateUser =  (props: any) => {
+    const {access_token} = props
     const { isOpenModalUpdateUser, setIsOpenUpdateUser, currentUser } = props
     const [form] = Form.useForm()
     const router = useRouter()
@@ -20,6 +21,9 @@ const ModalUpdateUser =  (props: any) => {
             body: {
                 ...values
             },
+            headers: {
+                'Authorization': `Bearer ${access_token}`
+            }
         },)
         if(res?.data){
             notification.success({

@@ -5,10 +5,11 @@ const ManageUserPage = async () => {
     const session  = await auth()
     let role = session?.user?.role as string
     let access_token = session?.user?.access_token as string
-    console.log(access_token)
+    let user = session?.user?.name as string
+    
     return (
         <div>
-            <UserTable role= {role} access_token = {access_token}/>
+            <UserTable role= {role} access_token = {access_token} />
         </div>
     )
 }

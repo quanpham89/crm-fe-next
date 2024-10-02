@@ -10,15 +10,14 @@ import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc';
 
 
-const ModalCreateVoucher = (props: any) => {
+const ModalCreateCoupon = (props: any) => {
     const { isOpenModal, setIsOpenModal, access_token, user } = props
     const [form] = Form.useForm()
-    const [dataUser, setDataUser] = useState([])
     const router = useRouter()
 
 
 
-    const createVoucher = async (values: any) => {
+    const createCoupon = async (values: any) => {
         dayjs.extend(utc);
         const convertedStarteDate = dayjs(values.rangeTime[0].$d).utc().format();
         const convertedEndedDate = dayjs(values.rangeTime[1].$d).utc().format();
@@ -31,11 +30,8 @@ const ModalCreateVoucher = (props: any) => {
             createdBy: user.name ? user.name : user.email
         }
 
-        console.log(formatValue)
-
-
         const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons`,
             method: "POST",
             body: {
                 ...formatValue
@@ -47,7 +43,7 @@ const ModalCreateVoucher = (props: any) => {
         if (res?.data) {
             notification.success({
                 message: "Success",
-                description: "Create voucher successfull."
+                description: "Create coupon successfull."
             })
             window.location.reload()
         } else {
@@ -77,13 +73,13 @@ const ModalCreateVoucher = (props: any) => {
                     autoComplete="off"
                     layout="vertical"
                     form={form}
-                    onFinish={createVoucher}
+                    onFinish={createCoupon}
                 >
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                label="For"
-                                name="forAge"
+                                label="Scope"
+                                name="scope"
                                 rules={[
                                     {
                                         required: true,
@@ -94,33 +90,13 @@ const ModalCreateVoucher = (props: any) => {
                                 <Select
 
                                     options={[
-                                        { value: 'ADULT', label: 'Adult' },
-                                        { value: 'CHILD', label: 'Children' },
+                                        { value: 'FOOD', label: 'Food' },
+                                        { value: 'DRINK', label: 'Drink' },
                                         { value: 'ALL', label: 'All' },
                                     ]}
                                 />
                             </Form.Item>
                         </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Type"
-                                name="type"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "type can't be blank!",
-                                    },
-                                ]}
-                            >
-                                <Select
-                                    options={[
-                                        { value: 'GIFT', label: 'Gift' },
-                                        { value: 'ACCOUNT', label: 'Account' },
-                                    ]}
-                                />
-                            </Form.Item>
-                        </Col>
-
                         <Col span={12}>
                             <Form.Item
                                 label="Status"
@@ -158,21 +134,34 @@ const ModalCreateVoucher = (props: any) => {
 
                                         placeholder={['From', 'To']}
                                         allowEmpty={[false, true]}
-                                        onChange={(date, dateString) => {
-                                            console.log(date, dateString);
-                                        }}
+                                        onChange={(date, dateString) => {}}
                                     />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                            <Form.Item
+                                label="Discount"
+                                name="discount"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Discount can't be blank!",
+                                    },
+                                ]}
+                            >
+                            <Input />
                             </Form.Item>
                         </Col>
                     </Row>
 
                     <Form.Item
-                        label="Name's voucher"
-                        name="nameVoucher"
+                        label="Name's coupon"
+                        name="nameCoupon"
                         rules={[
                             {
                                 required: true,
-                                message: "Name's voucher can't be blank!",
+                                message: "Name's coupon can't be blank!",
                             },
                         ]}
                     >
@@ -198,7 +187,7 @@ const ModalCreateVoucher = (props: any) => {
                         rules={[
                             {
                                 required: true,
-                                message: "Quantity's voucher can't be blank!",
+                                message: "Quantity's coupon can't be blank!",
                             },
                         ]}
                     >
@@ -219,4 +208,4 @@ const ModalCreateVoucher = (props: any) => {
 
 }
 
-export default ModalCreateVoucher
+export default ModalCreateCoupon

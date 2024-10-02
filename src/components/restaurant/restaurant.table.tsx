@@ -1,15 +1,17 @@
 'use client'
 import { Button, notification, Pagination, Spin, Table } from "antd"
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { sendRequest } from "@/utils/api";
 import ReactPaginate from "react-paginate";
-import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined } from "@ant-design/icons";
+import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined } from "@ant-design/icons";
 import { auth } from "@/auth";
 import ModalUpdateRestaurant from "./restaurant.update";
 import ModalCreateRestaurant from "./restaurant.create";
 import "./Restaurant.scss"
 import ModalConfirmDelete from "../modalConfirm/modalConfirm.delete";
 import ModalConfirmHidden from "../modalConfirm/modalConfirm.hidden";
+import { AdminContext } from "@/library/admin.context";
+import { useRouter } from "next/navigation";
 
 const RestaurantTable = (props: any) => {
     const {role, access_token} = props
@@ -23,12 +25,19 @@ const RestaurantTable = (props: any) => {
     const [isLoading, setLoading] = useState(true)
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
     const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
+    const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
+    setRoleUser(role)
+    const router = useRouter()
+
+
 
     const fetchRestaurantPerPage = async (page : number , limit : number) =>{
         const res = await sendRequest<IBackendRes<IUserPerPage>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants?current=${page}&pageSize=${limit}`,
             method: "GET",
-            
+            headers: {
+                "Authorization": `Bearer ${access_token}`
+            }
         })
         if(res?.data?.results){    
             const restaurants = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
@@ -76,6 +85,14 @@ const RestaurantTable = (props: any) => {
     const handleConfirmDeleteRestaurant = async (record : any) =>{
         setOpenModalConfirmDelete(true)
         setCurrentRestaurant(record)
+    }
+
+    const handleOpenCreateMenu = (record : any) =>{
+        setCurrentRestaurant(record)
+        console.log(record)
+        router.push(`/dashboard/restaurant/${record._id}/menu`);
+
+
     }
 
 
@@ -137,6 +154,7 @@ const RestaurantTable = (props: any) => {
             render: (text : string, record: any) =>
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", gap: 40, fontSize: 20}}>
                     <EditOutlined  onClick={()=>handleEditRestaurant(record)}/>
+                    <BarsOutlined  onClick={()=>handleOpenCreateMenu(record)}/>
                     <MinusOutlined onClick={()=>handleUnActiveRestaurant(record)}/>
                     <DeleteOutlined onClick={()=>handleConfirmDeleteRestaurant(record)}/>
                 </div>
@@ -145,7 +163,7 @@ const RestaurantTable = (props: any) => {
         },
         
     ];
-    if(role === "ADMIN") {
+    if(roleUsers.includes(roleUser)) {
         
         return (isLoading ?
             <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
@@ -162,7 +180,7 @@ const RestaurantTable = (props: any) => {
                     <span>Manager Restaurants</span>
                     <Button onClick={() => setIsOpenModal(true)}>Create Restaurant</Button>
                 </div>
-                <div style={{minHeight: "50vh"}}>
+                <div className="table" >
                     <Table
                         bordered
                         dataSource={dataSource}

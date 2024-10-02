@@ -1,49 +1,48 @@
-'use client'
-import { Button, notification, Pagination, Spin, Table } from "antd"
-import ModalCreateUser from "./user.create";
-import { useContext, useEffect, useState } from "react";
-import { sendRequest } from "@/utils/api";
-import ReactPaginate from "react-paginate";
-import "./User.scss"
-import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined } from "@ant-design/icons";
-import ModalUpdateUser from "./user.update";
-import { auth } from "@/auth";
-import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete";
-import ModalConfirmHidden from "../modalConfirm/modalConfirm.hidden";
-import { AdminContext } from "@/library/admin.context";
+"use client"
 
-const UserTable = (props: any) => {
+import { AdminContext } from "@/library/admin.context"
+import { handleGetData } from "@/utils/action"
+import { sendRequest } from "@/utils/api"
+import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined } from "@ant-design/icons"
+import { Button, notification, Spin, Table } from "antd"
+import { useRouter } from "next/navigation"
+import { useContext, useEffect, useState } from "react"
+import ReactPaginate from "react-paginate"
+
+
+const MenuTable = (props : any) =>{
     const {role, access_token} = props
     const [isOpenModal, setIsOpenModal] = useState(false)
-    const [isOpenModalUpdateUser, setIsOpenUpdateUser] = useState(false)
+    const [isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant] = useState(false)
     const [dataSource, setDataSource] = useState<any>([]);
     const [currentPage, setCurrentPage] = useState(1)
     const [currentLimit, setCurrentLimit] = useState(3)
     const [totalPages, setTotalPages] = useState<number>(1) 
-    const [currentUser, setCurrentUser] = useState({})
+    const [currentRestaurant, setCurrentRestaurant] = useState({})
     const [isLoading, setLoading] = useState(true)
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
     const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
     const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
     setRoleUser(role)
+    const router = useRouter()
 
-    const fetchUserPerPage = async (page : number , limit : number) =>{
-        const res = await sendRequest<IBackendRes<IUserPerPage>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users?current=${page}&pageSize=${limit}`,
-            method: "GET",
-            headers: {
-                'Authorization': `Bearer ${access_token}`
-            }
-            
-        })
-        if(res?.data?.results){          
-            const users = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
 
-            const formatDataUser = users.map(item => ({
-                ...item,
-                activeIcon: item.isActive ? <CheckOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "green"}}/> : <CloseOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "red"}}/>
-            }));
-            setDataSource(formatDataUser);
+
+    const fetchRestaurantPerPage = async (page : number , limit : number) =>{
+        const res = await handleGetData(`api/v1/menus?current=${currentPage}&pageSize=${limit}`, access_token )
+        if(res?.data?.results){    
+            const menus = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
+
+            const formatData = menus.map(item =>{ 
+                const {user, ...rest} = item
+                return ({
+                ...rest,
+                userId: item?.user?._id,
+                email: item?.user?.email,
+                name: item?.user?.name,
+                activeIcon: item.status ? <CheckOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "green"}}/> : <CloseOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "red"}}/>
+            })});
+            setDataSource(formatData)
             setTotalPages(+res?.data?.totalPages)
             setLoading(false)
         }else{
@@ -54,31 +53,39 @@ const UserTable = (props: any) => {
         }
 
     }
-    <CheckOutlined />
 
     useEffect(()=>{
-        fetchUserPerPage(currentPage, currentLimit)
+        fetchRestaurantPerPage(currentPage, currentLimit)
     },[currentPage])
 
     const handlePageClick =  async(e : any) =>{
         setCurrentPage(e.selected + 1)
     }
 
-    const handleEditUser =  async (record : any) =>{
-        setIsOpenUpdateUser(true)
-        setCurrentUser(record)
+    const handleEditRestaurant =  async (record : any) =>{
+        setIsOpenUpdateRestaurant(true)
+        setCurrentRestaurant(record)
     }
 
-    const handleUnActiveUser = async (record : any) =>{
+    const handleUnActiveRestaurant = async(record : any) =>{
         setOpenModalConfirmHidden(true)
-        setCurrentUser(record)
-        
+        setCurrentRestaurant(record)
+    }
+    
+
+    const handleConfirmDeleteRestaurant = async (record : any) =>{
+        setOpenModalConfirmDelete(true)
+        setCurrentRestaurant(record)
     }
 
-    const handleConfirmDeleteUser = (record: any) =>{
-        setOpenModalConfirmDelete(true)
-        setCurrentUser(record)
+    const handleOpenCreateMenu = (record : any) =>{
+        setCurrentRestaurant(record)
+        console.log(record)
+        router.push(`/dashboard/menu/${record._id}/menu`);
+
+
     }
+
 
     const columns = [
         {
@@ -87,14 +94,9 @@ const UserTable = (props: any) => {
             key: '_id',
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
+            title: "Name's menu",
+            dataIndex: 'menuName',
+            key: 'menuName',
         },
         {
             title: 'Phone',
@@ -102,29 +104,50 @@ const UserTable = (props: any) => {
             key: 'phone',
         },
         {
-            title: 'Role',
-            dataIndex: 'role',
-            key: 'role',
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
         },
         {
-            title: 'Sex',
-            dataIndex: 'sex',
-            key: 'sex',
+            title: 'Rating ?/10',
+            dataIndex: 'rating',
+            key: 'rating',
         },
         {
-            title: 'Status',
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'Product',
+            dataIndex: 'productType',
+            key: 'productType',
+        },
+        {
+            title: 'Menu',
+            dataIndex: 'menu-name',
+            key: 'menu-name',
+        },
+        {
+            title: 'Owner',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'status',
             dataIndex: 'activeIcon',
             key: 'activeIcon',
         },
         {
-            title: 'Aaction',
+            title: 'Action',
             dataIndex: '',
             key: '',
             render: (text : string, record: any) =>
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", gap: 40, fontSize: 20}}>
-                    <EditOutlined  onClick={()=>handleEditUser(record)}/>
-                    <MinusOutlined onClick={()=>handleUnActiveUser(record)}/>
-                    <DeleteOutlined onClick={()=>handleConfirmDeleteUser(record)}/>
+                    <EditOutlined  onClick={()=>handleEditRestaurant(record)}/>
+                    <BarsOutlined  onClick={()=>handleOpenCreateMenu(record)}/>
+                    <MinusOutlined onClick={()=>handleUnActiveRestaurant(record)}/>
+                    <DeleteOutlined onClick={()=>handleConfirmDeleteRestaurant(record)}/>
                 </div>
 
             
@@ -137,7 +160,6 @@ const UserTable = (props: any) => {
             <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
                 <Spin />
             </div>
-            
             :
             <>
                 <div style={{
@@ -146,10 +168,10 @@ const UserTable = (props: any) => {
                     alignItems: "center",
                     marginBottom: 20
                 }}>
-                    <span>Manager Users</span>
-                    <Button onClick={() => setIsOpenModal(true)}>Create User</Button>
+                    <span>Manager Restaurants</span>
+                    <Button onClick={() => setIsOpenModal(true)}>Create Restaurant</Button>
                 </div>
-                <div style={{height: "50vh", overflowY: "scroll"}}>
+                <div className="table" >
                     <Table
                         bordered
                         dataSource={dataSource}
@@ -160,7 +182,7 @@ const UserTable = (props: any) => {
     
                 </div>
                 {totalPages && totalPages > 0 &&
-                    <div className="user-footer">
+                    <div className="footer">
                         <ReactPaginate
                             nextLabel=">"
                             onPageChange={handlePageClick}
@@ -182,43 +204,38 @@ const UserTable = (props: any) => {
                             renderOnZeroPageCount={null}
                         />
                     </div>
-                    
                     }
-                <ModalCreateUser
+                {/* <ModalCreateRestaurant
                     isOpenModal = {isOpenModal}
                     setIsOpenModal = {setIsOpenModal}
-                    access_token = {access_token}
                 />
-                
-                <ModalUpdateUser
-                    isOpenModalUpdateUser = {isOpenModalUpdateUser}
-                    setIsOpenUpdateUser = {setIsOpenUpdateUser}
+                <ModalUpdateRestaurant
+                    isOpenModalUpdateRestaurant = {isOpenModalUpdateRestaurant}
+                    setIsOpenUpdateRestaurant = {setIsOpenUpdateRestaurant}
+                    currentRestaurant = {currentRestaurant}
                     access_token = {access_token}
-                    currentUser = {currentUser}
                 />
                 <ModalConfirmDelete 
                 isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
                 setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 
-                title = {`Bạn chắc chắn muốn xóa người dùng này vĩnh viễn ?`} 
-                currentUser= {currentUser} 
+                title = {`Bạn chắc chắn muốn xóa tài khoản bán hàng này vĩnh viễn ?`} 
+                currentItem= {currentRestaurant} 
                 access_token = {access_token}
-                type="USER"
+                type="RESTAURANTS"
                 />
-                 <ModalConfirmHidden
+                <ModalConfirmHidden
                 isOpenModalConfirmHidden = {isOpenModalConfirmHidden} 
                 setOpenModalConfirmHidden= {setOpenModalConfirmHidden} 
-                title = {`Bạn chắc chắn muốn ẩn hủy kích hoạt người dùng này?`} 
-                currentItem= {currentUser} 
+                title = {`Bạn chắc chắn muốn ẩn tài khoản bán hàng này?`} 
+                currentItem= {currentRestaurant} 
                 access_token = {access_token}
-                type="USER"
-                />
-
-
+                type="RESTAURANTS"
+                /> */}
             </> 
         )
     }else{
-        return <>Permission denied.</>
+        return <>Bạn không có quyền truy cập vào chức năng này.</>
     }
 }
 
-export default UserTable;
+export default MenuTable
