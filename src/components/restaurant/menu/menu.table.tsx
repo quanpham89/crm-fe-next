@@ -5,30 +5,40 @@ import { handleGetData } from "@/utils/action"
 import { sendRequest } from "@/utils/api"
 import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined } from "@ant-design/icons"
 import { Button, notification, Spin, Table } from "antd"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 import ReactPaginate from "react-paginate"
+import ModalCreateMenu from "./menu.create"
+import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete"
+import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden"
+import ModalUpdateMenu from "./modal.update"
 
 
 const MenuTable = (props : any) =>{
-    const {role, access_token} = props
+    const {role, access_token, dataRestaurant, user} = props
+    const author = {
+        userCreateId : user._id,
+        createdBy: user.name,
+        restaurantId: dataRestaurant[0]._id
+    }
     const [isOpenModal, setIsOpenModal] = useState(false)
-    const [isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant] = useState(false)
+    const [isOpenModalUpdateMenu, setIsOpenUpdateMenu] = useState(false)
     const [dataSource, setDataSource] = useState<any>([]);
     const [currentPage, setCurrentPage] = useState(1)
     const [currentLimit, setCurrentLimit] = useState(3)
     const [totalPages, setTotalPages] = useState<number>(1) 
-    const [currentRestaurant, setCurrentRestaurant] = useState({})
+    const [currentMenu, setCurrentMenu] = useState({})
     const [isLoading, setLoading] = useState(true)
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
     const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
     const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
     setRoleUser(role)
     const router = useRouter()
+    const pathName = usePathname()
 
 
 
-    const fetchRestaurantPerPage = async (page : number , limit : number) =>{
+    const fetchMenuPerPage = async (page : number , limit : number) =>{
         const res = await handleGetData(`api/v1/menus?current=${currentPage}&pageSize=${limit}`, access_token )
         if(res?.data?.results){    
             const menus = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
@@ -37,9 +47,7 @@ const MenuTable = (props : any) =>{
                 const {user, ...rest} = item
                 return ({
                 ...rest,
-                userId: item?.user?._id,
-                email: item?.user?.email,
-                name: item?.user?.name,
+
                 activeIcon: item.status ? <CheckOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "green"}}/> : <CloseOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "red"}}/>
             })});
             setDataSource(formatData)
@@ -55,37 +63,36 @@ const MenuTable = (props : any) =>{
     }
 
     useEffect(()=>{
-        fetchRestaurantPerPage(currentPage, currentLimit)
+        fetchMenuPerPage(currentPage, currentLimit)
     },[currentPage])
 
     const handlePageClick =  async(e : any) =>{
         setCurrentPage(e.selected + 1)
     }
 
-    const handleEditRestaurant =  async (record : any) =>{
-        setIsOpenUpdateRestaurant(true)
-        setCurrentRestaurant(record)
+    const handleEditMenu =  async (record : any) =>{
+        setIsOpenUpdateMenu(true)
+        setCurrentMenu(record)
     }
 
-    const handleUnActiveRestaurant = async(record : any) =>{
+    const handleUnActiveMenu = async(record : any) =>{
         setOpenModalConfirmHidden(true)
-        setCurrentRestaurant(record)
+        setCurrentMenu(record)
     }
     
 
-    const handleConfirmDeleteRestaurant = async (record : any) =>{
+    const handleConfirmDeleteMenu = async (record : any) =>{
         setOpenModalConfirmDelete(true)
-        setCurrentRestaurant(record)
+        setCurrentMenu(record)
     }
 
     const handleOpenCreateMenu = (record : any) =>{
-        setCurrentRestaurant(record)
+        setCurrentMenu(record)
         console.log(record)
         router.push(`/dashboard/menu/${record._id}/menu`);
 
 
     }
-
 
     const columns = [
         {
@@ -95,43 +102,13 @@ const MenuTable = (props : any) =>{
         },
         {
             title: "Name's menu",
-            dataIndex: 'menuName',
-            key: 'menuName',
-        },
-        {
-            title: 'Phone',
-            dataIndex: 'phone',
-            key: 'phone',
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
-        },
-        {
-            title: 'Rating ?/10',
-            dataIndex: 'rating',
-            key: 'rating',
+            dataIndex: 'nameMenu',
+            key: 'nameMenu',
         },
         {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
-        },
-        {
-            title: 'Product',
-            dataIndex: 'productType',
-            key: 'productType',
-        },
-        {
-            title: 'Menu',
-            dataIndex: 'menu-name',
-            key: 'menu-name',
-        },
-        {
-            title: 'Owner',
-            dataIndex: 'name',
-            key: 'name',
         },
         {
             title: 'status',
@@ -144,13 +121,11 @@ const MenuTable = (props : any) =>{
             key: '',
             render: (text : string, record: any) =>
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", gap: 40, fontSize: 20}}>
-                    <EditOutlined  onClick={()=>handleEditRestaurant(record)}/>
+                    <EditOutlined  onClick={()=>handleEditMenu(record)}/>
                     <BarsOutlined  onClick={()=>handleOpenCreateMenu(record)}/>
-                    <MinusOutlined onClick={()=>handleUnActiveRestaurant(record)}/>
-                    <DeleteOutlined onClick={()=>handleConfirmDeleteRestaurant(record)}/>
+                    <MinusOutlined onClick={()=>handleUnActiveMenu(record)}/>
+                    <DeleteOutlined onClick={()=>handleConfirmDeleteMenu(record)}/>
                 </div>
-
-            
         },
         
     ];
@@ -168,8 +143,8 @@ const MenuTable = (props : any) =>{
                     alignItems: "center",
                     marginBottom: 20
                 }}>
-                    <span>Manager Restaurants</span>
-                    <Button onClick={() => setIsOpenModal(true)}>Create Restaurant</Button>
+                    <span>Manager Menus</span>
+                    <Button onClick={() => setIsOpenModal(true)}>Create Menu</Button>
                 </div>
                 <div className="table" >
                     <Table
@@ -205,21 +180,26 @@ const MenuTable = (props : any) =>{
                         />
                     </div>
                     }
-                {/* <ModalCreateRestaurant
+                <ModalCreateMenu
                     isOpenModal = {isOpenModal}
                     setIsOpenModal = {setIsOpenModal}
-                />
-                <ModalUpdateRestaurant
-                    isOpenModalUpdateRestaurant = {isOpenModalUpdateRestaurant}
-                    setIsOpenUpdateRestaurant = {setIsOpenUpdateRestaurant}
-                    currentRestaurant = {currentRestaurant}
                     access_token = {access_token}
+                    retaurantId = {pathName}
+                    author = {author}
+
+
+                />
+                <ModalUpdateMenu
+                    // isOpenModalUpdateMenu = {isOpenModalUpdateMenu}
+                    // setIsOpenUpdateMenu = {setIsOpenUpdateMenu}
+                    // currentMenu = {currentMenu}
+                    // access_token = {access_token}
                 />
                 <ModalConfirmDelete 
                 isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
                 setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 
                 title = {`Bạn chắc chắn muốn xóa tài khoản bán hàng này vĩnh viễn ?`} 
-                currentItem= {currentRestaurant} 
+                currentItem= {currentMenu} 
                 access_token = {access_token}
                 type="RESTAURANTS"
                 />
@@ -227,10 +207,10 @@ const MenuTable = (props : any) =>{
                 isOpenModalConfirmHidden = {isOpenModalConfirmHidden} 
                 setOpenModalConfirmHidden= {setOpenModalConfirmHidden} 
                 title = {`Bạn chắc chắn muốn ẩn tài khoản bán hàng này?`} 
-                currentItem= {currentRestaurant} 
+                currentItem= {currentMenu} 
                 access_token = {access_token}
                 type="RESTAURANTS"
-                /> */}
+                /> 
             </> 
         )
     }else{

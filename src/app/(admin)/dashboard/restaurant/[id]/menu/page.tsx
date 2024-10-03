@@ -13,8 +13,10 @@ const ManageMenuPage = async(props:IProps) => {
     const session  = await auth()
     let role = session?.user?.role as string
     let access_token = session?.user?.access_token as string
+    let user = session?.user
     let res = await handleGetData(`api/v1/restaurants/get-retaurant-by-id?_id=${props?.params?.id}`, access_token)
     let dataRestaurant = res?.data
+    console.log(dataRestaurant)
     // const currentPage = props?.searchParams?.current ?? 1
     // const pageSize = props?.searchParams?.pageSize ?? 5
     // const nextOptions = {
@@ -32,6 +34,7 @@ const ManageMenuPage = async(props:IProps) => {
     role = {role}
     access_token = {access_token}
     dataRestaurant = {dataRestaurant} 
+    user = {user}
     />
 }
 
