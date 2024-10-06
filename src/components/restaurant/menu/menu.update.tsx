@@ -8,26 +8,27 @@ import { Select } from 'antd';
 import { useRouter } from "next/navigation";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
-const ModalCreateMenu = (props: any) => {
-    const { isOpenModal, setIsOpenModal, access_token, author, setLoading} = props
+const ModalUpdateMenu = (props: any) => {
+    const { isOpenModalUpdateMenu, setIsOpenUpdateMenu, access_token, author, setLoading, currentMenu} = props
+    const {menuItem, ...rest} = currentMenu
+    console.log(menuItem)
 
     const [form] = Form.useForm()
     const [dataUser, setDataUser] = useState([])
     const router = useRouter()
-    // useEffect(()=>{
-    //     form.setFieldValue("_id", currentMenu._id)
-    //     form.setFieldValue("email", currentMenu.email)
-    //     form.setFieldValue("phone", currentMenu.phone)
-    //     form.setFieldValue("name", currentMenu.name)
-    //     form.setFieldValue("address", currentMenu.address)
-    //     form.setFieldValue("accountType", currentMenu.accountType)
-    //     form.setFieldValue("role", currentMenu.role)
-    //     form.setFieldValue("sex", currentMenu.sex)
+    useEffect(()=>{
+        form.setFieldValue("nameMenu", currentMenu.nameMenu)
+        form.setFieldValue("status", currentMenu.status)
+        form.setFieldValue("description", currentMenu.description)
+        // form.setFieldValue("nameMenu", menuItem.nameMenu)
+        // form.setFieldValue("accountType", currentMenu.accountType)
+        // form.setFieldValue("role", currentMenu.role)
+        // form.setFieldValue("sex", currentMenu.sex)
 
 
 
 
-    // }, [currentMenu])
+    }, [currentMenu])
 
     const createMenus = async (values: any) => {
         const res = await sendRequest<IBackendRes<any>>({
@@ -42,14 +43,14 @@ const ModalCreateMenu = (props: any) => {
             }
         },)
         
-        // setLoading(true)
+        setLoading(true)
         if (res?.data) {
             notification.success({
                 message: "Thành công",
                 description: "Tạo thành công."
             })
             setLoading(false)
-            setIsOpenModal(false)
+            setIsOpenUpdateMenu(false)
             form.resetFields()
             window.location.reload()
         } else {
@@ -70,10 +71,10 @@ const ModalCreateMenu = (props: any) => {
     if (!hasMounted) return <></>;
     return (
         <>
-            <Modal title="Create Menu"
-                open={isOpenModal}
-                onOk={() => setIsOpenModal(false)}
-                onCancel={() => setIsOpenModal(false)}
+            <Modal title="Update Menu"
+                open={isOpenModalUpdateMenu}
+                onOk={() => setIsOpenUpdateMenu(false)}
+                onCancel={() => setIsOpenUpdateMenu(false)}
                 maskClosable={false}
                 footer={null}
                 forceRender={true}
@@ -255,4 +256,4 @@ const ModalCreateMenu = (props: any) => {
 
 }
 
-export default ModalCreateMenu
+export default ModalUpdateMenu

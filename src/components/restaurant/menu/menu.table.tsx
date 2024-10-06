@@ -1,17 +1,19 @@
 "use client"
 
 import { AdminContext } from "@/library/admin.context"
-import { handleGetData } from "@/utils/action"
+import { handleGetData, handleGetDataPerPage } from "@/utils/action"
 import { sendRequest } from "@/utils/api"
 import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined } from "@ant-design/icons"
 import { Button, notification, Spin, Table } from "antd"
 import { usePathname, useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
+import "../Pagination.scss"
+
 import ReactPaginate from "react-paginate"
 import ModalCreateMenu from "./menu.create"
 import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete"
 import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden"
-import ModalUpdateMenu from "./modal.update"
+import ModalUpdateMenu from "./menu.update"
 
 
 const MenuTable = (props : any) =>{
@@ -39,7 +41,7 @@ const MenuTable = (props : any) =>{
 
 
     const fetchMenuPerPage = async (page : number , limit : number) =>{
-        const res = await handleGetData(`api/v1/menus?current=${currentPage}&pageSize=${limit}`, access_token )
+        const res = await handleGetDataPerPage(`api/v1/menus?current=${currentPage}&pageSize=${limit}`, access_token, { next: { tags: "dataMenu" } })
         if(res?.data?.results){    
             const menus = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
 
@@ -71,8 +73,10 @@ const MenuTable = (props : any) =>{
     }
 
     const handleEditMenu =  async (record : any) =>{
-        setIsOpenUpdateMenu(true)
+        const menuId = record._id
         setCurrentMenu(record)
+        router.push(`${pathName}/detailMenu/${menuId}`);
+
     }
 
     const handleUnActiveMenu = async(record : any) =>{
@@ -88,7 +92,6 @@ const MenuTable = (props : any) =>{
 
     const handleOpenCreateMenu = (record : any) =>{
         setCurrentMenu(record)
-        console.log(record)
         router.push(`/dashboard/menu/${record._id}/menu`);
 
 
@@ -122,7 +125,6 @@ const MenuTable = (props : any) =>{
             render: (text : string, record: any) =>
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", gap: 40, fontSize: 20}}>
                     <EditOutlined  onClick={()=>handleEditMenu(record)}/>
-                    <BarsOutlined  onClick={()=>handleOpenCreateMenu(record)}/>
                     <MinusOutlined onClick={()=>handleUnActiveMenu(record)}/>
                     <DeleteOutlined onClick={()=>handleConfirmDeleteMenu(record)}/>
                 </div>
@@ -143,7 +145,7 @@ const MenuTable = (props : any) =>{
                     alignItems: "center",
                     marginBottom: 20
                 }}>
-                    <span>Manager Menus</span>
+                    <span>Manage Menu</span>
                     <Button onClick={() => setIsOpenModal(true)}>Create Menu</Button>
                 </div>
                 <div className="table" >
@@ -184,17 +186,18 @@ const MenuTable = (props : any) =>{
                     isOpenModal = {isOpenModal}
                     setIsOpenModal = {setIsOpenModal}
                     access_token = {access_token}
-                    retaurantId = {pathName}
+                    // retaurantId = {pathName}
                     author = {author}
+                    setLoading= {setLoading}
 
 
                 />
-                <ModalUpdateMenu
-                    // isOpenModalUpdateMenu = {isOpenModalUpdateMenu}
-                    // setIsOpenUpdateMenu = {setIsOpenUpdateMenu}
-                    // currentMenu = {currentMenu}
-                    // access_token = {access_token}
-                />
+                {/* <ModalUpdateMenu
+                    isOpenModalUpdateMenu = {isOpenModalUpdateMenu}
+                    setIsOpenUpdateMenu = {setIsOpenUpdateMenu}
+                    currentMenu = {currentMenu}
+                    access_token = {access_token}
+                /> */}
                 <ModalConfirmDelete 
                 isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
                 setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 

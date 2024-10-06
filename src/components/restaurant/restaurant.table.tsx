@@ -7,7 +7,7 @@ import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutline
 import { auth } from "@/auth";
 import ModalUpdateRestaurant from "./restaurant.update";
 import ModalCreateRestaurant from "./restaurant.create";
-import "./Restaurant.scss"
+import "./Pagination.scss"
 import ModalConfirmDelete from "../modalConfirm/modalConfirm.delete";
 import ModalConfirmHidden from "../modalConfirm/modalConfirm.hidden";
 import { AdminContext } from "@/library/admin.context";

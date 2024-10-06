@@ -16,7 +16,6 @@ const ManageMenuPage = async(props:IProps) => {
     let user = session?.user
     let res = await handleGetData(`api/v1/restaurants/get-retaurant-by-id?_id=${props?.params?.id}`, access_token)
     let dataRestaurant = res?.data
-    console.log(dataRestaurant)
     // const currentPage = props?.searchParams?.current ?? 1
     // const pageSize = props?.searchParams?.pageSize ?? 5
     // const nextOptions = {

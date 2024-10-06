@@ -35,7 +35,7 @@ export async function authenticate(username: string, password: string) {
     }
 }
 
-export async function handleGetData(path:string, access_token: string) {
+export async function handleGetData(path:string, access_token: string,) {
     const res = await sendRequest<IBackendRes<IUserPerPage>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",
@@ -50,6 +50,21 @@ export async function handleGetData(path:string, access_token: string) {
 
 export async function handleGetDataPerPage(path:string, access_token: string, nextOptions : any) {
     const res = await sendRequest<IBackendRes<IUserPerPage>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        },
+        nextOption:{
+            ...nextOptions
+        }
+    })
+    return res
+    
+}
+
+export async function handleGetDataMenu(path:string, access_token: string, nextOptions : any) {
+    const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",
         headers: {
