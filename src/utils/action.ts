@@ -1,6 +1,7 @@
 'use server'
 import { signIn} from "@/auth";
 import { sendRequest } from "./api";
+import { revalidateTag } from "next/cache";
 
 export async function authenticate(username: string, password: string) {
     try {

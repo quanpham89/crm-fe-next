@@ -13,7 +13,7 @@ import ReactPaginate from "react-paginate"
 import ModalCreateMenu from "./menu.create"
 import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete"
 import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden"
-import ModalUpdateMenu from "./menu.update"
+import ModalChooseMenu from "./menu.choose"
 
 
 const MenuTable = (props : any) =>{
@@ -24,7 +24,7 @@ const MenuTable = (props : any) =>{
         restaurantId: dataRestaurant[0]._id
     }
     const [isOpenModal, setIsOpenModal] = useState(false)
-    const [isOpenModalUpdateMenu, setIsOpenUpdateMenu] = useState(false)
+    const [isOpenModalChooseMenu, setIsOpenChooseMenu] = useState(false)
     const [dataSource, setDataSource] = useState<any>([]);
     const [currentPage, setCurrentPage] = useState(1)
     const [currentLimit, setCurrentLimit] = useState(3)
@@ -73,8 +73,8 @@ const MenuTable = (props : any) =>{
     }
 
     const handleEditMenu =  async (record : any) =>{
+        // setIsOpenChooseMenu(true)
         const menuId = record._id
-        setCurrentMenu(record)
         router.push(`${pathName}/detailMenu/${menuId}`);
 
     }
@@ -186,33 +186,31 @@ const MenuTable = (props : any) =>{
                     isOpenModal = {isOpenModal}
                     setIsOpenModal = {setIsOpenModal}
                     access_token = {access_token}
-                    // retaurantId = {pathName}
                     author = {author}
                     setLoading= {setLoading}
 
 
                 />
-                {/* <ModalUpdateMenu
-                    isOpenModalUpdateMenu = {isOpenModalUpdateMenu}
-                    setIsOpenUpdateMenu = {setIsOpenUpdateMenu}
-                    currentMenu = {currentMenu}
+                <ModalChooseMenu
+                    isOpenModalChooseMenu = {isOpenModalChooseMenu}
+                    setIsOpenChooseMenu = {setIsOpenChooseMenu}
                     access_token = {access_token}
-                /> */}
+                />
                 <ModalConfirmDelete 
-                isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
-                setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 
-                title = {`Bạn chắc chắn muốn xóa tài khoản bán hàng này vĩnh viễn ?`} 
-                currentItem= {currentMenu} 
-                access_token = {access_token}
-                type="RESTAURANTS"
+                    isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
+                    setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 
+                    title = {`Bạn chắc chắn muốn xóa tài khoản bán hàng này vĩnh viễn ?`} 
+                    currentItem= {currentMenu} 
+                    access_token = {access_token}
+                    type="RESTAURANTS"
                 />
                 <ModalConfirmHidden
-                isOpenModalConfirmHidden = {isOpenModalConfirmHidden} 
-                setOpenModalConfirmHidden= {setOpenModalConfirmHidden} 
-                title = {`Bạn chắc chắn muốn ẩn tài khoản bán hàng này?`} 
-                currentItem= {currentMenu} 
-                access_token = {access_token}
-                type="RESTAURANTS"
+                    isOpenModalConfirmHidden = {isOpenModalConfirmHidden} 
+                    setOpenModalConfirmHidden= {setOpenModalConfirmHidden} 
+                    title = {`Bạn chắc chắn muốn ẩn tài khoản bán hàng này?`} 
+                    currentItem= {currentMenu} 
+                    access_token = {access_token}
+                    type="RESTAURANTS"
                 /> 
             </> 
         )

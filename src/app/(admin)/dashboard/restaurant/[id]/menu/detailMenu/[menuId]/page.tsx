@@ -8,6 +8,7 @@ interface IProps {
 }
 const DetailMenu = async(props:IProps) => {
     const menuId = props.params.menuId
+    const restaurantId = props.params.id
     const session  = await auth()
     let role = session?.user?.role as string
     let access_token = session?.user?.access_token as string
@@ -16,7 +17,6 @@ const DetailMenu = async(props:IProps) => {
     let res = await handleGetDataMenu(`api/v1/menus/get-menu-by-id?_id=${menuId}`, access_token,{ next: { tags: "menuItem" } })
     let {menuItem, ...rest} = res?.data[0]
     let menuInfo = {...rest}
-    console.log(res?.data)
 
     return (
         <MenuDetail
@@ -25,6 +25,7 @@ const DetailMenu = async(props:IProps) => {
         user = {user}
         menuInfo = {menuInfo}
         menuItems  = {menuItem}
+        restaurantId= {restaurantId}
         />
     )
 }
