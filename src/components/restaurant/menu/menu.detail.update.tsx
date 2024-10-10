@@ -181,13 +181,11 @@ const MenuDetailUpdate = (props: any) => {
                                 )}
                             </Form.List>
 
+                        
+                        
+                        
                         </div>
 
-                        <Form.Item style={{display: "flex", justifyContent: "flex-end", marginBottom: 0 }}>
-                        <Button type="primary" htmlType="submit">
-                            Change
-                        </Button>
-                    </Form.Item>
 
                     </Form>
 

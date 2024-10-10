@@ -16,7 +16,7 @@ const DetailMenu = async(props:IProps) => {
 
     let res = await handleGetDataMenu(`api/v1/menus/get-menu-by-id?_id=${menuId}`, access_token,{ next: { tags: "menuItem" } })
     let {menuItem, ...rest} = res?.data[0]
-    let menuInfo = {...rest}
+    let menuInfo = {...rest, menuId}
 
     return (
         <MenuDetail

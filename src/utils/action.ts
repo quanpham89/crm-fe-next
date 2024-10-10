@@ -78,3 +78,21 @@ export async function handleGetDataMenu(path:string, access_token: string, nextO
     return res
     
 }
+
+
+export async function handleDeleteDataMenu(path:string, data: any, access_token: string, option : any) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        },
+        body:{
+            data
+        },
+
+    })
+    revalidateTag(option)
+    return res
+    
+}

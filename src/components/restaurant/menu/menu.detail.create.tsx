@@ -33,21 +33,54 @@ import { useContext, useEffect, useState } from "react";
 import "../Pagination.scss";
 
 const MenuDetailCreate = (props: any) => {
-    const {restaurantId, role, access_token} = props
+    const {restaurantId, role, access_token, menuInfo} = props
+    const [form] = Form.useForm()
+    const author = {
+        nameMenu : menuInfo?.nameMenu,
+        restaurantId : menuInfo?.restaurantId,
+        status : menuInfo?.status,
+        menuId: menuInfo?.menuId
+        
+    }
     const normFile = (e: any) => {
         if (Array.isArray(e)) {
             return e;
         }
         return e?.fileList;
     };
-    const handleCreateItem = (values: any) =>{
-        console.log(values)
+
+    const handleCreateItem = async (values: any) =>{
+        if(values.menuItem && values.menuItem.length > 0){
+            const res = await sendRequest<IBackendRes<any>>({
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menu-items`,
+                method: "POST",
+                body: {
+                    ...values,
+                    ...author
+                    
+                },
+                headers: {
+                    'Authorization': `Bearer ${access_token}`
+                }
+            },)
+            if(res.data?.EC === 0){
+                form.resetFields();
+                notification.success({
+                    message:"create item success."
+                })
+            }  
+        }else{
+            notification.error({
+                message:"you need at least 1 item."
+            })
+        }
     }
     return (
         <Form
             name="verify"
             autoComplete="off"
             layout="vertical"
+            form={form}
             onFinish={handleCreateItem}
         >
             <Form.List

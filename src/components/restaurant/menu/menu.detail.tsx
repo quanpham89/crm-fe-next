@@ -22,7 +22,9 @@ const MenuDetail = (props: any) => {
     }
     const [isLoading, setLoading] = useState(false)
     const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
-    setRoleUser(role)
+    useEffect(()=>{
+        setRoleUser(role)
+    },[])
     const formatItems = [
         {
             key: "1",
@@ -97,6 +99,8 @@ const MenuDetail = (props: any) => {
                                 restaurantId= {restaurantId}
                                 role= {role}
                                 access_token = {access_token}
+                                author= {author}
+                                menuInfo = {menuInfo}
                             />
                         ),
                     },
@@ -104,7 +108,11 @@ const MenuDetail = (props: any) => {
                         label: "Delete",
                         key: "3",
                         children: (
-                            <MenuDetailDelete/>
+                            <MenuDetailDelete
+                                role= {role}
+                                access_token = {access_token}
+                                menuInfo = {menuInfo}
+                            />
                         ),
                     },
                 ]}
