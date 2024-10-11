@@ -76,8 +76,11 @@ const MenuDetailUpdate = (props: any) => {
                 },
                     
             })
-            if(response){
-                console.log(response)
+            if(response && response.statusCode === 201){
+                notification.success({
+                    message: "Update Item Success"
+                })
+
             }
         }
 
@@ -91,7 +94,7 @@ const MenuDetailUpdate = (props: any) => {
             </div>
             :
             <>
-                <div className="list-item-menu" style={{ border: "1px solid #d9d9d9", padding: 15, borderRadius: 8, margin: 20, height: "60vh",  }}>
+                <div className="list-item-menu" style={{ border: "1px solid #d9d9d9", padding: 15, borderRadius: 8, margin: 20, height: "61vh",  }}>
                     <Form
                         name="verify"
                         autoComplete="off"
@@ -100,7 +103,6 @@ const MenuDetailUpdate = (props: any) => {
                         onFinish={handleMenuChange}
                         initialValues={initialValues}
                         onValuesChange= {(changedValues, allValues)=>valuechange(changedValues, allValues)}
-
                     >
                         <div style={{padding: "10px", height: "56vh", overflow: "scroll" }}>
                             <Form.List
@@ -185,6 +187,11 @@ const MenuDetailUpdate = (props: any) => {
                         
                         
                         </div>
+                        <Form.Item style={{display: "flex", justifyContent: "flex-end", marginBottom: 0 }}>
+                            <Button type="primary" htmlType="submit">
+                                Change
+                            </Button>
+                        </Form.Item>
 
 
                     </Form>

@@ -5,6 +5,7 @@ import { sendRequest } from "@/utils/api"
 import { CheckOutlined, CloseOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons"
 import { Button, notification, Spin, Table } from "antd"
 import dayjs from "dayjs"
+import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 
 const VoucherDetail = (props: any) =>{
@@ -16,6 +17,7 @@ const VoucherDetail = (props: any) =>{
     const [isOpenModalConfirmUnActive, setOpenModalConfirmUnActive] = useState(false)
     const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
     setRoleUser(role)
+    const router = useRouter()
 
 
     const fetchVoucherItem = async () => {
@@ -54,15 +56,7 @@ const VoucherDetail = (props: any) =>{
         fetchVoucherItem()
     },[])
 
-    const handleUnActiveVoucher = async (values: any) => {
-        setCurrentVoucher(values)
-        setOpenModalConfirmUnActive(true)
-    }
 
-    const handleActiveVoucher = async (values: any) => {
-        setCurrentVoucher(values)
-        setOpenModalConfirmActive(true)
-    }
 
 
     const columns = [
@@ -112,24 +106,14 @@ const VoucherDetail = (props: any) =>{
             dataIndex: 'usedTime',
             key: 'useTime',
         },
-        {
-            title: 'Action',
-            dataIndex: '',
-            key: '',
-            render: (text: string, record: any) =>
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 40, fontSize: 20 }}>
-                    <MinusOutlined onClick={() => handleUnActiveVoucher(record)} />
-                    <PlusOutlined onClick={() => handleActiveVoucher(record)} />
-                </div>
-
-
-        },
     ];
 
     if (roleUsers.includes(roleUser)) {
 
         return (!loading ?
                 <>
+                <Button onClick={()=> router.back()} style={{marginBottom: 20}}>Back</Button>
+
                 <div style={{
                     display: "flex",
                     justifyContent: "space-between",

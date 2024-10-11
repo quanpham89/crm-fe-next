@@ -25,7 +25,7 @@ const VoucherTable = (props: any) => {
     const [dataSource, setDataSource] = useState<any>([])
     const [totalItems, setTotalItems] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
-    const [currentLimit, setCurrentLimit] = useState(3)
+    const [currentLimit, setCurrentLimit] = useState(5)
     const [isOpenCreateModal, setOpenCreateModal] = useState<boolean>(false)
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
     const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
@@ -134,6 +134,11 @@ const VoucherTable = (props: any) => {
             key: 'amount',
         },
         {
+            title: 'Percentage',
+            dataIndex: 'percentage',
+            key: 'percentage',
+        },
+        {
             title: 'Create By',
             dataIndex: 'createdBy',
             key: 'createdBy',
@@ -203,6 +208,12 @@ const VoucherTable = (props: any) => {
                 description: res?.message
             })
         }
+    }
+
+    const handleRefresh = async()=>{
+        setLoading(true)
+        await fetchVouchersPerPage(+currentPage, +currentLimit)
+        form.resetFields()
     }
 
     if (roleUsers.includes(roleUser)) {
@@ -275,9 +286,8 @@ const VoucherTable = (props: any) => {
                                     <DatePicker.RangePicker
                                         placeholder={['From', 'To']}
                                         allowEmpty={[false, true]}
-                                        onChange={(date, dateString) => {
-                                            console.log(date, dateString);
-                                        }}
+                                        onChange={(date, dateString) => {}}
+                                        style={{width: "100%"}}
                                     />
                                 </Form.Item>
                             </Col>
@@ -292,6 +302,8 @@ const VoucherTable = (props: any) => {
                     </Form>
 
                 </div>
+
+                <Button  htmlType="submit" style={{marginBottom: 20}} onClick={()=>handleRefresh()}>Refresh</Button>
 
                 <div style={{ height: "50vh", overflowY: "scroll" }}>
                     <Table

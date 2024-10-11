@@ -2,9 +2,10 @@
 import { Modal, Form, Button, Input, message, notification } from "antd"
 import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
+import { handleDeleteDataMenu } from "@/utils/action";
 
 const ModalConfirmDelete =  (props: any) => {
-    const {isOpenModalConfirmDelete, setOpenModalConfirmDelete, title, currentItem, access_token, type} = props
+    const {isOpenModalConfirmDelete, setOpenModalConfirmDelete, title, currentItem, access_token, type, setIsLoading} = props
     const hasMounted = useHasMounted();
     if (!hasMounted) return <></>;
 
@@ -89,7 +90,6 @@ const ModalConfirmDelete =  (props: any) => {
                     }
                     
                 })
-                console.log(coupon)
         
                 if(coupon?.data){          
                     notification.success({
@@ -102,6 +102,25 @@ const ModalConfirmDelete =  (props: any) => {
                         message: "Call APIs error",
                         description: coupon?.message
                     })
+                }
+            break;
+
+            case "MENUITEM":
+                if(currentItem.length > 0){
+                    const response = await handleDeleteDataMenu(`api/v1/menu-items/delete-item-menu`, currentItem,  access_token, "menuItem")
+                    if(response.data.EC === 0){
+                        window.location.reload()
+                    }
+                    else{
+                        notification.error({
+                            message: "Call APIs error",
+                        })
+                    }
+                }else{
+                    notification.error({
+                        message: "Please choose at least 1 item to delete."
+                    })
+        
                 }
             break;
             default:

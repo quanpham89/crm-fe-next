@@ -1,5 +1,5 @@
 "use client"
-import { Modal, Steps, Form, Button, Input, message, notification, DatePicker, Row, Col } from "antd"
+import { Modal, Steps, Form, Button, Input, message, notification, DatePicker, Row, Col, InputNumber } from "antd"
 import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { sendRequest } from "@/utils/api";
@@ -30,9 +30,6 @@ const ModalCreateVoucher = (props: any) => {
             userCreateId: user?._id,
             createdBy: user.name ? user.name : user.email
         }
-
-        console.log(formatValue)
-
 
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers`,
@@ -115,7 +112,7 @@ const ModalCreateVoucher = (props: any) => {
                                 <Select
                                     options={[
                                         { value: 'GIFT', label: 'Gift' },
-                                        { value: 'ACCOUNT', label: 'Account' },
+                                        { value: 'DISCOUNT', label: 'Discount' },
                                     ]}
                                 />
                             </Form.Item>
@@ -158,9 +155,7 @@ const ModalCreateVoucher = (props: any) => {
 
                                         placeholder={['From', 'To']}
                                         allowEmpty={[false, true]}
-                                        onChange={(date, dateString) => {
-                                            console.log(date, dateString);
-                                        }}
+                                        onChange={(date, dateString) => {}}
                                     />
                             </Form.Item>
                         </Col>
@@ -191,6 +186,18 @@ const ModalCreateVoucher = (props: any) => {
                     >
                         <Input />
                     </Form.Item>
+                    <Form.Item
+                        label="Percentage"
+                        name="percentage"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Percentage can't be blank!",
+                            },
+                        ]}
+                    >
+                        <InputNumber style={{width: "100%"}} min={0} max={100}/>
+                    </Form.Item>
 
                     <Form.Item
                         label="Quantity"
@@ -202,7 +209,7 @@ const ModalCreateVoucher = (props: any) => {
                             },
                         ]}
                     >
-                        <Input />
+                        <InputNumber style={{width: "100%"}} min={1} max={15}/>
                     </Form.Item>
                     <Form.Item style={{ display: "flex", justifyContent: "flex-end", marginTop: 20, marginBottom: 0 }}>
                         <Button type="primary" htmlType="submit">

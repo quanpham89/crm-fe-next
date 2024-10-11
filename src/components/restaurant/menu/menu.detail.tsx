@@ -22,6 +22,7 @@ const MenuDetail = (props: any) => {
     }
     const [isLoading, setLoading] = useState(false)
     const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
+    const router = useRouter()
     useEffect(()=>{
         setRoleUser(role)
     },[])
@@ -62,13 +63,15 @@ const MenuDetail = (props: any) => {
             </div>
             :
             <>
+            <Button onClick={()=> router.back()}>Back</Button>
             <div style={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent: "center",
                     alignItems: "center",
-                    marginBottom: 20
+                    marginBottom: 20,
+                    marginTop: 20
                 }}>
-                    <span>Detail menu</span>
+                    <span style={{fontSize:20, fontWeight: 600}}>Detail menu</span>
                 </div>
                 <div style={{ border: "1px solid #d9d9d9", padding: 15, borderRadius: 8, margin: 20, }}>
                     <Descriptions title="Menu" items={formatItems} />

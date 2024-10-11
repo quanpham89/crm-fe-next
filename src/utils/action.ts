@@ -50,6 +50,7 @@ export async function handleGetData(path:string, access_token: string,) {
 
 
 export async function handleGetDataPerPage(path:string, access_token: string, nextOptions : any) {
+    console.log(">>>>>>>>>>>>>>>>>",nextOptions)
     const res = await sendRequest<IBackendRes<IUserPerPage>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",
@@ -64,7 +65,7 @@ export async function handleGetDataPerPage(path:string, access_token: string, ne
     
 }
 
-export async function handleGetDataMenu(path:string, access_token: string, nextOptions : any) {
+export async function handleGetDataMenu(path:string, access_token: string) {
     const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",
@@ -72,7 +73,7 @@ export async function handleGetDataMenu(path:string, access_token: string, nextO
             "Authorization": `Bearer ${access_token}`
         },
         nextOption:{
-            ...nextOptions
+             next: { tags: ["menuItem"] } 
         }
     })
     return res
@@ -80,7 +81,42 @@ export async function handleGetDataMenu(path:string, access_token: string, nextO
 }
 
 
-export async function handleDeleteDataMenu(path:string, data: any, access_token: string, option : any) {
+export async function handleSoftDeleteDataMenu(path:string, data: any, access_token: string, option : any) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        },
+        body:{
+            data
+        },
+
+    })
+    revalidateTag(option)
+    return res
+    
+}
+
+
+export async function handleActiveItemDataMenu(path:string, data: any, access_token: string, option : any) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        },
+        body:{
+            data
+        },
+
+    })
+    revalidateTag(option)
+    return res
+    
+}
+
+export async function handleDeleteDataMenu(path:string, data: any, access_token: string, option: string) {
     const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "DELETE",
@@ -96,3 +132,6 @@ export async function handleDeleteDataMenu(path:string, data: any, access_token:
     return res
     
 }
+
+
+

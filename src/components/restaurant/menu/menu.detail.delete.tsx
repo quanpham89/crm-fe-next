@@ -1,7 +1,7 @@
 "use client"
 
 import { AdminContext } from "@/library/admin.context"
-import { handleDeleteDataMenu, handleGetData, handleGetDataMenu, handleGetDataPerPage } from "@/utils/action"
+import { handleActiveItemDataMenu, handleDeleteDataMenu, handleGetData, handleGetDataMenu, handleGetDataPerPage, handleSoftDeleteDataMenu } from "@/utils/action"
 import { sendRequest } from "@/utils/api"
 import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusCircleOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons"
 import { Button, Col, Descriptions, Form, Input, InputNumber, notification, Row, Space, Spin, Table, TableColumnsType, Upload, Image  } from "antd"
@@ -9,6 +9,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 import "../Pagination.scss"
 import { TableRowSelection } from "antd/es/table/interface"
+import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete"
 
 interface DataType {
     key: React.Key;
@@ -22,14 +23,14 @@ const MenuDetailDelete = (props: any) => {
     const [dataSource, setDataSource] = useState<any>([])
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [isLoading, setIsLoading] = useState(true)
+    const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState(false)
     const [pagination, setPagination] = useState({
         current: 1,
         pageSize: 5,
     });
     
     const getMenuItem = async() =>{
-        const response = await handleGetDataMenu(`api/v1/menus/get-menu-by-id?_id=${menuInfo.menuId}`, access_token,  { next: { tags: "menuItem" } })
-        console.log(response.data)
+        const response = await handleGetDataMenu(`api/v1/menus/get-menu-by-id?_id=${menuInfo.menuId}`, access_token)
         if (response){
             const formatData = response?.data[0]?.menuItem.map((item : any, index : number)=>{
                 return {
@@ -38,7 +39,8 @@ const MenuDetailDelete = (props: any) => {
                     image : <Image alt = "image" width={60} src={`${item.image}`}/>,
                     sellingPrice : item.sellingPrice,
                     fixedPrice : item.fixedPrice,
-                    description : item.description
+                    description : item.description,
+                    status: item.status
                 }
             })
             setDataSource(formatData)
@@ -76,6 +78,10 @@ const MenuDetailDelete = (props: any) => {
         {
             title: 'Description',
             dataIndex: 'description',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
         }
     ];
       
@@ -100,38 +106,77 @@ const MenuDetailDelete = (props: any) => {
         });
     };
 
-    const handleDeleteMenuItem = async () =>{
-        let itemDelete = [...selectedRowKeys]
-        if(itemDelete.length > 0){
-            const response = await handleDeleteDataMenu(`api/v1/menus/get-menu-by-id?_id=${menuInfo.menuId}`, itemDelete,  access_token, "menuItem")
-        }else{
-            notification.error({
-                message: "Please choose at least 1 item to delete."
-            })
+    const handleMenuItem = async (type : string) =>{
+        let itemHandle = [...selectedRowKeys]
+        switch (type){
+            case "DELETE":
+                setOpenModalConfirmDelete(true)
+            break;
 
+            case "HIDDEN":
+                if(itemHandle.length > 0){
+                    await handleSoftDeleteDataMenu(`api/v1/menu-items/soft-delete`, itemHandle, access_token, "menuItem")
+                    setIsLoading(true)
+                    setSelectedRowKeys([]);
+                    getMenuItem()
+                }else{
+                    notification.error({
+                        message: "Please choose at least 1 item to hide."
+                    })
+        
+                }
+            break;
+
+            case "ACTIVE":
+                if(itemHandle.length > 0){
+                    await handleActiveItemDataMenu(`api/v1/menu-items/active-item`, itemHandle, access_token, "menuItem")
+                    setIsLoading(true)
+                    setSelectedRowKeys([]);
+                    getMenuItem()
+                }else{
+                    notification.error({
+                        message: "Please choose at least 1 item to active."
+                    })
+        
+                }
+            break;
         }
+
     }
+    
 
     return ( !isLoading ? 
-    <>
+        <>
             <Table  
             columns={columns} 
             dataSource={dataSource}  
             rowSelection={rowSelection}
             pagination={{
-                current: pagination.current,
                 pageSize: pagination.pageSize,
                 total: dataSource.length,
                 onChange: (page, pageSize) => handleTableChange({ current: page, pageSize }),
             }}
             />
-            <div style ={{display: "flex", justifyContent: "flex-end"}}>
-                <Button onClick={handleDeleteMenuItem}>Delete</Button>
+            <div style ={{display: "flex", justifyContent: "flex-end", gap: "10px"}}>
+                <Button onClick={()=>handleMenuItem("DELETE")}>Delete</Button>
+                <Button onClick={()=>handleMenuItem("HIDDEN")}>Hidden</Button>
+                <Button onClick={()=>handleMenuItem("ACTIVE")}>Active</Button>
+
             </div>
-    </> : 
-    <div style={{display: "flex", justifyContent:"center", alignItems: "center"}}>
-        <Spin/>
-    </div>
+
+            <ModalConfirmDelete 
+                    isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
+                    setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 
+                    title = {`Bạn chắc chắn muốn xóa vĩnh viễn ?`} 
+                    currentItem= { [...selectedRowKeys]} 
+                    access_token = {access_token}
+                    type="MENUITEM"
+                    setIsLoading={setIsLoading}
+                />
+        </> : 
+        <div style={{display: "flex", justifyContent:"center", alignItems: "center"}}>
+            <Spin/>
+        </div>
     )
   
 }

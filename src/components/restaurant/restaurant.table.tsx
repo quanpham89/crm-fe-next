@@ -41,14 +41,16 @@ const RestaurantTable = (props: any) => {
         })
         if(res?.data?.results){    
             const restaurants = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
-
+            
             const formatData = restaurants.map(item =>{ 
                 const {user, ...rest} = item
+                console.log(item)
                 return ({
                 ...rest,
                 userId: item?.user?._id,
                 email: item?.user?.email,
                 name: item?.user?.name,
+                menu: item?.menuId.length,
                 activeIcon: item.isShow ? <CheckOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "green"}}/> : <CloseOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "red"}}/>
             })});
             setDataSource(formatData)
@@ -134,8 +136,8 @@ const RestaurantTable = (props: any) => {
         },
         {
             title: 'Menu',
-            dataIndex: 'menu-name',
-            key: 'menu-name',
+            dataIndex: 'menu',
+            key: 'menu',
         },
         {
             title: 'Owner',

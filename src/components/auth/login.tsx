@@ -18,6 +18,7 @@ const Login = () => {
         const {username, password} = values
         // trigger sign-in
         const res = await authenticate(username, password)
+        console.log(">>>>>>>>>",res)
         if(res?.error){
             // error
             notification.error({

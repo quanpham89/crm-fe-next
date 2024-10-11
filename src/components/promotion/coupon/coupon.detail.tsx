@@ -5,6 +5,7 @@ import { sendRequest } from "@/utils/api"
 import { CheckOutlined, CloseOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons"
 import { Button, notification, Spin, Table } from "antd"
 import dayjs from "dayjs"
+import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 
 const CouponDetail = (props: any) =>{
@@ -16,6 +17,7 @@ const CouponDetail = (props: any) =>{
     const [isOpenModalConfirmUnActive, setOpenModalConfirmUnActive] = useState(false)
     const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
     setRoleUser(role)
+    const router = useRouter()
 
 
     const fetchCouponItem = async () => {
@@ -54,15 +56,7 @@ const CouponDetail = (props: any) =>{
         fetchCouponItem()
     },[])
 
-    const handleUnActiveCoupon = async (values: any) => {
-        setCurrentCoupon(values)
-        setOpenModalConfirmUnActive(true)
-    }
 
-    const handleActiveCoupon = async (values: any) => {
-        setCurrentCoupon(values)
-        setOpenModalConfirmActive(true)
-    }
 
 
     const columns = [
@@ -112,24 +106,14 @@ const CouponDetail = (props: any) =>{
             dataIndex: 'usedTime',
             key: 'useTime',
         },
-        {
-            title: 'Action',
-            dataIndex: '',
-            key: '',
-            render: (text: string, record: any) =>
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 40, fontSize: 20 }}>
-                    <MinusOutlined onClick={() => handleUnActiveCoupon(record)} />
-                    <PlusOutlined onClick={() => handleActiveCoupon(record)} />
-                </div>
-
-
-        },
     ];
 
     if (roleUsers.includes(roleUser)) {
 
         return (!loading ?
                 <>
+                <Button onClick={()=> router.back()} style={{marginBottom: 20}}>Back</Button>
+
                 <div style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -140,6 +124,7 @@ const CouponDetail = (props: any) =>{
                     <span>Information Coupon</span>
                     <span>Total: {dataCouponItem.length}</span>
                 </div>
+
                 
                 <div style={{height: "50vh", overflowY: "scroll" }}>
                     <Table

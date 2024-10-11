@@ -1,5 +1,5 @@
 "use client"
-import { Modal, Steps, Form, Button, Input, message, notification, DatePicker, Row, Col } from "antd"
+import { Modal, Steps, Form, Button, Input, message, notification, DatePicker, Row, Col, InputNumber } from "antd"
 import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { sendRequest } from "@/utils/api";
@@ -150,7 +150,7 @@ const ModalCreateCoupon = (props: any) => {
                                     },
                                 ]}
                             >
-                            <Input />
+                            <InputNumber min={1000} style={{width: "100%"}} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -191,7 +191,7 @@ const ModalCreateCoupon = (props: any) => {
                             },
                         ]}
                     >
-                        <Input />
+                        <InputNumber min={1} style={{width: "100%"}} max={15} />
                     </Form.Item>
                     <Form.Item style={{ display: "flex", justifyContent: "flex-end", marginTop: 20, marginBottom: 0 }}>
                         <Button type="primary" htmlType="submit">
