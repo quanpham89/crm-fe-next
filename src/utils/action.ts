@@ -50,7 +50,6 @@ export async function handleGetData(path:string, access_token: string,) {
 
 
 export async function handleGetDataPerPage(path:string, access_token: string, nextOptions : any) {
-    console.log(">>>>>>>>>>>>>>>>>",nextOptions)
     const res = await sendRequest<IBackendRes<IUserPerPage>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",

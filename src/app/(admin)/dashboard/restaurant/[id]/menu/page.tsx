@@ -14,6 +14,7 @@ const ManageMenuPage = async(props:IProps) => {
     let role = session?.user?.role as string
     let access_token = session?.user?.access_token as string
     let user = session?.user
+
     let res = await handleGetData(`api/v1/restaurants/get-retaurant-by-id?_id=${props?.params?.id}`, access_token)
     let dataRestaurant = res?.data
     // const currentPage = props?.searchParams?.current ?? 1
@@ -29,6 +30,9 @@ const ManageMenuPage = async(props:IProps) => {
     //     pages: dataMenu?.data?.totalPages,
     //     total: dataMenu?.data?.totalItems
     // }
+
+    console.log(res)
+
     return <MenuTable 
     role = {role}
     access_token = {access_token}

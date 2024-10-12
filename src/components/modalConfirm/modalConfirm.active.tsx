@@ -8,13 +8,13 @@ const ModalConfirmActive =  (props: any) => {
     const hasMounted = useHasMounted();
     if (!hasMounted) return <></>;
 
-    const confirmHidden  = async() =>{
+    const confirmActve  = async() =>{
         switch(type){
             case "RESTAURANTS":
-                if(!currentItem.isShow){
+                if(currentItem.isShow){
                     notification.success({
-                        message: "Ẩn tài khoản bán hàng",
-                        description: "Tài khoản hiện đang không kích hoạt."
+                        message: "Tài khoản bán hàng",
+                        description: "Tài khoản hiện đang được kích hoạt."
                     })
                     setOpenModalConfirmActive(false)
                     return
@@ -28,7 +28,7 @@ const ModalConfirmActive =  (props: any) => {
                 })
                 if(res?.data){          
                     notification.success({
-                        message: "Hủy kích hoạt tài khoản thành công.",
+                        message: "Kích hoạt tài khoản thành công.",
                         description: res?.message
                     })
                     window.location.reload()
@@ -36,6 +36,37 @@ const ModalConfirmActive =  (props: any) => {
                     notification.error({
                         message: "Call APIs error",
                         description: res?.message
+                    })
+                }
+            break;
+
+            case "MENU":
+                console.log(currentItem)
+                if(currentItem.status === "PUBLIC"){
+                    notification.success({
+                        message: "Menu",
+                        description: "Menu đang được kích hoạt."
+                    })
+                    setOpenModalConfirmActive(false)
+                    return
+                }
+                const resMenu = await sendRequest<IBackendRes<any>>({
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menus/active-menu?_id=${currentItem._id}`,
+                    method: "PATCH",
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                })
+                if(resMenu?.data){          
+                    notification.success({
+                        message: "Kích hoạt tài khoản thành công.",
+                        description: resMenu?.message
+                    })
+                    window.location.reload()
+                }else{
+                    notification.error({
+                        message: "Call APIs error",
+                        description: resMenu?.message
                     })
                 }
             break;
@@ -72,7 +103,7 @@ const ModalConfirmActive =  (props: any) => {
             case "COUPON":
                 if(currentItem.status === "PUBLIC"){
                     notification.success({
-                        message: "Kích hoạt coupon",
+                        message: "Kích hoạt Coupon",
                         description: "Coupon hiện đang được kích hoạt."
                     })
                     setOpenModalConfirmActive(false)
@@ -137,7 +168,7 @@ const ModalConfirmActive =  (props: any) => {
                         <Button type="primary" htmlType="submit"  onClick={()=>setOpenModalConfirmActive(false)} style={{marginRight: 20}} >
                                 CANCLE
                             </Button>
-                            <Button type="primary" htmlType="submit"  onClick={confirmHidden} style={{background: "green"}}>
+                            <Button type="primary" htmlType="submit"  onClick={confirmActve} style={{background: "green"}}>
                                 ACTIVE
                             </Button>
                             

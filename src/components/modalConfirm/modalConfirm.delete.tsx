@@ -57,6 +57,28 @@ const ModalConfirmDelete =  (props: any) => {
                     })
                 }
             break;
+            case "MENU":
+                const resMenu = await sendRequest<IBackendRes<any>>({
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menus/remove-menu?_id=${currentItem._id}`,
+                    method: "DELETE",
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                })
+        
+                if(resMenu?.data){          
+                    notification.success({
+                        message: "Xóa menu thành công.",
+                        description: resMenu?.message
+                    })
+                    window.location.reload()
+                }else{
+                    notification.error({
+                        message: "Call APIs error",
+                        description: resMenu?.message
+                    })
+                }
+            break;
             case "VOUCHER":
                 const voucher = await sendRequest<IBackendRes<any>>({
                     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/remove?_id=${currentItem._id}`,

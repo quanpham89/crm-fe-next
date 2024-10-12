@@ -71,6 +71,37 @@ const ModalConfirmHidden =  (props: any) => {
                 }
             break;
 
+            case "MENU":
+                console.log(currentItem)
+                if(!currentItem.status){
+                    notification.success({
+                        message: "Ẩn menu",
+                        description: "Menu hiện đang được ẩn."
+                    })
+                    setOpenModalConfirmHidden(false)
+                    return
+                }
+                const resMenu = await sendRequest<IBackendRes<any>>({
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menus/soft-delete?_id=${currentItem._id}`,
+                    method: "PATCH",
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                })
+                if(resMenu?.data){          
+                    notification.success({
+                        message: "Ẩn menu thành công.",
+                        description: resMenu?.message
+                    })
+                    window.location.reload()
+                }else{
+                    notification.error({
+                        message: "Call APIs error",
+                        description: resMenu?.message
+                    })
+                }
+            break;
+
             case "VOUCHER":
                 if( currentItem.status === "HIDDEN"){
                     notification.success({

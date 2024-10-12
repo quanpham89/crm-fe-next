@@ -3,7 +3,7 @@ import { Button, notification, Pagination, Spin, Table } from "antd"
 import { useContext, useEffect, useState } from "react";
 import { sendRequest } from "@/utils/api";
 import ReactPaginate from "react-paginate";
-import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined } from "@ant-design/icons";
+import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { auth } from "@/auth";
 import ModalUpdateRestaurant from "./restaurant.update";
 import ModalCreateRestaurant from "./restaurant.create";
@@ -12,6 +12,7 @@ import ModalConfirmDelete from "../modalConfirm/modalConfirm.delete";
 import ModalConfirmHidden from "../modalConfirm/modalConfirm.hidden";
 import { AdminContext } from "@/library/admin.context";
 import { useRouter } from "next/navigation";
+import ModalConfirmActive from "../modalConfirm/modalConfirm.active";
 
 const RestaurantTable = (props: any) => {
     const {role, access_token} = props
@@ -25,6 +26,8 @@ const RestaurantTable = (props: any) => {
     const [isLoading, setLoading] = useState(true)
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
     const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
+    const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState<boolean>(false)
+
     const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
     setRoleUser(role)
     const router = useRouter()
@@ -44,7 +47,6 @@ const RestaurantTable = (props: any) => {
             
             const formatData = restaurants.map(item =>{ 
                 const {user, ...rest} = item
-                console.log(item)
                 return ({
                 ...rest,
                 userId: item?.user?._id,
@@ -82,6 +84,11 @@ const RestaurantTable = (props: any) => {
         setOpenModalConfirmHidden(true)
         setCurrentRestaurant(record)
     }
+
+    const handleActiveRestaurant = (record : any) =>{
+        setOpenModalConfirmActive(true)
+        setCurrentRestaurant(record)
+    }
     
 
     const handleConfirmDeleteRestaurant = async (record : any) =>{
@@ -89,9 +96,8 @@ const RestaurantTable = (props: any) => {
         setCurrentRestaurant(record)
     }
 
-    const handleOpenCreateMenu = (record : any) =>{
+    const handleOpenCreateRestaurant = (record : any) =>{
         setCurrentRestaurant(record)
-        console.log(record)
         router.push(`/dashboard/restaurant/${record._id}/menu`);
 
 
@@ -156,8 +162,9 @@ const RestaurantTable = (props: any) => {
             render: (text : string, record: any) =>
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", gap: 40, fontSize: 20}}>
                     <EditOutlined  onClick={()=>handleEditRestaurant(record)}/>
-                    <BarsOutlined  onClick={()=>handleOpenCreateMenu(record)}/>
+                    <BarsOutlined  onClick={()=>handleOpenCreateRestaurant(record)}/>
                     <MinusOutlined onClick={()=>handleUnActiveRestaurant(record)}/>
+                    <PlusOutlined onClick={() => handleActiveRestaurant(record)} />
                     <DeleteOutlined onClick={()=>handleConfirmDeleteRestaurant(record)}/>
                 </div>
 
@@ -230,6 +237,14 @@ const RestaurantTable = (props: any) => {
                 isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
                 setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 
                 title = {`Bạn chắc chắn muốn xóa tài khoản bán hàng này vĩnh viễn ?`} 
+                currentItem= {currentRestaurant} 
+                access_token = {access_token}
+                type="RESTAURANTS"
+                />
+                <ModalConfirmActive
+                isOpenModalConfirmActive = {isOpenModalConfirmActive} 
+                setOpenModalConfirmActive= {setOpenModalConfirmActive} 
+                title = {`Bạn chắc chắn hiển thị tài khoản bán hàng này?`} 
                 currentItem= {currentRestaurant} 
                 access_token = {access_token}
                 type="RESTAURANTS"

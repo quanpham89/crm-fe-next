@@ -3,7 +3,7 @@
 import { AdminContext } from "@/library/admin.context"
 import { handleGetData, handleGetDataPerPage } from "@/utils/action"
 import { sendRequest } from "@/utils/api"
-import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined } from "@ant-design/icons"
+import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons"
 import { Button, notification, Spin, Table } from "antd"
 import { usePathname, useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
@@ -14,6 +14,7 @@ import ModalCreateMenu from "./menu.create"
 import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete"
 import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden"
 import ModalChooseMenu from "./menu.choose"
+import ModalConfirmActive from "@/components/modalConfirm/modalConfirm.active"
 
 
 const MenuTable = (props : any) =>{
@@ -33,6 +34,7 @@ const MenuTable = (props : any) =>{
     const [isLoading, setLoading] = useState(true)
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
     const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
+    const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState<boolean>(false)
     const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
     setRoleUser(role)
     const router = useRouter()
@@ -41,7 +43,8 @@ const MenuTable = (props : any) =>{
 
 
     const fetchMenuPerPage = async (page : number , limit : number) =>{
-        const res = await handleGetDataPerPage(`api/v1/menus?current=${currentPage}&pageSize=${limit}`, access_token, { next: { tags: "dataMenu" } })
+        const res = await handleGetDataPerPage(`api/v1/menus?current=${page}&pageSize=${limit}&belongTo=${author.restaurantId}`, access_token, { next: { tags: "dataMenu" } })
+
         if(res?.data?.results){    
             const menus = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
 
@@ -50,7 +53,7 @@ const MenuTable = (props : any) =>{
                 return ({
                 ...rest,
 
-                activeIcon: item.status ? <CheckOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "green"}}/> : <CloseOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "red"}}/>
+                activeIcon: item.status==="PUBLIC" ? <CheckOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "green"}}/> : <CloseOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "red"}}/>
             })});
             setDataSource(formatData)
             setTotalPages(+res?.data?.totalPages)
@@ -73,7 +76,6 @@ const MenuTable = (props : any) =>{
     }
 
     const handleEditMenu =  async (record : any) =>{
-        // setIsOpenChooseMenu(true)
         const menuId = record._id
         router.push(`${pathName}/detailMenu/${menuId}`);
 
@@ -81,6 +83,11 @@ const MenuTable = (props : any) =>{
 
     const handleUnActiveMenu = async(record : any) =>{
         setOpenModalConfirmHidden(true)
+        setCurrentMenu(record)
+    }
+
+    const handleActiveMenu = (record : any)=>{
+        setOpenModalConfirmActive(true)
         setCurrentMenu(record)
     }
     
@@ -125,7 +132,8 @@ const MenuTable = (props : any) =>{
             render: (text : string, record: any) =>
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", gap: 40, fontSize: 20}}>
                     <EditOutlined  onClick={()=>handleEditMenu(record)}/>
-                    <MinusOutlined onClick={()=>handleUnActiveMenu(record)}/>
+                    <MinusOutlined onClick={()=>handleUnActiveMenu(record)}/>         
+                    <PlusOutlined onClick={() => handleActiveMenu(record)} />
                     <DeleteOutlined onClick={()=>handleConfirmDeleteMenu(record)}/>
                 </div>
         },
@@ -139,6 +147,7 @@ const MenuTable = (props : any) =>{
             </div>
             :
             <>
+                <Button onClick={()=> router.back()}>Back</Button>
                 <div style={{
                     display: "flex", 
                     justifyContent: "space-between",
@@ -199,19 +208,27 @@ const MenuTable = (props : any) =>{
                 <ModalConfirmDelete 
                     isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
                     setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 
-                    title = {`Bạn chắc chắn muốn xóa tài khoản bán hàng này vĩnh viễn ?`} 
+                    title = {`Bạn chắc chắn muốn menu này vĩnh viễn ?`} 
                     currentItem= {currentMenu} 
                     access_token = {access_token}
-                    type="RESTAURANTS"
+                    type="MENU"
                 />
                 <ModalConfirmHidden
                     isOpenModalConfirmHidden = {isOpenModalConfirmHidden} 
                     setOpenModalConfirmHidden= {setOpenModalConfirmHidden} 
-                    title = {`Bạn chắc chắn muốn ẩn tài khoản bán hàng này?`} 
+                    title = {`Bạn chắc chắn muốn ẩn menu này?`} 
                     currentItem= {currentMenu} 
                     access_token = {access_token}
-                    type="RESTAURANTS"
+                    type="MENU"
                 /> 
+                <ModalConfirmActive
+                    isOpenModalConfirmActive = {isOpenModalConfirmActive} 
+                    setOpenModalConfirmActive= {setOpenModalConfirmActive} 
+                    title = {`Bạn chắc chắn hiển thị menu này?`} 
+                    currentItem= {currentMenu} 
+                    access_token = {access_token}
+                    type="MENU"
+                />
             </> 
         )
     }else{

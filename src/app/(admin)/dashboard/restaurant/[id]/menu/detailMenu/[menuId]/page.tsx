@@ -14,7 +14,9 @@ const DetailMenu = async(props:IProps) => {
     let access_token = session?.user?.access_token as string
     let user  = session?.user
 
-    let res = await handleGetDataMenu(`api/v1/menus/get-menu-by-id?_id=${menuId}`, access_token,{ next: { tags: "menuItem" } })
+   
+
+    let res = await handleGetDataMenu(`api/v1/menus/get-menu-by-id?_id=${menuId}`, access_token)
     let {menuItem, ...rest} = res?.data[0]
     let menuInfo = {...rest, menuId}
 
