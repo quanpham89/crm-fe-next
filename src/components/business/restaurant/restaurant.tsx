@@ -1,0 +1,188 @@
+'use client'
+import { Button, Checkbox, Descriptions, Form, Input, notification, Pagination, Select, Spin, Table } from "antd"
+import { Children, use, useContext, useEffect, useState } from "react";
+import { sendRequest } from "@/utils/api";
+import ReactPaginate from "react-paginate";
+import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { auth } from "@/auth";
+import { BusinessContext } from "@/library/business.context";
+import { useRouter } from "next/navigation";
+import ModalCreateRestaurant from "@/components/restaurant/restaurant.create";
+import ModalUpdateRestaurant from "@/components/business/restaurant/restaurant.update";
+import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete";
+import ModalConfirmActive from "@/components/modalConfirm/modalConfirm.active";
+import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden";
+import { handleGetDataRestaurantById } from "@/utils/action";
+import dayjs from "dayjs";
+
+const RestaurantBusiness = (props: any) => {
+    const { user } = props
+    const [isOpenModal, setIsOpenModal] = useState(false)
+    const [isHaveRestaurant, setIsHaveRestaurant] = useState(false)
+    const [isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant] = useState(false)
+    const [dataSource, setDataSource] = useState<any>([]);
+    const [currentPage, setCurrentPage] = useState(1)
+    const [currentLimit, setCurrentLimit] = useState(3)
+    const [totalPages, setTotalPages] = useState<number>(1)
+    const [currentRestaurant, setCurrentRestaurant] = useState({})
+    const [isLoading, setIsLoading] = useState(true)
+    const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
+    const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
+    const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState<boolean>(false)
+    const [dataRestaurant, setDataRestaurant] = useState<any>([])
+    const [form] = Form.useForm()
+    const { roleUsers, roleUser, setRoleUser } = useContext(BusinessContext)!;
+    const router = useRouter()
+
+    const getDataRestaurant = async (user: any) => {
+        if (user && user?.restaurantId) {
+            setIsHaveRestaurant(true)
+            const response: any = await handleGetDataRestaurantById(`api/v1/restaurants/get-retaurant-by-id?_id=${user.restaurantId}`, user?.access_token)
+            if (response?.data.length > 0) {
+                setIsLoading(false)
+                const formatData  = [
+                    {
+                        label: "Owner",
+                        children: response?.data[0]?.user?.name
+                    },
+                    {
+                        label: "Name",
+                        children: response?.data[0]?.restaurantName
+                    },
+                    {
+                        label: "Address",
+                        children: response?.data[0]?.address
+                    },
+                    {
+                        label: "Phone",
+                        children: response?.data[0]?.phone
+                    },
+                    {
+                        label: "Status",
+                        children: response?.data[0]?.isShow ? "Show": "Hidden"
+                    },
+                    {
+                        label: "Rating",
+                        children: response?.data[0]?.rating
+                    },
+                    {
+                        label: "Description",
+                        children: response?.data[0]?.description
+                    },
+                    {
+                        label: "Create At",
+                        children: dayjs(response?.data[0]?.createdAt).format('DD-MM-YYYY')
+                         
+                    },
+                    {
+                        label: "Product Type",
+                        children: response?.data[0]?.productType
+                    },
+                    {
+                        label: "Menu",
+                        children: response?.data[0]?.menu.length
+                    },
+                ]
+    
+                setDataRestaurant(formatData)
+                
+            }
+        }
+    }
+
+    useEffect(() => {
+        getDataRestaurant(user)
+    }, [])
+
+    const handlePageClick = async (e: any) => {
+        setCurrentPage(e.selected + 1)
+    }
+
+    const handleEditRestaurant = async (record: any) => {
+        setIsOpenUpdateRestaurant(true)
+        setCurrentRestaurant(record)
+    }
+
+    const handleUnActiveRestaurant = async (record: any) => {
+        setOpenModalConfirmHidden(true)
+        setCurrentRestaurant(record)
+    }
+
+    const handleActiveRestaurant = (record: any) => {
+        setOpenModalConfirmActive(true)
+        setCurrentRestaurant(record)
+    }
+
+
+    const handleConfirmDeleteRestaurant = async (record: any) => {
+        setOpenModalConfirmDelete(true)
+        setCurrentRestaurant(record)
+    }
+
+
+    if (user?.role === "BUSINESSMAN") {
+
+        return (isLoading ?
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <Spin />
+            </div>
+            :
+            <>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginBottom: 20,
+                    fontSize: 20,
+                    fontWeight: 600
+                }}>
+                    <span>My Restaurants</span>
+                    {!isHaveRestaurant && <Button onClick={() => setIsOpenModal(true)}>Create Restaurant</Button>}
+                    
+                </div>
+
+                <Descriptions  items={dataRestaurant} bordered/>
+
+                
+                <ModalCreateRestaurant
+                    isOpenModal={isOpenModal}
+                    setIsOpenModal={setIsOpenModal}
+                />
+                <ModalUpdateRestaurant
+                    isOpenModalUpdateRestaurant={isOpenModalUpdateRestaurant}
+                    setIsOpenUpdateRestaurant={setIsOpenUpdateRestaurant}
+                    currentRestaurant={currentRestaurant}
+                    access_token={user?.access_token}
+                />
+                <ModalConfirmDelete
+                    isOpenModalConfirmDelete={isOpenModalConfirmDelete}
+                    setOpenModalConfirmDelete={setOpenModalConfirmDelete}
+                    title={`Bạn chắc chắn muốn xóa tài khoản bán hàng này vĩnh viễn ?`}
+                    currentItem={currentRestaurant}
+                    access_token={user?.access_token}
+                    type="RESTAURANTS"
+                />
+                <ModalConfirmActive
+                    isOpenModalConfirmActive={isOpenModalConfirmActive}
+                    setOpenModalConfirmActive={setOpenModalConfirmActive}
+                    title={`Bạn chắc chắn hiển thị tài khoản bán hàng này?`}
+                    currentItem={currentRestaurant}
+                    access_token={user?.access_token}
+                    type="RESTAURANTS"
+                />
+                <ModalConfirmHidden
+                    isOpenModalConfirmHidden={isOpenModalConfirmHidden}
+                    setOpenModalConfirmHidden={setOpenModalConfirmHidden}
+                    title={`Bạn chắc chắn muốn ẩn tài khoản bán hàng này?`}
+                    currentItem={currentRestaurant}
+                    access_token={user?.access_token}
+                    type="RESTAURANTS"
+                />
+            </>
+        )
+    } else {
+        return <>Bạn không có quyền truy cập vào chức năng này.</>
+    }
+}
+
+export default RestaurantBusiness;

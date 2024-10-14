@@ -53,14 +53,7 @@ const AdminSideBar = () => {
                     children: [
                         { key: 'voucher', label: <Link href={"/dashboard/promotion/voucher"}>Voucher</Link> },
                         { key: 'coupon', label: <Link href={"/dashboard/promotion/coupon"}>Coupon</Link> },
-                        {
-                            key: 'sub3',
-                            label: 'Submenu',
-                            children: [
-                                { key: '7', label: 'Option 7' },
-                                { key: '8', label: 'Option 8' },
-                            ],
-                        },
+                        
                     ],
                 },
                 {

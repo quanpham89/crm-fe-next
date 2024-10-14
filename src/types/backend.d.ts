@@ -35,7 +35,8 @@ declare global {
             name: string,
             email: string
             role: string,
-            accountType: string
+            accountType: string,
+            restaurantId: string
         },
         access_token: string
     }

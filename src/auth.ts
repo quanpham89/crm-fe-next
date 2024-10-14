@@ -33,7 +33,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     email: res.data?.user?.email,
                     access_token: res.data?.access_token,
                     role: res.data?.user?.role,
-                    accountType: res.data?.user?.accountType
+                    accountType: res.data?.user?.accountType,
+                    restaurantId: res.data?.user?.restaurantId
                 }    
             }
             // sai mat khau 401

@@ -8,7 +8,8 @@ interface IUser {
     isVerify: boolean,
     type: string;
     role: string;
-    access_token: string
+    access_token: string,
+    restaurantId: string
 }
 declare module "next-auth/jwt" {
     /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */

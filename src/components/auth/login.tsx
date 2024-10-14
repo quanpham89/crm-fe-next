@@ -30,7 +30,7 @@ const Login = () => {
                 return
             }
         }else{
-            router.push("/dashboard")
+            router.push("/auth/role")
         }
         
     };
