@@ -3,30 +3,35 @@
 import { AdminContext } from "@/library/admin.context"
 import { handleGetData, handleGetDataPerPage } from "@/utils/action"
 import { sendRequest } from "@/utils/api"
-import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons"
-import { Button, notification, Spin, Table } from "antd"
+import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusOutlined, PlusOutlined, UnorderedListOutlined } from "@ant-design/icons"
+import { Button, Descriptions, notification, Spin, Table, Tabs } from "antd"
 import { usePathname, useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
-import "../Pagination.scss"
 
-import ReactPaginate from "react-paginate"
-import ModalCreateMenu from "./menu.create"
+
 import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete"
 import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden"
-import ModalChooseMenu from "./menu.choose"
 import ModalConfirmActive from "@/components/modalConfirm/modalConfirm.active"
-import Restaurant from "@/app/(admin)/dashboard/restaurant/[id]/page"
+import ModalChooseMenu from "@/components/restaurant/menu/menu.choose"
+import ModalCreateMenu from "@/components/restaurant/menu/menu.create"
+import MenuDetailUpdate from "@/components/restaurant/menu/menu.detail.update"
+import MenuDetailCreate from "@/components/restaurant/menu/menu.detail.create"
+import MenuDetailDelete from "@/components/restaurant/menu/menu.detail.delete"
+import ModalMenuUpdate from "@/components/restaurant/menu/menu.update"
+import dayjs from "dayjs"
 
 
-const MenuTable = (props : any) =>{
-    const {role, access_token, dataRestaurant, user} = props
+const MenuRestaurant = (props : any) =>{
+    const {role, access_token, dataRestaurant, menu} = props
     const author = {
-        userCreateId : user._id,
-        createdBy: user.name,
-        restaurantId: dataRestaurant[0]._id
+        userCreateId : dataRestaurant?.user._id,
+        createdBy: dataRestaurant?.user.name,
+        restaurantId: dataRestaurant._id
     }
+
+
     const [isOpenModal, setIsOpenModal] = useState(false)
-    const [isOpenModalChooseMenu, setIsOpenChooseMenu] = useState(false)
+    const [isOpenModalUpdateMenu, setIsOpenUpdateMenu] = useState(false)
     const [dataSource, setDataSource] = useState<any>([]);
     const [currentPage, setCurrentPage] = useState(1)
     const [currentLimit, setCurrentLimit] = useState(3)
@@ -36,49 +41,28 @@ const MenuTable = (props : any) =>{
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
     const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
     const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState<boolean>(false)
-    const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
-    setRoleUser(role)
+
     const router = useRouter()
     const pathName = usePathname()
 
 
 
-    const fetchMenuPerPage = async (page : number , limit : number) =>{
-        const res = await handleGetDataPerPage(`api/v1/menus?current=${page}&pageSize=${limit}&belongTo=${author.restaurantId}`, access_token, { next: { tags: "dataMenu" } })
-
-        if(res?.data?.results){    
-            const menus = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
-
-            const formatData = menus.map(item =>{ 
-                const {user, ...rest} = item
-                return ({
-                ...rest,
-
-                activeIcon: item.status==="PUBLIC" ? <CheckOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "green"}}/> : <CloseOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "red"}}/>
-            })});
-            setDataSource(formatData)
-            setTotalPages(+res?.data?.totalPages)
-            setLoading(false)
-        }else{
-            notification.error({
-                message: "Call APIs error",
-                description: res?.message
-            })
-        }
-
-    }
-
     useEffect(()=>{
-        fetchMenuPerPage(currentPage, currentLimit)
-    },[currentPage])
+        setLoading(false)
+        const formatData = menu.map((item: any) =>{ 
+            const {user, ...rest} = item
+            return ({
+            ...rest,
+            createdAt: dayjs(item.createdAt).format("DD-MM-YYYY"),
+            activeIcon: item.status==="PUBLIC" ? <CheckOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "green"}}/> : <CloseOutlined style={{fontSize: "16px", display: "flex", justifyContent: "center", color: "red"}}/>
+        })});
+        setDataSource(formatData)
+    },[])
 
-    const handlePageClick =  async(e : any) =>{
-        setCurrentPage(e.selected + 1)
-    }
 
     const handleEditMenu =  async (record : any) =>{
-        const menuId = record._id
-        router.push(`${pathName}/detailMenu/${menuId}`);
+        setIsOpenUpdateMenu(true)
+        setCurrentMenu(record)
 
     }
 
@@ -98,11 +82,8 @@ const MenuTable = (props : any) =>{
         setCurrentMenu(record)
     }
 
-    const handleOpenCreateMenu = (record : any) =>{
-        setCurrentMenu(record)
-        router.push(`/dashboard/menu/${record._id}/menu`);
-
-
+    const HandleDetailMenu = (record : any) =>{
+        router.push(`${pathName}/${record._id}`)
     }
 
     const columns = [
@@ -127,12 +108,18 @@ const MenuTable = (props : any) =>{
             key: 'activeIcon',
         },
         {
+            title: 'Create At',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+        },
+        {
             title: 'Action',
             dataIndex: '',
             key: '',
             render: (text : string, record: any) =>
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", gap: 40, fontSize: 20}}>
                     <EditOutlined  onClick={()=>handleEditMenu(record)}/>
+                    <UnorderedListOutlined onClick={()=>HandleDetailMenu(record)}/>
                     <MinusOutlined onClick={()=>handleUnActiveMenu(record)}/>         
                     <PlusOutlined onClick={() => handleActiveMenu(record)} />
                     <DeleteOutlined onClick={()=>handleConfirmDeleteMenu(record)}/>
@@ -140,7 +127,7 @@ const MenuTable = (props : any) =>{
         },
         
     ];
-    if(roleUsers.includes(roleUser)) {
+    if(role === "BUSINESSMAN") {
         
         return (isLoading ?
             <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
@@ -148,7 +135,6 @@ const MenuTable = (props : any) =>{
             </div>
             :
             <>
-                <Button onClick={()=> router.back()}>Back</Button>
                 <div style={{
                     display: "flex", 
                     justifyContent: "space-between",
@@ -156,7 +142,7 @@ const MenuTable = (props : any) =>{
                     marginBottom: 20
                 }}>
                     <span>Manage Menu</span>
-                    <Button onClick={() => setIsOpenModal(true)}>Create Menu</Button>
+                    {menu.length < 5 && <Button onClick={() => setIsOpenModal(true)}>Create Menu</Button>}
                 </div>
                 <div className="table" >
                     <Table
@@ -168,30 +154,6 @@ const MenuTable = (props : any) =>{
                     />
     
                 </div>
-                {totalPages && totalPages > 0 &&
-                    <div className="footer">
-                        <ReactPaginate
-                            nextLabel=">"
-                            onPageChange={handlePageClick}
-                            pageRangeDisplayed={3}
-                            marginPagesDisplayed={2}
-                            pageCount={totalPages}
-                            previousLabel="<"
-                            pageClassName="page-item"
-                            pageLinkClassName="page-link"
-                            previousClassName="page-item"
-                            previousLinkClassName="page-link"
-                            nextClassName="page-item"
-                            nextLinkClassName="page-link"
-                            breakLabel="..."
-                            breakClassName="page-item"
-                            breakLinkClassName="page-link"
-                            containerClassName="pagination"
-                            activeClassName="active"
-                            renderOnZeroPageCount={null}
-                        />
-                    </div>
-                    }
                 <ModalCreateMenu
                     isOpenModal = {isOpenModal}
                     setIsOpenModal = {setIsOpenModal}
@@ -201,10 +163,11 @@ const MenuTable = (props : any) =>{
 
 
                 />
-                <ModalChooseMenu
-                    isOpenModalChooseMenu = {isOpenModalChooseMenu}
-                    setIsOpenChooseMenu = {setIsOpenChooseMenu}
+                <ModalMenuUpdate
+                    isOpenModal = {isOpenModalUpdateMenu}
+                    setIsOpenModal = {setIsOpenUpdateMenu}
                     access_token = {access_token}
+                    currentMenu={currentMenu}
                 />
                 <ModalConfirmDelete 
                     isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
@@ -237,4 +200,4 @@ const MenuTable = (props : any) =>{
     }
 }
 
-export default MenuTable
+export default MenuRestaurant

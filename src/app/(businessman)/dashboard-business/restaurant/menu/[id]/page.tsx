@@ -1,19 +1,18 @@
 import { auth } from "@/auth";
-import MenuDetail from "@/components/restaurant/menu/menu.detail";
+import MenuRestaurantDetail from "@/components/business/restaurant/menu/menuDetail";
 import { handleGetDataMenu } from "@/utils/action";
 
 interface IProps {
-    params: {id: string, menuId: string},
+    params: {id: string},
     searchParams: {[key: string]:string | string[] | undefined}
 }
-const DetailMenu = async(props:IProps) => {
-    const menuId = props.params.menuId
-    const restaurantId = props.params.id
+const DetailMenuRestaurant = async(props:IProps) => {
+    const menuId = props.params.id
     const session  = await auth()
     let role = session?.user?.role as string
     let access_token = session?.user?.access_token as string
-    let user  = session?.user
-
+    let restaurantId = session?.user?.access_token
+    let user = session?.user
    
 
     let res = await handleGetDataMenu(`api/v1/menus/get-menu-by-id?_id=${menuId}`, access_token)
@@ -22,7 +21,7 @@ const DetailMenu = async(props:IProps) => {
 
 
     return (
-        <MenuDetail
+        <MenuRestaurantDetail
         role = {role}
         access_token = {access_token}
         user = {user}
@@ -33,4 +32,4 @@ const DetailMenu = async(props:IProps) => {
     )
 }
 
-export default DetailMenu;
+export default DetailMenuRestaurant;

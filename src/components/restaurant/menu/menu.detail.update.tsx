@@ -1,6 +1,5 @@
 "use client"
 
-import { AdminContext } from "@/library/admin.context"
 import { handleGetData, handleGetDataPerPage } from "@/utils/action"
 import { sendRequest } from "@/utils/api"
 import { BarsOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, MinusCircleOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons"
@@ -11,10 +10,8 @@ import "../Pagination.scss"
 
 const MenuDetailUpdate = (props: any) => {
     const { role, menuItems, user, access_token } = props
-    
     const [isLoading, setLoading] = useState(false)
-    const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
-    setRoleUser(role)
+
     const router = useRouter()
     const pathName = usePathname()
     const [form] = Form.useForm()
@@ -86,125 +83,120 @@ const MenuDetailUpdate = (props: any) => {
 
     }
 
-    if (roleUsers.includes(roleUser)) {
+    return (isLoading ?
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Spin />
+        </div>
+        :
+        <>
+            <div className="list-item-menu" style={{ border: "1px solid #d9d9d9", padding: 15, borderRadius: 8, margin: 20, height: "61vh",  }}>
+                <Form
+                    name="verify"
+                    autoComplete="off"
+                    layout="vertical"
+                    form={form}
+                    onFinish={handleMenuChange}
+                    initialValues={initialValues}
+                    onValuesChange= {(changedValues, allValues)=>valuechange(changedValues, allValues)}
+                >
+                    <div style={{padding: "10px", height: "56vh", overflow: "scroll" }}>
+                        <Form.List
+                            name="menuItem"
+                        >
+                            {(fields, { add, remove }) => (
+                                <>
+                                    {fields.map(({ key, name, ...restField }) => (
+                                        <Space key={key} style={{ display: 'block', marginBottom: 16 }} >
+                                            <Form.Item
+                                                        name={[name, '_id']}
+                                                        rules={[{ required: true, message: 'Missing _id' }]}
+                                                        hidden
+                                                    >
+                                                        <Input disabled/>
+                                                    </Form.Item>
+                                            <Row gutter={16}>
+                                                <Col span={12}>
+                                                    <Form.Item valuePropName="fileList" getValueFromEvent={normFile} name={[name, 'image']}>
+                                                        <Upload
+                                                            listType="picture-card"
+                                                            accept="image/png, image/jpeg"
+                                                            maxCount={1}
+                                                            showUploadList={{
+                                                                showPreviewIcon: false
+                                                            }}>
+                                                            <button style={{ border: 0, background: 'none' }} type="button">
+                                                                <PlusOutlined />
+                                                                <div style={{ marginTop: 8 }}>Upload</div>
+                                                            </button>
+                                                        </Upload>
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={11}></Col>
+                                                <Col span={1}></Col>
+                                            </Row>
 
-        return (isLoading ?
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <Spin />
+                                            <Row gutter={16}>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        name={[name, 'nameItemMenu']}
+                                                        rules={[{ required: true, message: 'Missing name' }]}
+                                                    >
+                                                        <Input placeholder="Name"/>
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        name={[name, 'description']}
+                                                        rules={[{ required: true, message: 'Missing Description', }]}
+                                                    >
+                                                        <Input placeholder="Description" />
+                                                    </Form.Item>
+                                                </Col>
+
+                                            </Row>
+                                            <Row gutter={16}>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        name={[name, 'fixedPrice']}
+                                                        rules={[{ required: true, message: 'Missing fixed price', }]}
+                                                    >
+                                                        <InputNumber min={1000} placeholder="Fixed price" style={{ width: "100%" }} />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={12}>
+                                                    <Form.Item
+                                                        name={[name, 'sellingPrice']}
+                                                        rules={[{ required: true, message: 'Missing selling price', }]}
+                                                    >
+                                                        <InputNumber min={1000} placeholder="Selling price" style={{ width: "100%" }} />
+                                                    </Form.Item>
+                                                </Col>
+                                            </Row>
+                                        </Space>
+                                    ))}
+                                </>
+                            )}
+                        </Form.List>
+
+                    
+                    
+                    
+                    </div>
+                    <Form.Item style={{display: "flex", justifyContent: "flex-end", marginBottom: 0 }}>
+                        <Button type="primary" htmlType="submit">
+                            Change
+                        </Button>
+                    </Form.Item>
+
+
+                </Form>
+
+
+
             </div>
-            :
-            <>
-                <div className="list-item-menu" style={{ border: "1px solid #d9d9d9", padding: 15, borderRadius: 8, margin: 20, height: "61vh",  }}>
-                    <Form
-                        name="verify"
-                        autoComplete="off"
-                        layout="vertical"
-                        form={form}
-                        onFinish={handleMenuChange}
-                        initialValues={initialValues}
-                        onValuesChange= {(changedValues, allValues)=>valuechange(changedValues, allValues)}
-                    >
-                        <div style={{padding: "10px", height: "56vh", overflow: "scroll" }}>
-                            <Form.List
-                                name="menuItem"
-                            >
-                                {(fields, { add, remove }) => (
-                                    <>
-                                        {fields.map(({ key, name, ...restField }) => (
-                                            <Space key={key} style={{ display: 'block', marginBottom: 16 }} >
-                                                <Form.Item
-                                                            name={[name, '_id']}
-                                                            rules={[{ required: true, message: 'Missing _id' }]}
-                                                            hidden
-                                                        >
-                                                            <Input disabled/>
-                                                        </Form.Item>
-                                                <Row gutter={16}>
-                                                    <Col span={12}>
-                                                        <Form.Item valuePropName="fileList" getValueFromEvent={normFile} name={[name, 'image']}>
-                                                            <Upload
-                                                                listType="picture-card"
-                                                                accept="image/png, image/jpeg"
-                                                                maxCount={1}
-                                                                showUploadList={{
-                                                                    showPreviewIcon: false
-                                                                }}>
-                                                                <button style={{ border: 0, background: 'none' }} type="button">
-                                                                    <PlusOutlined />
-                                                                    <div style={{ marginTop: 8 }}>Upload</div>
-                                                                </button>
-                                                            </Upload>
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col span={11}></Col>
-                                                    <Col span={1}></Col>
-                                                </Row>
 
-                                                <Row gutter={16}>
-                                                    <Col span={12}>
-                                                        <Form.Item
-                                                            name={[name, 'nameItemMenu']}
-                                                            rules={[{ required: true, message: 'Missing name' }]}
-                                                        >
-                                                            <Input placeholder="Name"/>
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col span={12}>
-                                                        <Form.Item
-                                                            name={[name, 'description']}
-                                                            rules={[{ required: true, message: 'Missing Description', }]}
-                                                        >
-                                                            <Input placeholder="Description" />
-                                                        </Form.Item>
-                                                    </Col>
-
-                                                </Row>
-                                                <Row gutter={16}>
-                                                    <Col span={12}>
-                                                        <Form.Item
-                                                            name={[name, 'fixedPrice']}
-                                                            rules={[{ required: true, message: 'Missing fixed price', }]}
-                                                        >
-                                                            <InputNumber min={1000} placeholder="Fixed price" style={{ width: "100%" }} />
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col span={12}>
-                                                        <Form.Item
-                                                            name={[name, 'sellingPrice']}
-                                                            rules={[{ required: true, message: 'Missing selling price', }]}
-                                                        >
-                                                            <InputNumber min={1000} placeholder="Selling price" style={{ width: "100%" }} />
-                                                        </Form.Item>
-                                                    </Col>
-                                                </Row>
-                                            </Space>
-                                        ))}
-                                    </>
-                                )}
-                            </Form.List>
-
-                        
-                        
-                        
-                        </div>
-                        <Form.Item style={{display: "flex", justifyContent: "flex-end", marginBottom: 0 }}>
-                            <Button type="primary" htmlType="submit">
-                                Change
-                            </Button>
-                        </Form.Item>
-
-
-                    </Form>
-
-
-
-                </div>
-
-            </>
-        )
-    } else {
-        return <>Bạn không có quyền truy cập vào chức năng này.</>
-    }
+        </>
+    )
 }
 
 

@@ -132,9 +132,8 @@ export async function handleDeleteDataMenu(path:string, data: any, access_token:
 }
 
 // businessman
-
 export async function handleGetDataUserById(path:string, access_token: string) {
-    const res = await sendRequest<IBackendRes<IUserPerPage>>({
+    const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",
         headers: {
@@ -146,7 +145,7 @@ export async function handleGetDataUserById(path:string, access_token: string) {
 }
 
 export async function handleGetDataRestaurantById(path:string, access_token: string) {
-    const res = await sendRequest<IBackendRes<IUserPerPage>>({
+    const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",
         headers: {

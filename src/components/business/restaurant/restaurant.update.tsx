@@ -195,7 +195,7 @@ const ModalUpdateRestaurant =  (props: any) => {
                             ]}
                         >
                             <Select
-                                
+                                disabled
                                 options={dataUser}
                                 />
                         </Form.Item>

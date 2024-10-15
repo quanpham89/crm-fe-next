@@ -40,6 +40,17 @@ const RestaurantBusiness = (props: any) => {
             const response: any = await handleGetDataRestaurantById(`api/v1/restaurants/get-retaurant-by-id?_id=${user.restaurantId}`, user?.access_token)
             if (response?.data.length > 0) {
                 setIsLoading(false)
+                setCurrentRestaurant({
+                    isShow: response?.data[0].isShow,
+                    _id: response?.data[0]._id,
+                    address: response?.data[0].address,
+                    phone:  response?.data[0].phone,
+                    description:  response?.data[0].description,
+                    restaurantName: response?.data[0].restaurantName,
+                    productType: response?.data[0].productType,
+                    userId: response?.data[0]?.user?._id
+
+                })
                 const formatData  = [
                     {
                         label: "Owner",
@@ -94,31 +105,6 @@ const RestaurantBusiness = (props: any) => {
         getDataRestaurant(user)
     }, [])
 
-    const handlePageClick = async (e: any) => {
-        setCurrentPage(e.selected + 1)
-    }
-
-    const handleEditRestaurant = async (record: any) => {
-        setIsOpenUpdateRestaurant(true)
-        setCurrentRestaurant(record)
-    }
-
-    const handleUnActiveRestaurant = async (record: any) => {
-        setOpenModalConfirmHidden(true)
-        setCurrentRestaurant(record)
-    }
-
-    const handleActiveRestaurant = (record: any) => {
-        setOpenModalConfirmActive(true)
-        setCurrentRestaurant(record)
-    }
-
-
-    const handleConfirmDeleteRestaurant = async (record: any) => {
-        setOpenModalConfirmDelete(true)
-        setCurrentRestaurant(record)
-    }
-
 
     if (user?.role === "BUSINESSMAN") {
 
@@ -143,11 +129,13 @@ const RestaurantBusiness = (props: any) => {
 
                 <Descriptions  items={dataRestaurant} bordered/>
 
-                
-                <ModalCreateRestaurant
-                    isOpenModal={isOpenModal}
-                    setIsOpenModal={setIsOpenModal}
-                />
+                <div style={{ display: "flex", gap: 15, marginTop: 20, justifyContent: "flex-end"}}>
+                    <Button onClick={()=>setOpenModalConfirmDelete(true)}>Delete</Button>
+                    <Button onClick={()=> setOpenModalConfirmHidden(true)}>Disable</Button>
+                    <Button onClick={()=>setOpenModalConfirmActive(true)}>Active</Button>
+                    <Button onClick={()=>setIsOpenUpdateRestaurant(true)}>Update</Button>
+                </div>
+
                 <ModalUpdateRestaurant
                     isOpenModalUpdateRestaurant={isOpenModalUpdateRestaurant}
                     setIsOpenUpdateRestaurant={setIsOpenUpdateRestaurant}
