@@ -76,6 +76,7 @@ const UserTable = (props: any) => {
     }
 
     const handleConfirmDeleteUser = (record: any) =>{
+        console.log(record)
         setOpenModalConfirmDelete(true)
         setCurrentUser(record)
     }
@@ -200,7 +201,7 @@ const UserTable = (props: any) => {
                 isOpenModalConfirmDelete = {isOpenModalConfirmDelete} 
                 setOpenModalConfirmDelete= {setOpenModalConfirmDelete} 
                 title = {`Bạn chắc chắn muốn xóa người dùng này vĩnh viễn ?`} 
-                currentUser= {currentUser} 
+                currentItem= {currentUser} 
                 access_token = {access_token}
                 type="USER"
                 />

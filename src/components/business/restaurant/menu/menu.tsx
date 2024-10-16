@@ -103,7 +103,7 @@ const MenuRestaurant = (props : any) =>{
             key: 'description',
         },
         {
-            title: 'status',
+            title: 'Status',
             dataIndex: 'activeIcon',
             key: 'activeIcon',
         },

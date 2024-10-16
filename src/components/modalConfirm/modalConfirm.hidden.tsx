@@ -41,6 +41,37 @@ const ModalConfirmHidden =  (props: any) => {
                     })
                 }
             break;
+            case "CUSTOMER": 
+                if(!currentItem?.user.isActive){
+                    notification.success({
+                        message: "Hủy kích hoạt tài khoản",
+                        description: "Tài khoản hiện đang không kích hoạt."
+                    })
+                    setOpenModalConfirmHidden(false)
+                    return
+                }
+                const resCustomer = await sendRequest<IBackendRes<any>>({
+                    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/soft-delete?_id=${currentItem?.user._id}`,
+                    method: "PATCH",
+                    headers: {
+                        'Authorization': `Bearer ${access_token}`
+                    }
+                    
+                })
+        
+                if(resCustomer?.data){          
+                    notification.success({
+                        message: "Hủy kích hoạt tài khoản thành công.",
+                        description: resCustomer?.message
+                    })
+                    window.location.reload()
+                }else{
+                    notification.error({
+                        message: "Call APIs error",
+                        description: resCustomer?.message
+                    })
+                }
+            break;
             case "RESTAURANTS":
                 if(!currentItem.isShow){
                     notification.success({

@@ -157,5 +157,19 @@ export async function handleGetDataRestaurantById(path:string, access_token: str
 }
 
 
+// customer
+export async function handleGetDataUserCustomer(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+    
+}
+
+
 
 

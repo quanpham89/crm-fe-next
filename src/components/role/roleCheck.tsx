@@ -20,6 +20,12 @@ const RoleCheck = (props: any) => {
                     router.push("/dashboard-business");
                 }, 1000);
                 break;
+
+            case "CUSTOMER":
+                setTimeout(() => {
+                    router.push("/customer");
+                }, 1000);
+                break;
         }
     };
 

@@ -17,21 +17,8 @@ const ManageMenuPage = async(props:IProps) => {
 
     let res = await handleGetData(`api/v1/restaurants/get-retaurant-by-id?_id=${props?.params?.id}`, access_token)
     let dataRestaurant = res?.data
-    // const currentPage = props?.searchParams?.current ?? 1
-    // const pageSize = props?.searchParams?.pageSize ?? 5
-    // const nextOptions = {
-    //     next : {tags : ['list-menu']}
-    // }
-    // const dataMenu  = await handleGetDataPerPage(`api/v1/restaurants?current=${currentPage}&pageSize=${pageSize}`, access_token, nextOptions )
-    // console.log(dataMenu)
-    // const meta = {
-    //     current: currentPage,
-    //     pageSize: pageSize,
-    //     pages: dataMenu?.data?.totalPages,
-    //     total: dataMenu?.data?.totalItems
-    // }
 
-    console.log(res)
+
 
     return <MenuTable 
     role = {role}

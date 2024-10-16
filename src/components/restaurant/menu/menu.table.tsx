@@ -25,11 +25,13 @@ const MenuTable = (props : any) =>{
         createdBy: user.name,
         restaurantId: dataRestaurant[0]._id
     }
+
+    console.log(author.restaurantId)
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [isOpenModalChooseMenu, setIsOpenChooseMenu] = useState(false)
     const [dataSource, setDataSource] = useState<any>([]);
     const [currentPage, setCurrentPage] = useState(1)
-    const [currentLimit, setCurrentLimit] = useState(3)
+    const [currentLimit, setCurrentLimit] = useState(5)
     const [totalPages, setTotalPages] = useState<number>(1) 
     const [currentMenu, setCurrentMenu] = useState({})
     const [isLoading, setLoading] = useState(true)
@@ -45,10 +47,8 @@ const MenuTable = (props : any) =>{
 
     const fetchMenuPerPage = async (page : number , limit : number) =>{
         const res = await handleGetDataPerPage(`api/v1/menus?current=${page}&pageSize=${limit}&belongTo=${author.restaurantId}`, access_token, { next: { tags: "dataMenu" } })
-
         if(res?.data?.results){    
             const menus = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
-
             const formatData = menus.map(item =>{ 
                 const {user, ...rest} = item
                 return ({
