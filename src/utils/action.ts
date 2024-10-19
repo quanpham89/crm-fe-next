@@ -170,6 +170,15 @@ export async function handleGetDataUserCustomer(path:string, access_token: strin
     
 }
 
+export async function handleGetAllRestaurantRender(path:string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+    })
+    return res
+    
+} 
+
 
 
 

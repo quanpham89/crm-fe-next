@@ -27,7 +27,7 @@ const DetailMenuRestaurant = async(props:IProps) => {
         user = {user}
         menuInfo = {menuInfo}
         menuItems  = {menuItem}
-        restaurantId= {restaurantId}
+        restaurantId= {res?.data[0]?.restaurant?._id}
         />
     )
 }

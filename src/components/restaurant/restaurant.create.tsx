@@ -8,11 +8,11 @@ import { Select } from 'antd';
 import { useRouter } from "next/navigation";
 
 const ModalCreateRestaurant =  (props: any) => {
-    const { isOpenModal, setIsOpenModal } = props
+    const { isOpenModal, setIsOpenModal, user } = props
     const [form] = Form.useForm()
     const [dataUser, setDataUser] = useState([])
     const router = useRouter()
-
+    form.setFieldValue("userId", user._id)
     useEffect(()=>{
         fetchUserId();
     },[])
@@ -36,6 +36,7 @@ const ModalCreateRestaurant =  (props: any) => {
     }
     
     const createRestaurants =  async(values : any) =>{
+
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants`,
             method: "POST",
@@ -152,6 +153,7 @@ const ModalCreateRestaurant =  (props: any) => {
                         <Form.Item
                             label="Owner"
                             name="userId"
+                            hidden
                             rules={[
                                 {
                                     required: true,
@@ -159,10 +161,7 @@ const ModalCreateRestaurant =  (props: any) => {
                                 },
                             ]}
                         >
-                            <Select
-                                
-                                options={dataUser}
-                                />
+                            <Input disabled/>
                         </Form.Item>
 
                         

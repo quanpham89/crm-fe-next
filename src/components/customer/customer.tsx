@@ -60,7 +60,7 @@ const Customer = (props: any) => {
         <ModalConfirmHidden
             isOpenModalConfirmHidden={isOpenModalConfirmHidden}
             setOpenModalConfirmHidden={setIsOpenModalConfirmHidden}
-            title={`Bạn chắc chắn vô hiệu hóa tài khoản này?`}
+            title={`Bạn chắc chắn muốn vô hiệu hóa tài khoản của bạn này?`}
             currentItem={currentCustomer}
             access_token={user?.access_token}
             type="CUSTOMER"

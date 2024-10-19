@@ -163,9 +163,9 @@ const ModalUpdateUser =  (props: any) => {
                             <Select
                                 style={{ width: 140 }}
                                 options={[
-                                    { value: 'ADMIN', label: 'Admin' },
-                                    { value: 'CUSTOMER', label: 'Customer' },
-                                    { value: 'BUSINESSMAN', label: 'Businessman' },
+                                    { value: 'ADMIN', label: 'Quản trị viên' },
+                                    { value: 'CUSTOMER', label: 'Khách hàng' },
+                                    { value: 'BUSINESSMAN', label: 'Người bán hàng' },
                                 ]}
                                 />
                         </Form.Item>

@@ -19,13 +19,10 @@ const RestaurantBusiness = (props: any) => {
     const { user } = props
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [isHaveRestaurant, setIsHaveRestaurant] = useState(false)
-    const [isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant] = useState(false)
-    const [dataSource, setDataSource] = useState<any>([]);
-    const [currentPage, setCurrentPage] = useState(1)
-    const [currentLimit, setCurrentLimit] = useState(3)
-    const [totalPages, setTotalPages] = useState<number>(1)
     const [currentRestaurant, setCurrentRestaurant] = useState({})
     const [isLoading, setIsLoading] = useState(true)
+    const [isOpenModalCreateRestaurant, setIsOpenModalCreateRestaurant] = useState(false)
+    const [isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant] = useState(false)
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
     const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
     const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState<boolean>(false)
@@ -35,10 +32,10 @@ const RestaurantBusiness = (props: any) => {
     const router = useRouter()
 
     const getDataRestaurant = async (user: any) => {
-        if (user && user?.restaurantId) {
-            setIsHaveRestaurant(true)
-            const response: any = await handleGetDataRestaurantById(`api/v1/restaurants/get-retaurant-by-id?_id=${user.restaurantId}`, user?.access_token)
+        if (user) {
+            const response: any = await handleGetDataRestaurantById(`api/v1/restaurants/get-retaurant-by-id?_id=${user._id}`, user?.access_token)
             if (response?.data.length > 0) {
+                setIsHaveRestaurant(true)
                 setIsLoading(false)
                 setCurrentRestaurant({
                     isShow: response?.data[0].isShow,
@@ -103,7 +100,10 @@ const RestaurantBusiness = (props: any) => {
 
     useEffect(() => {
         getDataRestaurant(user)
-    }, [])
+        setTimeout(()=>{
+            setIsLoading(false)
+        }, 500)
+    },[])
 
 
     if (user?.role === "BUSINESSMAN") {
@@ -114,6 +114,7 @@ const RestaurantBusiness = (props: any) => {
             </div>
             :
             <>
+                {!isHaveRestaurant && <Button onClick={() => setIsOpenModalCreateRestaurant(true)}>Create Restaurant</Button>}
                 <div style={{
                     display: "flex",
                     justifyContent: "center",
@@ -123,18 +124,26 @@ const RestaurantBusiness = (props: any) => {
                     fontWeight: 600
                 }}>
                     <span>My Restaurants</span>
-                    {!isHaveRestaurant && <Button onClick={() => setIsOpenModal(true)}>Create Restaurant</Button>}
                     
                 </div>
 
                 <Descriptions  items={dataRestaurant} bordered/>
 
-                <div style={{ display: "flex", gap: 15, marginTop: 20, justifyContent: "flex-end"}}>
+                {isHaveRestaurant &&
+                    <div style={{ display: "flex", gap: 15, marginTop: 20, justifyContent: "flex-end"}}>
                     <Button onClick={()=>setOpenModalConfirmDelete(true)}>Delete</Button>
                     <Button onClick={()=> setOpenModalConfirmHidden(true)}>Disable</Button>
                     <Button onClick={()=>setOpenModalConfirmActive(true)}>Active</Button>
                     <Button onClick={()=>setIsOpenUpdateRestaurant(true)}>Update</Button>
-                </div>
+                </div>}
+
+                <ModalCreateRestaurant
+                    isOpenModal={isOpenModalCreateRestaurant}
+                    setIsOpenModal={setIsOpenModalCreateRestaurant}
+                    currentRestaurant={currentRestaurant}
+                    access_token={user?.access_token}
+                    user= {user}
+                />
 
                 <ModalUpdateRestaurant
                     isOpenModalUpdateRestaurant={isOpenModalUpdateRestaurant}
