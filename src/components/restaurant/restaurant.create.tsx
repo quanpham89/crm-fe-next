@@ -8,11 +8,13 @@ import { Select } from 'antd';
 import { useRouter } from "next/navigation";
 
 const ModalCreateRestaurant =  (props: any) => {
-    const { isOpenModal, setIsOpenModal, user } = props
+    const { isOpenModal, setIsOpenModal, user, role } = props
     const [form] = Form.useForm()
     const [dataUser, setDataUser] = useState([])
     const router = useRouter()
-    form.setFieldValue("userId", user._id)
+    if(user ){
+        form.setFieldValue("userId", user._id)
+    }
     useEffect(()=>{
         fetchUserId();
     },[])
@@ -149,7 +151,23 @@ const ModalCreateRestaurant =  (props: any) => {
                                  ]}
                                 />
                         </Form.Item>
-
+                        {role === "ADMIN" || role === "ADMINS" ?
+                        <Form.Item
+                        label="Owner"
+                        name="userId"
+                        hidden
+                        rules={[
+                            {
+                                required: true,
+                                message: "Owner can't be blank!",
+                            },
+                        ]}
+                    >
+                        <Select style={{ width: 140 }}
+                                options={dataUser}
+                        />
+                    </Form.Item>
+                    :
                         <Form.Item
                             label="Owner"
                             name="userId"
@@ -163,6 +181,7 @@ const ModalCreateRestaurant =  (props: any) => {
                         >
                             <Input disabled/>
                         </Form.Item>
+                        }
 
                         
                         <Form.Item style={{display: "flex", justifyContent: "flex-end", marginTop: 20, marginBottom: 0}}>

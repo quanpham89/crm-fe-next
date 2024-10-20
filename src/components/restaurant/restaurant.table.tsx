@@ -226,6 +226,7 @@ const RestaurantTable = (props: any) => {
                 <ModalCreateRestaurant
                     isOpenModal = {isOpenModal}
                     setIsOpenModal = {setIsOpenModal}
+                    role= {role}
                 />
                 <ModalUpdateRestaurant
                     isOpenModalUpdateRestaurant = {isOpenModalUpdateRestaurant}

@@ -23,7 +23,6 @@
     "react-highlight-words": "0.20.0",
     "react-paginate": "^8.1.0",
     "sass": "1.48.0",
-    "swiper": "11.1.14",
     "uuid": "10.0.0"
   },
   "devDependencies": {
