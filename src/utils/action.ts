@@ -179,6 +179,15 @@ export async function handleGetAllRestaurantRender(path:string) {
     
 } 
 
+export async function handleGetAllVoucherRender(path:string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+    })
+    return res
+    
+} 
+
 
 
 

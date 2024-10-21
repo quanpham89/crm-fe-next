@@ -59,7 +59,7 @@ const ModalCreateCoupon = (props: any) => {
     if (!hasMounted) return <></>;
     return (
         <>
-            <Modal title="Create Restaurant"
+            <Modal title="Tạo Coupon"
                 open={isOpenModal}
                 onOk={() => setIsOpenModal(false)}
                 onCancel={() => setIsOpenModal(false)}

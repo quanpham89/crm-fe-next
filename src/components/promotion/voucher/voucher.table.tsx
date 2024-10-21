@@ -18,7 +18,7 @@ import { AdminContext } from "@/library/admin.context";
 
 const VoucherTable = (props: any) => {
     const [form] = Form.useForm()
-    const { role, access_token, user } = props
+    const { role, access_token, user, userCreateId } = props
     const router = useRouter()
     const [loading, setLoading] = useState<boolean>(true)
     const [totalPages, setTotalPages] = useState(1)
@@ -32,12 +32,12 @@ const VoucherTable = (props: any) => {
     const [currentVoucher, setCurrentVoucher] = useState<any>("")
     const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState<boolean>(false)
     const [typeAction, setTypeAction] = useState<string>("NORMAL")
-    const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
-    setRoleUser(role)
+    const roleUsers = ["ADMINS", "ADMIN", "BUSINESSMAN"]
+
 
     const fetchVouchersPerPage = async (page: number, limit: number) => {
         const res = await sendRequest<IBackendRes<IUserPerPage>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers?current=${page}&pageSize=${limit}`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers?current=${page}&pageSize=${limit}&belongTo=${userCreateId}`,
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${access_token}`
@@ -93,7 +93,11 @@ const VoucherTable = (props: any) => {
 
     const handleShowDetail = async (values: any) => {
         setCurrentVoucher(values)
-        router.push(`/dashboard/promotion/voucher/${values._id}`)
+        if(role === "ADMINS" || role === "ADMIN"){
+            router.push(`/dashboard/promotion/voucher/${values._id}`)
+        }else{
+            router.push(`/dashboard-business/promotion/voucher/${values._id}`)
+        }
 
     }
 
@@ -177,9 +181,10 @@ const VoucherTable = (props: any) => {
             }
 
         }
+        console.log(formatvalue)
     
         const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/search?searchValue=${JSON.stringify(formatvalue)}`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/search?searchValue=${JSON.stringify(formatvalue)}&belongTo=${userCreateId}`,
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${access_token}`
@@ -216,7 +221,7 @@ const VoucherTable = (props: any) => {
         form.resetFields()
     }
 
-    if (roleUsers.includes(roleUser)) {
+    if (roleUsers.includes(role)) {
 
         return (!loading ?
             <div >
@@ -312,8 +317,10 @@ const VoucherTable = (props: any) => {
                         columns={columns}
                         pagination={false}
                         rowKey="_id"
+                        
                     />
                     {totalPages && totalPages > 0 && typeAction !== "SEARCH" &&
+                    
                         <div className="footer">
                             <ReactPaginate
                                 nextLabel=">"

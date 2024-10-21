@@ -5,7 +5,7 @@ import CustomerHeader from '@/components/layout/customer.header';
 import CustomerSideBar from '@/components/layout/customer.sidebar';
 import { CustomerContextProvider } from '@/library/customer.context';
 
-const BusinessLayout = async ({
+const  CustomerLayout = async ({
     children,
 }: Readonly<{
     children: React.ReactNode;
@@ -31,4 +31,4 @@ const BusinessLayout = async ({
     )
 }
 
-export default BusinessLayout
+export default CustomerLayout

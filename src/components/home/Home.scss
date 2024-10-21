@@ -1,37 +1,140 @@
-.home-container{
-    display: flex;
-    justify-content: center;
+.home-container {
+    height: 100vh;
 
-    .slider{
-    width: 90vw;
-    padding: 20px;
-    border: 1px solid rgba(5, 5, 5, 0.06);
-    border-radius: 8px;
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        background-color: #faf8f8;
+    }
 
-    .slide{
-        display: flex !important;
-        gap: 20px;
-        .slide-card{
-            width: 400px;
+    ::-webkit-scrollbar {
+        width: 5px;
+        background-color: #f7f4f4;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: rgba(5, 5, 5, 0.06);
+    }
+
+    .slider {
+        width: 90vw;
+        padding: 40px;
+        border: 1px solid rgba(5, 5, 5, 0.06);
+        border-radius: 8px;
+        .slick-arrow.slick-prev,
+        .slick-arrow.slick-next{
+            color: #000;
+            font-size: 16px;
         }
-        .menu-list{
-            flex: 1;
-            .title{
-                text-align: center;
-
+        .slick-dots.slick-dots-bottom{
+            li{
+                button{
+                    background-color: #df5d5d;
+                    font-size: 16px;
+                    
+                }
             }
-            .menu-item{
-                .menu-card{
-                    padding: 12px;
-                    width: 180px;
-                    border: 1px solid rgba(5, 5, 5, 0.06);
-                    border-radius: 8px;
+            .slick-active{
+                button{
+                    background-color: #000;
+                    font-size: 16px;
+                }
+            }
+        }
+
+        .slide {
+            display: flex !important;
+            gap: 20px;
+            height: 40vh;
+
+            .slide-card {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                width: 400px;
+
+                .support-title {
+                    font-size: 12px;
+                    font-style: italic;
+                }
+            }
+
+            .menu-list {
+                flex: 1;
+
+                .title {
+                    text-align: center;
 
                 }
 
+                .menu-item {
+                    display: flex;
+                    gap: 20px;
+                    flex-wrap: wrap;
+                    height: 90%;
+                    overflow-y: scroll;
+
+                    .menu-card {
+                        padding: 12px;
+                        width: 200px;
+                        border: 1px solid rgba(5, 5, 5, 0.06);
+                        border-radius: 8px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+
+                        .support-title {
+                            font-size: 12px;
+                            font-style: italic;
+                        }
+
+                    }
+
+                }
             }
         }
+
     }
 
+    .slider-voucher{
+        width: 90vw;
+        padding: 30px;
+        border: 1px solid rgba(5, 5, 5, 0.06);
+        border-radius: 8px;
+        .slick-arrow.slick-prev,
+        .slick-arrow.slick-next{
+            color: #000;
+            font-size: 16px;
+        }
+        .slick-dots.slick-dots-bottom{
+            li{
+                button{
+                    background-color: #df5d5d;
+                    font-size: 16px;
+                    
+                }
+            }
+            .slick-active{
+                button{
+                    background-color: #000;
+                    font-size: 16px;
+                }
+            }
+        }
+        .slide-card{
+            width: 96% !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            flex-direction: column !important;
+            .support-title {
+                font-size: 12px;
+                font-style: italic;
+            }
+        }
     }
 }

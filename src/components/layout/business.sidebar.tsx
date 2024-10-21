@@ -44,6 +44,8 @@ const BusinessSideBar = () => {
                     icon: <ShopOutlined />,
                     children: [
                         {key: 'menu', label:<Link href={"/dashboard-business/restaurant/menu"}> Menu</Link>, icon: <MenuOutlined />},
+                        {key: "voucher", label: <Link href={"/dashboard-business/promotion/voucher"}> Voucher</Link>, icon: <ShoppingOutlined />},
+                        {key: "coupon", label: <Link href={"/dashboard-business/promotion/coupon"}> Coupon</Link>, icon: <ShoppingOutlined />},
                         {key: "order", label: <Link href={"/dashboard-business/restaurant/order"}> Order</Link>, icon: <ShoppingOutlined />},
                     ],
                 },

@@ -15,8 +15,8 @@ const VoucherDetail = (props: any) =>{
     const [currentVoucher, setCurrentVoucher] =  useState("")
     const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState(false)
     const [isOpenModalConfirmUnActive, setOpenModalConfirmUnActive] = useState(false)
-    const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
-    setRoleUser(role)
+    const roleUsers = ["ADMINS", "ADMIN", "BUSINESSMAN"]
+
     const router = useRouter()
 
 
@@ -108,7 +108,7 @@ const VoucherDetail = (props: any) =>{
         },
     ];
 
-    if (roleUsers.includes(roleUser)) {
+    if (roleUsers.includes(role)) {
 
         return (!loading ?
                 <>
