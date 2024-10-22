@@ -20,13 +20,13 @@ import Restaurant from "@/app/(admin)/dashboard/restaurant/[id]/page"
 
 const MenuTable = (props : any) =>{
     const {role, access_token, dataRestaurant, user} = props
+
     const author = {
         userCreateId : user._id,
         createdBy: user.name,
         restaurantId: dataRestaurant[0]._id
     }
 
-    console.log(author.restaurantId)
     const [isOpenModal, setIsOpenModal] = useState(false)
     const [isOpenModalChooseMenu, setIsOpenChooseMenu] = useState(false)
     const [dataSource, setDataSource] = useState<any>([]);

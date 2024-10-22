@@ -39,6 +39,21 @@ const CustomerSideBar = () => {
                     label: <Link href={"/customer/restaurant"}> Restaurant</Link>,
                     icon: <ShopOutlined />,
                 },
+                {
+                    key: "order",
+                    label: <Link href={"/customer/order"}> My Order</Link>,
+                    icon: <ShopOutlined />,
+                },
+                {
+                    key: "cart",
+                    label: <Link href={"/customer/cart"}> Cart</Link>,
+                    icon: <ShopOutlined />,
+                },
+                {
+                    key: "protion",
+                    label: <Link href={"/customer/protion"}> Promotion</Link>,
+                    icon: <ShopOutlined />,
+                },
             ],
         },
     ];

@@ -1,5 +1,9 @@
 .home-container {
     height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
 
     ::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -20,7 +24,7 @@
 
     .slider {
         width: 85vw;
-        padding: 40px;
+        padding: 20px;
         border: 1px solid rgba(5, 5, 5, 0.06);
         border-radius: 8px;
         .slick-arrow.slick-prev,
@@ -47,20 +51,26 @@
         .slide {
             display: flex !important;
             gap: 20px;
-            height: 40vh;
+            height: 30vh;
 
             .slide-card {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                width: 400px;
-
-                .support-title {
-                    font-size: 12px;
-                    font-style: italic;
+                width: 300px;
+                cursor: pointer;
+                .truncate{
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 260px;
+                    .support-title {
+                        font-size: 11px;
+                        font-style: italic;
+                    }
                 }
-            }
+}
 
             .menu-list {
                 flex: 1;
@@ -79,17 +89,22 @@
 
                     .menu-card {
                         padding: 12px;
-                        width: 200px;
+                        font-size: 12px;
+                        width: 210px;
                         border: 1px solid rgba(5, 5, 5, 0.06);
                         border-radius: 8px;
                         display: flex;
                         flex-direction: column;
                         justify-content: center;
-                        align-items: center;
-
-                        .support-title {
-                            font-size: 12px;
-                            font-style: italic;
+                        .truncate{
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            max-width: 190px;
+                            .support-title {
+                                font-size: 11px;
+                                font-style: italic;
+                            }
                         }
 
                     }
@@ -100,7 +115,8 @@
 
     }
 
-    .slider-voucher{
+    .slider-voucher,
+    .slider-coupon {
         width: 85vw;
         padding: 30px;
         border: 1px solid rgba(5, 5, 5, 0.06);
@@ -127,13 +143,22 @@
         }
         .slide-card{
             width: 96% !important;
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            flex-direction: column !important;
-            .support-title {
-                font-size: 12px;
-                font-style: italic;
+            .ant-card-body{
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                flex-direction: column !important;
+                padding: 12px;
+            }
+            .truncate{
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 150px;
+                .support-title {
+                    font-size: 11px;
+                    font-style: italic;
+                }
             }
         }
     }
