@@ -2,6 +2,7 @@
 import { Layout, Menu } from "antd";
 import {
     AppstoreOutlined,
+    BookOutlined,
     MenuOutlined,
     SettingOutlined,
     ShopOutlined,
@@ -44,8 +45,8 @@ const BusinessSideBar = () => {
                     icon: <ShopOutlined />,
                     children: [
                         {key: 'menu', label:<Link href={"/dashboard-business/restaurant/menu"}> Menu</Link>, icon: <MenuOutlined />},
-                        {key: "voucher", label: <Link href={"/dashboard-business/promotion/voucher"}> Voucher</Link>, icon: <ShoppingOutlined />},
-                        {key: "coupon", label: <Link href={"/dashboard-business/promotion/coupon"}> Coupon</Link>, icon: <ShoppingOutlined />},
+                        {key: "voucher", label: <Link href={"/dashboard-business/promotion/voucher"}> Voucher</Link>, icon: <BookOutlined />},
+                        {key: "coupon", label: <Link href={"/dashboard-business/promotion/coupon"}> Coupon</Link>, icon: <BookOutlined />},
                         {key: "order", label: <Link href={"/dashboard-business/restaurant/order"}> Order</Link>, icon: <ShoppingOutlined />},
                     ],
                 },

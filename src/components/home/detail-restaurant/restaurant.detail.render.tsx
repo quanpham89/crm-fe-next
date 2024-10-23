@@ -4,12 +4,23 @@ import { useRouter } from "next/navigation";
 import { Button, Card, Image, Rate } from "antd";
 import "./restaurant.detail.render.scss"
 import { helper } from "@/app/helpers/customize";
+import PromotionListRender from "../promotion/promotion.list.render";
+import { useState } from "react";
 
 const RestaurantDetailRender = (props: any) => {
-  const { dataRestaurant, dataMenu } = props
+  const { dataRestaurant, dataMenu, user } = props
+  const [isOpenModal, setIsOpenModal] = useState(false)
+  const[type, setType] = useState<string>("")
   const router = useRouter()
-  console.log(dataMenu)
-
+  const handleOpenPromotionModal = (type : string) =>{
+    if(type === "VOUCHER"){
+      setIsOpenModal(true)
+      setType("VOUCHER")
+    }else{
+      setIsOpenModal(true)
+      setType("COUPON")
+    }
+  }
   return <div className="detail-restaurant-container">
     <div className="restaurant">
       <div className="image">
@@ -23,8 +34,8 @@ const RestaurantDetailRender = (props: any) => {
           <div className="truncate"><span className="support-title">Loại sản phẩm:  </span> {dataRestaurant.productType}</div>
           <div className="truncate"><span className="support-title">Đánh giá:  </span> <Rate allowHalf disabled defaultValue={Number(dataRestaurant.rating / 2)} style={{ fontSize: 13 }} /></div>
           <div className="truncate" style={{ display: "flex", justifyContent : "flex-end", gap: 20}}>
-            <Button>Voucher</Button>
-            <Button>Coupon</Button>
+            <Button onClick={()=>handleOpenPromotionModal("VOUCHER")}>Voucher</Button>
+            <Button onClick={()=>handleOpenPromotionModal("COUPON")}>Coupon</Button>
           </div>
         </div>
       </div>
@@ -55,6 +66,12 @@ const RestaurantDetailRender = (props: any) => {
       ) : (
         <h5>Chưa có món ăn nào</h5>
       )}
+      <PromotionListRender 
+        setIsOpenModal = {setIsOpenModal}
+        isOpenModal = {isOpenModal}
+        user = {user}
+        type= {type}
+      />
     </div>
   </div>
 }

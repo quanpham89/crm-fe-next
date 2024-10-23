@@ -2,6 +2,7 @@
 import { Layout, Menu } from "antd";
 import {
     AppstoreOutlined,
+    BookOutlined,
     MenuOutlined,
     SettingOutlined,
     ShopOutlined,
@@ -52,7 +53,7 @@ const CustomerSideBar = () => {
                 {
                     key: "protion",
                     label: <Link href={"/customer/protion"}> Promotion</Link>,
-                    icon: <ShopOutlined />,
+                    icon: <BookOutlined />,
                 },
             ],
         },

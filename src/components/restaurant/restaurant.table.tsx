@@ -232,6 +232,7 @@ const RestaurantTable = (props: any) => {
                     isOpenModalUpdateRestaurant = {isOpenModalUpdateRestaurant}
                     setIsOpenUpdateRestaurant = {setIsOpenUpdateRestaurant}
                     currentRestaurant = {currentRestaurant}
+                    setCurrentRestaurant= {setCurrentRestaurant}
                     access_token = {access_token}
                 />
                 <ModalConfirmDelete 

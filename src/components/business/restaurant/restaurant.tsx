@@ -33,7 +33,7 @@ const RestaurantBusiness = (props: any) => {
 
     const getDataRestaurant = async (user: any) => {
         if (user) {
-            const response: any = await handleGetDataRestaurantById(`api/v1/restaurants/get-retaurant-by-id?_id=${user._id}`, user?.access_token)
+            const response: any = await handleGetDataRestaurantById(`api/v1/restaurants/get-restaurant-by-id?_id=${user._id}`, user?.access_token)
             if (response?.data.length > 0) {
                 setIsHaveRestaurant(true)
                 setIsLoading(false)

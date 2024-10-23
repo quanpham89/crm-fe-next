@@ -1,0 +1,10 @@
+.ant-modal-content{
+    .ant-modal-body{
+        max-height: 800px;
+        overflow-y: scroll;
+        scrollbar-width: none; 
+        ::-webkit-scrollbar {
+            display: none; 
+        }
+    }
+}

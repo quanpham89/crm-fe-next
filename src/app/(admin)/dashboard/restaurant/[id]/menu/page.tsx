@@ -15,7 +15,7 @@ const ManageMenuPage = async(props:IProps) => {
     let access_token = session?.user?.access_token as string
     let user = session?.user
 
-    let res = await handleGetData(`api/v1/restaurants/get-retaurant-with-menu-by-id?_id=${props?.params?.id}`, access_token)
+    let res = await handleGetData(`api/v1/restaurants/get-restaurant-with-menu-by-id?_id=${props?.params?.id}`, access_token)
     let dataRestaurant = res?.data
     return <MenuTable 
     role = {role}

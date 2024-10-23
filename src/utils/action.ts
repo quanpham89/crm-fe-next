@@ -215,6 +215,36 @@ export async function handleGetDataMenuBelongToRender(path:string) {
     
 }
 
+export async function handlegetListVoucher(path:string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+    })
+    return res
+    
+}
+
+export async function handlegetListCoupon(path:string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+    })
+    return res
+    
+}
+
+export async function handleAddVoucherForCustomer(path:string, data : any) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "POST",
+        body:{
+            ...data
+        },
+    })
+    return res
+    
+}
+
 
 
 

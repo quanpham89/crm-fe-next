@@ -12,7 +12,8 @@ import { auth } from "@/auth";
 
 const ModalUpdateRestaurant =  (props: any) => {
     const {access_token} = props
-    const { isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant, currentRestaurant } = props
+
+    const { isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant, currentRestaurant, setCurrentRestaurant } = props
     const [form] = Form.useForm()
     const [dataUser, setDataUser] = useState([])
 
@@ -53,7 +54,6 @@ const ModalUpdateRestaurant =  (props: any) => {
     }, [currentRestaurant])
 
     const updateRestaurant =  async(values : any) =>{
-        console.log(values)
 
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/update`,
@@ -72,11 +72,19 @@ const ModalUpdateRestaurant =  (props: any) => {
             })
             window.location.reload()
         }else{
+            console.log(res)
             notification.error({
                 message: "Thất bại",
                 description: res.message
             })
         }
+    }
+    const handleCloseModal = ()=>{
+        setIsOpenUpdateRestaurant(false)
+        form.resetFields()
+        setCurrentRestaurant({})
+        
+
     }
     const hasMounted = useHasMounted();
     if (!hasMounted) return <></>;
@@ -84,8 +92,8 @@ const ModalUpdateRestaurant =  (props: any) => {
         <>
             <Modal title="Update restaurant"
                 open={isOpenModalUpdateRestaurant}
-                onOk={() => setIsOpenUpdateRestaurant(false)}
-                onCancel={() => setIsOpenUpdateRestaurant(false)}
+                onOk={handleCloseModal }
+                onCancel={handleCloseModal}
                 maskClosable={false}
                 footer={null}
                 forceRender={true}
@@ -195,7 +203,6 @@ const ModalUpdateRestaurant =  (props: any) => {
                             ]}
                         >
                             <Select
-                                
                                 options={dataUser}
                                 />
                         </Form.Item>
