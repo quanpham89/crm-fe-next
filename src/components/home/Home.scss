@@ -149,12 +149,20 @@
                 align-items: center !important;
                 flex-direction: column !important;
                 padding: 12px;
+                width: 100%;
+                text-overflow: ellipsis;
+                
             }
             .truncate{
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                max-width: 150px;
+                max-width: 270px;
+                text-align: center;
+                margin: 5px 0;
+                font-size: 15;
+
+                // max-width: 100%;
                 .support-title {
                     font-size: 11px;
                     font-style: italic;

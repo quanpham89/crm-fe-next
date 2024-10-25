@@ -215,7 +215,7 @@ export async function handleGetDataMenuBelongToRender(path:string) {
     
 }
 
-export async function handlegetListVoucher(path:string) {
+export async function handleGetListVoucher(path:string) {
     const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",
@@ -224,7 +224,7 @@ export async function handlegetListVoucher(path:string) {
     
 }
 
-export async function handlegetListCoupon(path:string) {
+export async function handleGetListCoupon(path:string) {
     const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",
@@ -233,7 +233,7 @@ export async function handlegetListCoupon(path:string) {
     
 }
 
-export async function handleAddVoucherForCustomer(path:string, data : any) {
+export async function handleAddPromotionForCustomer(path:string, data : any) {
     const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "POST",
