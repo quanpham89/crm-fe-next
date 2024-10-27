@@ -21,8 +21,6 @@ const ModalMenuUpdate = (props: any) => {
         
     }, [currentMenu])
 
-    
-
     const hasMounted = useHasMounted();
     if (!hasMounted) return <></>;
 

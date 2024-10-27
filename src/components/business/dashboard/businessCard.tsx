@@ -18,7 +18,6 @@ ChartJS.register(...registerables);
 
 const BusinessCard = (props: any) => {
     const { role } = props;
-    console.log(role)
     const [isLoading, setLoading] = useState(true);
     // Dữ liệu cho biểu đồ
     const dataDoughnut = {

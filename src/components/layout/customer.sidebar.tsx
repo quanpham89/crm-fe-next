@@ -32,27 +32,27 @@ const CustomerSideBar = () => {
             children: [
                 {
                     key: "customer",
-                    label: <Link href={"/customer"}> Me</Link>,
+                    label: <Link href={"/customer"}> Tôi</Link>,
                     icon: <UserOutlined />,
                 },
                 {
                     key: "restaurant",
-                    label: <Link href={"/customer/restaurant"}> Restaurant</Link>,
-                    icon: <ShopOutlined />,
-                },
-                {
-                    key: "order",
-                    label: <Link href={"/customer/order"}> My Order</Link>,
+                    label: <Link href={"/customer/restaurant"}> Shop</Link>,
                     icon: <ShopOutlined />,
                 },
                 {
                     key: "cart",
-                    label: <Link href={"/customer/cart"}> Cart</Link>,
+                    label: <Link href={"/customer/cart"}> Giỏ hàng</Link>,
                     icon: <ShopOutlined />,
                 },
                 {
                     key: "protion",
-                    label: <Link href={"/customer/protion"}> Promotion</Link>,
+                    label: <Link href={"/customer/protion"}> Ưu đãi</Link>,
+                    icon: <BookOutlined />,
+                },
+                {
+                    key: "history",
+                    label: <Link href={"/customer/history"}> Lịch sử mua hàng</Link>,
                     icon: <BookOutlined />,
                 },
             ],

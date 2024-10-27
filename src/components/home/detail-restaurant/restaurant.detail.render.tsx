@@ -1,17 +1,31 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button, Card, Image, Rate } from "antd";
+import { Avatar, Badge, Button, Card, Image, Rate } from "antd";
 import "./restaurant.detail.render.scss";
 import { helper } from "@/app/helpers/customize";
 import PromotionListRender from "../promotion/promotion.list.render";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import OderModal from "../order/order.modal";
+import { PlusOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { CustomerContext } from "@/library/customer.context";
 
 const RestaurantDetailRender = (props: any) => {
   const { dataRestaurant, dataMenu, user } = props;
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenModalOrder, setIsOpenModalOrder] = useState(false);
+  const [currentItem, setCurrentItem] = useState({})
   const [type, setType] = useState<string>("");
+  const { currentCart, setCurrentCard } = useContext(CustomerContext)!;
   const router = useRouter();
+
+  useEffect(() => {
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart) {
+      const { cart } = JSON.parse(storedCart);
+      setCurrentCard(cart);
+    }
+  }, []);
   const handleOpenPromotionModal = (type: string) => {
     if (type === "VOUCHER") {
       setIsOpenModal(true);
@@ -21,9 +35,34 @@ const RestaurantDetailRender = (props: any) => {
       setType("COUPON");
     }
   };
+  const actions = (i: any): React.ReactNode[] => [
+    <PlusOutlined key="add" onClick={() => handleOrder(i)} />,
+  ];
+
+  const handleOrder = (item: any) => {
+    setIsOpenModalOrder(true)
+    item.restaurantId = dataRestaurant._id
+    item.userId = user._id
+    item.restaurantName = dataRestaurant.restaurantName
+    setCurrentItem(item)
+  }
   return (
     <div className="detail-restaurant-container">
-      <Button onClick={() => router.back()}>Back</Button>
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20,
+        fontSize: 20,
+        fontWeight: 600
+      }}>
+        <Button onClick={() => router.back()}>Back</Button>
+        <span style={{cursor: "pointer"}} onClick={() => router.push("/customer/cart")}>
+          <Badge count={currentCart.length} >
+            <Avatar shape="square" icon={<ShoppingCartOutlined />} />
+          </Badge>
+        </span>
+      </div>
       <div className="restaurant">
         <div className="image">
           <Image alt="image" src={dataRestaurant.image} />
@@ -73,7 +112,7 @@ const RestaurantDetailRender = (props: any) => {
         {dataMenu && dataMenu.length > 0 ? (
           dataMenu.map((item: any) =>
             item.menuItem.map((i: any) => (
-              <Card className="menu-card" key={i._id}>
+              <Card className="menu-card" key={i._id} actions={actions(i)} >
                 <div className="image">
                   <Image alt="image" src={i.image} />
                 </div>
@@ -127,6 +166,14 @@ const RestaurantDetailRender = (props: any) => {
           isOpenModal={isOpenModal}
           user={user}
           type={type}
+        />
+
+        <OderModal
+          setIsOpenModal={setIsOpenModalOrder}
+          isOpenModal={isOpenModalOrder}
+          currentItem={currentItem}
+          setCurrentItem={setCurrentItem}
+          user={user}
         />
       </div>
     </div>

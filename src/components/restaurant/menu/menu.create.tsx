@@ -205,6 +205,13 @@ const ModalCreateMenu = (props: any) => {
                                                 </Form.Item>
                                             </Col>
                                         </Row>
+                                        <Form.Item
+                                                    name={[name, 'quantity']}
+                                                    rules={[{ required: true, message: 'Số lượng không được để trống',  }]}
+                                                >
+                                                    <InputNumber max={1000} min = {1} placeholder="Số lượng"  style={{width: "100%"}}/>
+                                                </Form.Item>
+
 
 
 

@@ -30,7 +30,6 @@ import { error } from "console";
 
 const PromotionListRender = (props: any) => {
   const { type, isOpenModal, setIsOpenModal, user } = props;
-  console.log(user);
   const [loading, setLoading] = useState<boolean>(true);
   const [dataPromotion, setDataPromotion] = useState([]);
 
