@@ -76,7 +76,6 @@ const UserTable = (props: any) => {
     }
 
     const handleConfirmDeleteUser = (record: any) =>{
-        console.log(record)
         setOpenModalConfirmDelete(true)
         setCurrentUser(record)
     }

@@ -25,7 +25,6 @@ const ModalMenuUpdate = (props: any) => {
     if (!hasMounted) return <></>;
 
     const handleUpdateMenu = async(values: any) =>{
-        console.log(values)
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menus/update`,
             method: "PATCH",

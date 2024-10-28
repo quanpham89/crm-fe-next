@@ -181,7 +181,6 @@ const VoucherTable = (props: any) => {
             }
 
         }
-        console.log(formatvalue)
     
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/search?searchValue=${JSON.stringify(formatvalue)}&belongTo=${userCreateId}`,

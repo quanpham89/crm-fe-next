@@ -233,6 +233,30 @@ export async function handleGetListCoupon(path:string) {
     
 }
 
+export async function handleGetVoucherPerUserId(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+    
+}
+
+export async function handleGetCouponPerUserId(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+    
+}
+
 export async function handleAddPromotionForCustomer(path:string, data : any) {
     const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,

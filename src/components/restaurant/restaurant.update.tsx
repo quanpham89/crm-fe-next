@@ -72,7 +72,6 @@ const ModalUpdateRestaurant =  (props: any) => {
             })
             window.location.reload()
         }else{
-            console.log(res)
             notification.error({
                 message: "Thất bại",
                 description: res.message

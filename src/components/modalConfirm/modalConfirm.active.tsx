@@ -41,7 +41,6 @@ const ModalConfirmActive =  (props: any) => {
             break;
 
             case "MENU":
-                console.log(currentItem)
                 if(currentItem.status === "PUBLIC"){
                     notification.success({
                         message: "Menu",

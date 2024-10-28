@@ -54,7 +54,6 @@ const OderModal = (props: any) => {
     }
 
     const handleAddItemToCart = (values: any) => {
-        console.log(values)
         const checkItemExistInCart = helper.isExistItemInCart(currentCart, values);
         let updatedCart;
         

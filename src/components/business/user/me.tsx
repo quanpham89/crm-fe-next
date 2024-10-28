@@ -10,7 +10,6 @@ const MeInfor = (props: any) => {
     const getInforUser = async()=>{
         const response = await handleGetDataUserById(`api/v1/users/get-user-by-id?_id=${user._id}`, user.access_token)
         if(response){
-            // console.log(response.data)
         }
     }
     

@@ -103,7 +103,6 @@ const ModalConfirmHidden =  (props: any) => {
             break;
 
             case "MENU":
-                console.log(currentItem)
                 if(!currentItem.status){
                     notification.success({
                         message: "Ẩn menu",

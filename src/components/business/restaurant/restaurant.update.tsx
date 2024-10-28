@@ -53,7 +53,6 @@ const ModalUpdateRestaurant =  (props: any) => {
     }, [currentRestaurant])
 
     const updateRestaurant =  async(values : any) =>{
-        console.log(values)
 
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/update`,

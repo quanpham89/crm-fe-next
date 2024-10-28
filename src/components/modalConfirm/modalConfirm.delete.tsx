@@ -12,7 +12,6 @@ const ModalConfirmDelete =  (props: any) => {
     const confirmDelete  = async() =>{
         switch(type){
             case "USER": 
-            console.log(currentItem)
                 const resUser = await sendRequest<IBackendRes<any>>({
                     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/remove-user?_id=${currentItem._id}`,
                     method: "DELETE",
@@ -89,7 +88,6 @@ const ModalConfirmDelete =  (props: any) => {
                     }
                     
                 })
-                console.log(voucher)
         
                 if(voucher?.data){          
                     notification.success({
