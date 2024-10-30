@@ -3,9 +3,11 @@ import { Layout, Menu } from "antd";
 import {
     AppstoreOutlined,
     BookOutlined,
+    ContainerOutlined,
     MenuOutlined,
     SettingOutlined,
     ShopOutlined,
+    ShoppingCartOutlined,
     ShoppingOutlined,
     TeamOutlined,
     UserOutlined,
@@ -43,7 +45,12 @@ const CustomerSideBar = () => {
                 {
                     key: "cart",
                     label: <Link href={"/customer/cart"}> Giỏ hàng</Link>,
-                    icon: <ShopOutlined />,
+                    icon: <ShoppingCartOutlined />,
+                },
+                {
+                    key: "order",
+                    label: <Link href={"/customer/order"}> Đơn hàng của tôi</Link>,
+                    icon: <ContainerOutlined />,
                 },
                 {
                     key: "protion",

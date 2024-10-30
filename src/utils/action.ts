@@ -270,5 +270,33 @@ export async function handleAddPromotionForCustomer(path:string, data : any) {
 }
 
 
+export async function handlePostDataBillOfCustomer(path:string, data : any, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "POST",
+        body:{
+            ...data
+        },
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+    
+}
+
+
+export async function handleGetOrderById(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+    
+}
+
 
 

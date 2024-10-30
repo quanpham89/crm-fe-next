@@ -68,7 +68,7 @@ interface optionSelect {
   label: string;
 }
 const Cart = (props: any) => {
-  const { user, vouchers, coupons } = props;
+  const { user, vouchers, coupons, domainUrl, customerId} = props;
 
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -143,7 +143,6 @@ const Cart = (props: any) => {
             placeholder="Chức năng này hiện tại vẫn đang được phát triển."
             options={[
               { value: "money", label: "Tiền mặt" },
-              { value: "card", label: "Thẻ" },
               { value: "bank", label: "Chuyển khoản" },
             ]}
           />
@@ -475,68 +474,79 @@ const Cart = (props: any) => {
 
   const handleAddVoucher = (selectedOption: string) => {
     const currentTotal = total;
-    if (selectedOption) {
-      const voucherSelected = vouchers.filter(
-        (item: any) => item._id === selectedOption
-      );
-      setVoucher(voucherSelected);
-      if (!_.isEmpty(coupon) && coupon[0].discount) {
-        const formatTotal =
-          (Number(currentTotal) - coupon[0].discount) *
-          (1 - voucherSelected[0].percentage / 100);
-        setTotalDisplay(String(formatTotal));
+    if(dataColumn.length > 0){
+      if (selectedOption) {
+        const voucherSelected = vouchers.filter(
+          (item: any) => item._id === selectedOption
+        );
+        setVoucher(voucherSelected);
+        if (!_.isEmpty(coupon) && coupon[0].discount) {
+          const formatTotal =
+            (Number(currentTotal) - coupon[0].discount) *
+            (1 - voucherSelected[0].percentage / 100);
+          setTotalDisplay(String(formatTotal));
+        } else {
+          const formatTotal =
+            Number(currentTotal) * (1 - voucherSelected[0].percentage / 100);
+          setTotalDisplay(String(Math.round(formatTotal / 1000) * 1000));
+        }
       } else {
-        const formatTotal =
-          Number(currentTotal) * (1 - voucherSelected[0].percentage / 100);
-        setTotalDisplay(String(Math.round(formatTotal / 1000) * 1000));
-      }
-    } else {
-      setVoucher({});
-      setTotalDisplay(String(total));
-      if (!_.isEmpty(coupon) && coupon[0].discount) {
-        const formatTotal = Number(currentTotal) - coupon[0].discount;
-        setTotalDisplay(String(formatTotal));
+        setVoucher({});
+        setTotalDisplay(String(total));
+        if (!_.isEmpty(coupon) && coupon[0].discount) {
+          const formatTotal = Number(currentTotal) - coupon[0].discount;
+          setTotalDisplay(String(formatTotal));
+        }
       }
     }
   };
 
   const handleAddCoupon = (selectedOption: string) => {
     const currentTotal = total;
-    if (selectedOption) {
-      const couponSelected = coupons.filter(
-        (item: any) => item._id === selectedOption
-      );
-      if (!_.isEmpty(voucher) && voucher[0].percentage) {
-        const formatTotal =
-          (Number(currentTotal) - couponSelected[0].discount) *
-          (1 - voucher[0].percentage / 100);
-        setTotalDisplay(String(Math.round(formatTotal / 1000) * 1000));
+    if(dataColumn.length >0){
+      if (selectedOption) {
+        const couponSelected = coupons.filter(
+          (item: any) => item._id === selectedOption
+        );
+        if (!_.isEmpty(voucher) && voucher[0].percentage) {
+          const formatTotal =
+            (Number(currentTotal) - couponSelected[0].discount) *
+            (1 - voucher[0].percentage / 100);
+          setTotalDisplay(String(Math.round(formatTotal / 1000) * 1000));
+        } else {
+          const formatTotal = Number(currentTotal) - couponSelected[0].discount;
+          setTotalDisplay(String(Math.round(formatTotal / 1000) * 1000));
+        }
+        setCoupon(couponSelected);
       } else {
-        const formatTotal = Number(currentTotal) - couponSelected[0].discount;
-        setTotalDisplay(String(Math.round(formatTotal / 1000) * 1000));
-      }
-      setCoupon(couponSelected);
-    } else {
-      setCoupon({});
-      setTotalDisplay(String(Math.round(Number(total) / 1000) * 1000));
-      if (!_.isEmpty(voucher) && voucher[0].percentage) {
-        const formatTotal =
-          Number(currentTotal) * (1 - voucher[0].percentage / 100);
-        setTotalDisplay(String(Math.round(formatTotal / 1000) * 1000));
+        setCoupon({});
+        setTotalDisplay(String(Math.round(Number(total) / 1000) * 1000));
+        if (!_.isEmpty(voucher) && voucher[0].percentage) {
+          const formatTotal =
+            Number(currentTotal) * (1 - voucher[0].percentage / 100);
+          setTotalDisplay(String(Math.round(formatTotal / 1000) * 1000));
+        }
       }
     }
   };
 
   const handleBuyItem = (values: any) => {
-    console.log(values);
     values.orderTime = values.orderTime.$d;
     values.predictionTime = values.predictionTime.$d;
     setDataConfirmOrder({
       cart: currentCart,
       ...values,
-      total: totalDisplay,
+      totalPrice: totalDisplay,
+      totalWithoutDiscount: total,
+      customerId: customerId
     });
-    setIsOpenModalConfirmOrder(true);
+    if(currentCart && currentCart.length > 0){
+      setIsOpenModalConfirmOrder(true);
+    }else{
+      notification.error({
+        message: "Giỏ hàng của bạn không có sản phẩm, vui lòng chọn sản phẩm để thực hiện thanh toán."
+      })
+    }
   };
 
   return isLoading ? (
@@ -645,7 +655,6 @@ const Cart = (props: any) => {
             <Select
               options={[
                 { value: "money", label: "Tiền mặt" },
-                { value: "card", label: "Thẻ" },
                 { value: "bank", label: "Chuyển khoản" },
               ]}
             ></Select>
@@ -719,6 +728,9 @@ const Cart = (props: any) => {
         isOpenModalConfirmOrder={isOpenModalConfirmOrder}
         setIsOpenModalConfirmOrder={setIsOpenModalConfirmOrder}
         data={dataConfirmOrder}
+        domainUrl = {domainUrl}
+        customerId = {customerId}
+        user= {user}
       />
     </>
   );

@@ -119,7 +119,7 @@ const PromotionListRender = (props: any) => {
   ];
   return (
     <Modal
-      title="Danh sách voucher"
+      title={type === "VOUCHER"? "Danh sách voucher" : "Danh sách coupon"}
       centered
       open={isOpenModal}
       onCancel={() => handleClose()}
@@ -131,41 +131,45 @@ const PromotionListRender = (props: any) => {
     >
       <Flex gap="middle" align="start" vertical>
         {dataPromotion && dataPromotion.length > 0 ? (
-          dataPromotion.map((item: any, index) => (
-            <Card
-              loading={loading}
-              actions={actions(item)}
-              style={{ width: "100%" }}
-              key={item._id}
-            >
-              <Card.Meta
-                avatar={<Avatar src={item.image} />}
-                title={item.nameVoucher ? item.nameVoucher : item.nameCoupon}
-                description={
-                  <>
-                    <div> {item.description}</div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginTop: 5,
-                      }}
-                    >
-                      <div>
-                        <i>Bắt đầu từ: </i>
-                        <b>{dayjs(item.startedDate).format("DD/MM/YYYY")}</b>
-                      </div>
-                      <div>
-                        <i>Kết thúc: </i>
-                        <b>{dayjs(item.endedDate).format("DD/MM/YYYY")}</b>
-                      </div>
-                    </div>
-                  </>
-                }
-              />
-            </Card>
-          ))
-        ) : (
+          dataPromotion.map((item: any, index) =>{
+              return  (
+                <Card
+                  loading={loading}
+                  actions={ item.remain < item.amount ? actions(item) : [] }
+                  style={{ width: "100%" }}
+                  key={item._id}
+                >
+                  <Card.Meta
+                    avatar={<Avatar src={item.image} />}
+                    title={item.nameVoucher ? item.nameVoucher : item.nameCoupon}
+                    description={
+                      <>
+                        <div> {item.description}</div>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginTop: 5,
+                          }}
+                        >
+                          <div>
+                            <i>Bắt đầu từ: </i>
+                            <b>{dayjs(item.startedDate).format("DD/MM/YYYY")}</b>
+                          </div>
+                          <div>
+                            <i>Kết thúc: </i>
+                            <b>{dayjs(item.endedDate).format("DD/MM/YYYY")}</b>
+                          </div>
+                        </div>
+                      </>
+                    }
+                  />
+                </Card>
+              )
+          }
+        )
+        ) 
+        : (
           <>
             {type === "VOUCHER" ? (
               <h2 style={{ textAlign: "center" }}>
@@ -175,7 +179,8 @@ const PromotionListRender = (props: any) => {
               <h2 style={{ textAlign: "center" }}>Chưa có thông tin coupon.</h2>
             )}
           </>
-        )}
+        )
+        }
       </Flex>
     </Modal>
   );
