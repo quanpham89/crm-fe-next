@@ -1,11 +1,53 @@
 "use client";
 
-import { Card, Carousel, Image } from "antd";
+import { Card, Carousel, Image, notification } from "antd";
 import "./Home.scss";
 import dayjs from "dayjs";
+import { PlusOutlined } from "@ant-design/icons";
+import { handleAddPromotionForCustomer } from "@/utils/action";
+import { useState } from "react";
 
 const VoucherRender = (props: any) => {
-  const { voucher } = props;
+  const { voucher, user, type } = props;
+
+  const handleAddPromotion = async (item: any) => {
+    const data = {
+      userId: user._id,
+      _id: item._id,
+    };
+    if (type === "VOUCHER") {
+      const response = await handleAddPromotionForCustomer(
+        "api/v1/customers/add-voucher-for-customer",
+        data
+      );
+      if (response.statusCode === 201) {
+        notification.success({
+          message: "Thêm thành công!",
+        });
+      } else {
+        notification.error({
+          message: response.message,
+        });
+      }
+    } else {
+      const response = await handleAddPromotionForCustomer(
+        "api/v1/customers/add-coupon-for-customer",
+        data
+      );
+      if (response.statusCode === 201) {
+        notification.success({
+          message: "Thêm thành công!",
+        });
+      } else {
+        notification.error({
+          message: response.message,
+        });
+      }
+    }
+  };
+  const actions = (item: any): React.ReactNode[] => [
+    <PlusOutlined key="add" onClick={() => handleAddPromotion(item)} />,
+  ];
   return (
     <Carousel
       className="slider-voucher"
@@ -16,8 +58,13 @@ const VoucherRender = (props: any) => {
       {voucher &&
         voucher.length > 0 &&
         voucher.map((item: any, index: number) => {
+          console.log(item);
           return (
-            <Card className="slide-card" key={item._id}>
+            <Card
+              className="slide-card"
+              actions={item.remain < item.amount ? actions(item) : []}
+              key={item._id}
+            >
               <div className="image">
                 <Image
                   alt="image"
