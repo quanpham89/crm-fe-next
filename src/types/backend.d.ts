@@ -37,6 +37,7 @@ declare global {
             role: string,
             accountType: string,
             restaurantId: string
+            isActive: boolean
         },
         access_token: string
     }

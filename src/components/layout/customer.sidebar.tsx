@@ -5,6 +5,7 @@ import {
     BookOutlined,
     ContainerOutlined,
     MenuOutlined,
+    ReadOutlined,
     SettingOutlined,
     ShopOutlined,
     ShoppingCartOutlined,
@@ -53,14 +54,9 @@ const CustomerSideBar = () => {
                     icon: <ContainerOutlined />,
                 },
                 {
-                    key: "protion",
-                    label: <Link href={"/customer/protion"}> Ưu đãi</Link>,
-                    icon: <BookOutlined />,
-                },
-                {
                     key: "history",
                     label: <Link href={"/customer/history"}> Lịch sử mua hàng</Link>,
-                    icon: <BookOutlined />,
+                    icon: <ReadOutlined />,
                 },
             ],
         },

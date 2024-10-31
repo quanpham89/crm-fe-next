@@ -209,7 +209,7 @@ const ModalCreateVoucher = (props: any) => {
                             },
                         ]}
                     >
-                        <InputNumber style={{width: "100%"}} min={1} max={15}/>
+                        <InputNumber style={{width: "100%"}} min={1} max={10}/>
                     </Form.Item>
                     <Form.Item style={{ display: "flex", justifyContent: "flex-end", marginTop: 20, marginBottom: 0 }}>
                         <Button type="primary" htmlType="submit">

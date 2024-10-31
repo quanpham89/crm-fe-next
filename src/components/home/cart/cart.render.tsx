@@ -83,7 +83,7 @@ const Cart = (props: any) => {
   const [totalDisplay, setTotalDisplay] = useState("0");
   const [voucher, setVoucher] = useState<any>({});
   const [coupon, setCoupon] = useState<any>({});
-  const { currentCart, setCurrentCard } = useContext(CustomerContext)!;
+  const { currentCart, setCurrentCart } = useContext(CustomerContext)!;
   type NewType = keyof DataType;
   type DataIndex = keyof DataType;
   type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
@@ -95,11 +95,10 @@ const Cart = (props: any) => {
   });
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
-    const userId = localStorage.getItem("userId");
     form.setFieldValue("orderTime", dayjs());
     if (storedCart) {
       const { cart } = JSON.parse(storedCart);
-      setCurrentCard(cart);
+      setCurrentCart(cart);
     }
     const emptyOption: optionSelect = {
       value: "",
@@ -177,7 +176,17 @@ const Cart = (props: any) => {
     }
   }, [currentCart]);
 
-  useEffect(() => {}, [total]);
+  const handleRemoveAllCart = () =>{
+    form.resetFields()
+    if(localStorage.getItem("cart")){
+        setCurrentCart([])
+        localStorage.removeItem('cart');
+        notification.success({message: "Xóa toàn bộ sản phẩm khỏi giỏ hàng thành công."})
+    }else{
+        notification.error({message: "Giỏ hàng trống."})
+    }
+    
+  }
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
@@ -276,7 +285,7 @@ const Cart = (props: any) => {
         return item.menuItemId !== record.key;
       });
       form.resetFields();
-      setCurrentCard(cartAfterRemoveItem);
+      setCurrentCart(cartAfterRemoveItem);
     }
   };
 
@@ -289,7 +298,7 @@ const Cart = (props: any) => {
         return item;
       });
       form.resetFields();
-      setCurrentCard(cartAfterReduceItem);
+      setCurrentCart(cartAfterReduceItem);
     }
   };
 
@@ -302,7 +311,7 @@ const Cart = (props: any) => {
         return item;
       });
       form.resetFields();
-      setCurrentCard(cartAfterReduceItem);
+      setCurrentCart(cartAfterReduceItem);
     }
   };
 
@@ -691,7 +700,10 @@ const Cart = (props: any) => {
             <div>{helper.formatMoneyVND(Number(totalDisplay))}</div>
           </div>
 
-          <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Form.Item style={{ display: "flex", justifyContent: "flex-end", gap: 20 }}>
+            <Button onClick={handleRemoveAllCart} style={{marginRight: 20 }}>
+              Xóa toàn bộ giỏ hàng
+            </Button>
             <Button type="primary" htmlType="submit">
               Mua hàng
             </Button>

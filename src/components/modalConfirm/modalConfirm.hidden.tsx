@@ -2,9 +2,12 @@
 import { Modal, Form, Button, Input, message, notification } from "antd"
 import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const ModalConfirmHidden =  (props: any) => {
     const {isOpenModalConfirmHidden, setOpenModalConfirmHidden, title, access_token, type, currentItem} = props
+    const router = useRouter();
     const hasMounted = useHasMounted();
     if (!hasMounted) return <></>;
 
@@ -56,7 +59,6 @@ const ModalConfirmHidden =  (props: any) => {
                     headers: {
                         'Authorization': `Bearer ${access_token}`
                     }
-                    
                 })
         
                 if(resCustomer?.data){          
@@ -64,7 +66,9 @@ const ModalConfirmHidden =  (props: any) => {
                         message: "Hủy kích hoạt tài khoản thành công.",
                         description: resCustomer?.message
                     })
-                    window.location.reload()
+                    await signOut({redirect : false})
+                    router.push('/auth/login');
+
                 }else{
                     notification.error({
                         message: "Call APIs error",
@@ -191,6 +195,36 @@ const ModalConfirmHidden =  (props: any) => {
                     })
                 }
             break;
+
+            case "CANCLE":
+                console.log(currentItem)
+                if(currentItem){
+                    const cancleOrder = await sendRequest<IBackendRes<any>>({
+                        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders/close-order?_id=${currentItem}`,
+                        method: "PATCH",
+                        headers: {
+                            'Authorization': `Bearer ${access_token}`
+                        }
+                    })
+                    if(cancleOrder?.data){  
+                        console.log(cancleOrder)        
+                        notification.success({
+                            message: "Hủy đơn hàng thành thành công.",
+                            description: cancleOrder?.message
+                        })
+                        window.location.reload()
+                    }else{
+                        notification.error({
+                            message: "Call APIs error",
+                            description: cancleOrder?.message
+                        })
+                    }
+                }else{
+                    notification.error({
+                        message: "Không xác định được _id",
+                    })
+                }
+            break;
             default:
                 
 
@@ -228,10 +262,10 @@ const ModalConfirmHidden =  (props: any) => {
                         </Form.Item>
                         <Form.Item style={{display: "flex", justifyContent: "flex-end", alignItems: "flex-end", marginTop: 40, marginBottom: 0}}>
                         <Button type="primary" htmlType="submit"  onClick={()=>setOpenModalConfirmHidden(false)} style={{marginRight: 20}} >
-                                CANCLE
+                                Đóng
                             </Button>
                             <Button type="primary" htmlType="submit"  onClick={confirmHidden} style={{background: "red"}}>
-                                HIDDEN
+                                Đồng ý
                             </Button>
                             
                         </Form.Item>

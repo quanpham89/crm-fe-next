@@ -16,7 +16,7 @@ import { helper } from "@/app/helpers/customize";
 const OderModal = (props: any) => {
     const { isOpenModal, setIsOpenModal, currentItem, setCurrentItem, user } = props
     const [form] = Form.useForm()
-    const { currentCart, setCurrentCard } = useContext(CustomerContext)!;
+    const { currentCart, setCurrentCart } = useContext(CustomerContext)!;
  
     type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
     dayjs.extend(customParseFormat);
@@ -28,7 +28,7 @@ const OderModal = (props: any) => {
         const storedCart = localStorage.getItem('cart');
         if (storedCart) {
             const { cart } = JSON.parse(storedCart);
-            setCurrentCard(cart);
+            setCurrentCart(cart);
         }
     }, []);
     useEffect(() => {
@@ -82,16 +82,11 @@ const OderModal = (props: any) => {
             cart: updatedCart, 
         };
     
-        setCurrentCard(updatedCart); 
+        setCurrentCart(updatedCart); 
         localStorage.setItem('cart', JSON.stringify(cart));
         handleCloseModal()
     };
     
-
-
-  
-
-
     return <>
         <Modal title="Đơn hàng"
             open={isOpenModal}
@@ -195,66 +190,6 @@ const OderModal = (props: any) => {
                         </Form.Item>
                     </Col>
                 </Row>
-
-                {/* <Form.Item
-                    label="Địa chỉ người nhận:"
-                    name="address"
-                    rules={[
-                        {
-                            required: true,
-
-                            message: 'Địa chỉ nhận hàng không được để trống!',
-                        },
-                    ]}
-                >
-                    <Input />
-                </Form.Item> */}
-
-                {/* <Row gutter={16}>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Thời gian đặt"
-                            name="orderTime"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'orderTime không được để trống!',
-                                },
-                            ]}
-                        >
-                            <DatePicker format={"DD-MM-YYYY HH-mm"} disabled style={{ width: "100%" }} />
-
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Dự kiến thời gian nhận hàng"
-                            name="predictionTime"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'predictionTime không được để trống!',
-                                },
-                            ]}
-                        >
-                            <ConfigProvider locale={globalBuddhistLocale}>
-                                <DatePicker
-                                    placeholder="Chọn ngày/ giờ"
-                                    showTime
-                                    showNow={false}
-                                    onChange={(date, dateString) => {
-                                        form.setFieldValue("predictionTime", date);
-                                    }
-                                    }
-                                    style={{ width: "100%" }}
-                                    disabledDate={disabledDate}
-                                    disabledTime={disabledTime}
-                                />
-                            </ConfigProvider>
-
-                        </Form.Item>
-                    </Col>
-                </Row> */}
 
                 <Form.Item
                     label={`Số lượng mua (tối đa ${+currentItem?.quantity}): `}

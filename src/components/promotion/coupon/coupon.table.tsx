@@ -95,7 +95,7 @@ const CouponTable = (props: any) => {
         if(role === "ADMINS" || role === "ADMIN"){
             router.push(`/dashboard/promotion/coupon/${values._id}`)
         }else{
-            router.push(`/dashboard-business/promotion/coupon/${values._id}`)
+            router.push(`/business/promotion/coupon/${values._id}`)
         }
 
     }

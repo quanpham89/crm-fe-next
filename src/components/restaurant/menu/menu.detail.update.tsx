@@ -77,7 +77,11 @@ const MenuDetailUpdate = (props: any) => {
                 notification.success({
                     message: "Update Item Success"
                 })
-
+                window.location.reload()
+            }else{
+                notification.success({
+                    message: "có lỗi xảy ra vui lòng thử lại sau."
+                })
             }
         }
 

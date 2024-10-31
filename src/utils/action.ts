@@ -36,7 +36,6 @@ export async function authenticate(username: string, password: string) {
     }
 }
 
-
 // admin
 export async function handleGetData(path:string, access_token: string,) {
     const res = await sendRequest<IBackendRes<IUserPerPage>>({
@@ -145,6 +144,18 @@ export async function handleGetDataUserById(path:string, access_token: string) {
 }
 
 export async function handleGetDataRestaurantById(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+    
+}
+
+export async function handleGetDataOrderDetail(path:string, access_token: string) {
     const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",
@@ -298,5 +309,31 @@ export async function handleGetOrderById(path:string, access_token: string) {
     
 }
 
+
+export async function handleCloseOrder(path:string, data : any, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "PATCH",
+        body:{
+            ...data
+        },
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+}
+
+
+export async function handleReceiveOrder(path:string,access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+}
 
 

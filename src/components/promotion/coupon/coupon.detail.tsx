@@ -34,10 +34,13 @@ const CouponDetail = (props: any) =>{
             const formatResult = result.map((item : any) =>{
                 let startDate = dayjs(item.startedDate).format("DD-MM-YYYY")
                 let endDate = dayjs(item.endedDate).format("DD-MM-YYYY") 
+                let time = dayjs(item.useTime).format("DD-MM-YYYY") 
                 return {
                     ...item,
                     startedDate: startDate,
-                    endedDate: endDate
+                    endedDate: endDate,
+                    nameCoupon: res?.data[0].nameCoupon,
+                    useTime: time
                 }
             })
             setDataCouponItem(formatResult)
@@ -77,13 +80,13 @@ const CouponDetail = (props: any) =>{
         },
         {
             title: 'Item Id - itemUse',
-            dataIndex: 'itemId',
-            key: 'itemId',
+            dataIndex: 'orderUse',
+            key: 'orderUse',
         },
         {
             title: 'Customer Id - userUse',
-            dataIndex: 'customerId',
-            key: 'customerId',
+            dataIndex: 'customer',
+            key: 'customer',
         },
 
         {

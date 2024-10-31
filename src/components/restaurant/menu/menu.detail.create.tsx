@@ -102,7 +102,7 @@ const MenuDetailCreate = (props: any) => {
                                                 }}>
                                                 <button style={{ border: 0, background: 'none' }} type="button">
                                                     <PlusOutlined />
-                                                    <div style={{ marginTop: 8 }}>Upload</div>
+                                                    <div style={{ marginTop: 8 }}>Tải ảnh</div>
                                                 </button>
                                             </Upload>
                                         </Form.Item>
@@ -135,6 +135,28 @@ const MenuDetailCreate = (props: any) => {
                                 <Row gutter={16}>
                                     <Col span={12}>
                                         <Form.Item
+                                            name={[name, 'quantity']}
+                                            rules={[{ required: true, message: 'Missing fixed price', }]}
+                                        >
+                                            <InputNumber min={1} placeholder="Số lượng" style={{ width: "100%" }} />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={12}>
+                                        <Form.Item
+                                            name={[name, 'status']}
+                                        >
+                                            <Select placeholder = "Trạng thái"
+                                            options={[
+                                                { value: 'HIDDEN', label: 'Ẩn sản phẩm' },
+                                                { value: 'PUBLIC', label: 'Hiện sản phẩm' },
+                                            ]}
+                                        ></Select>
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                                <Row gutter={16}>
+                                    <Col span={12}>
+                                        <Form.Item
                                             name={[name, 'fixedPrice']}
                                             rules={[{ required: true, message: 'Missing fixed price', }]}
                                         >
@@ -150,6 +172,8 @@ const MenuDetailCreate = (props: any) => {
                                         </Form.Item>
                                     </Col>
                                 </Row>
+
+                               
                             </Space>
                         ))}
 

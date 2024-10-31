@@ -50,10 +50,6 @@ const MenuRestaurantDetail = (props: any) => {
 
     const [size, setSize] = useState<SizeType>('small');
 
-   
-
-    if (role ==="BUSINESSMAN") {
-
         return(isLoading ?
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <Spin />
@@ -68,7 +64,7 @@ const MenuRestaurantDetail = (props: any) => {
                     marginBottom: 20,
                     marginTop: 20
                 }}>
-                    <span style={{fontSize:20, fontWeight: 600}}>Detail menu</span>
+                    <span style={{fontSize:20, fontWeight: 600}}>Menu</span>
                 </div>
                 <div style={{ border: "1px solid #d9d9d9", padding: 15, borderRadius: 8, margin: 20, }}>
                     <Descriptions title="Menu" items={formatItems} />
@@ -121,9 +117,6 @@ const MenuRestaurantDetail = (props: any) => {
             </>
 
         )
-    } else {
-        return <>Bạn không có quyền truy cập vào chức năng này.</>
-    }
 }
 
 

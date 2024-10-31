@@ -47,44 +47,59 @@ const CouponRender = (props: any) => {
     <PlusOutlined key="add" onClick={() => handleAddPromotion(item)} />,
   ];
   return (
-    <Carousel
-      className="slider-coupon"
-      arrows
-      infinite={false}
-      slidesToShow={5}
-    >
-      {coupon &&
-        coupon.length > 0 &&
-        coupon.map((item: any, index: number) => {
-          return (
-            <Card
-              className="slide-card"
-              actions={item.remain < item.amount ? actions(item) : []}
-              key={item._id}
-            >
-              <Image alt="image" preview={false} src={item.image} width={140} />
-              <h5 className="truncate">{item.nameCoupon}</h5>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: 12,
-                  gap: 5,
-                }}
+    <>
+    <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 20,
+          marginBottom: 10,
+          fontSize: 20,
+          fontWeight: 600,
+        }}
+      >
+        <span>Coupon Khuyến mãi</span>
+      </div>
+      <Carousel
+        className="slider-coupon"
+        arrows
+        infinite={false}
+        slidesToShow={5}
+      >
+        {coupon &&
+          coupon.length > 0 &&
+          coupon.map((item: any, index: number) => {
+            return (
+              <Card
+                className="slide-card"
+                actions={item.remain > 0 ? actions(item) : []}
+                key={item._id}
               >
-                <div>
-                  <span className="support-title">Thời gian bắt đầu: </span>
-                  <b>{dayjs(item.startedDate).format("DD/MM/YYYY")}</b>
+                <Image alt="image" preview={false} src={item.image} width={140} />
+                <h5 className="truncate">{item.nameCoupon}</h5>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: 12,
+                    gap: 5,
+                  }}
+                >
+                  <div>
+                    <span className="support-title">Thời gian bắt đầu: </span>
+                    <b>{dayjs(item.startedDate).format("DD/MM/YYYY")}</b>
+                  </div>
+                  <div>
+                    <span className="support-title">Thời gian kết thúc: </span>
+                    <b>{dayjs(item.endedDate).format("DD/MM/YYYY")}</b>
+                  </div>
                 </div>
-                <div>
-                  <span className="support-title">Thời gian kết thúc: </span>
-                  <b>{dayjs(item.endedDate).format("DD/MM/YYYY")}</b>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
-    </Carousel>
+              </Card>
+            );
+          })}
+      </Carousel>
+    </>
   );
 };
 

@@ -16,14 +16,14 @@ const RestaurantDetailRender = (props: any) => {
   const [isOpenModalOrder, setIsOpenModalOrder] = useState(false);
   const [currentItem, setCurrentItem] = useState({})
   const [type, setType] = useState<string>("");
-  const { currentCart, setCurrentCard } = useContext(CustomerContext)!;
+  const { currentCart, setCurrentCart } = useContext(CustomerContext)!;
   const router = useRouter();
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
       const { cart } = JSON.parse(storedCart);
-      setCurrentCard(cart);
+      setCurrentCart(cart);
     }
   }, []);
   const handleOpenPromotionModal = (type: string) => {

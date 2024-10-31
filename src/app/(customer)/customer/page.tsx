@@ -10,11 +10,8 @@ const CustomerPage = async () => {
   const session = await auth();
   const user = session?.user;
   const access_token = session?.user?.access_token as string;
-  const data = await handleGetDataUserCustomer(
-    `api/v1/customers/get-customer-by-id?_id=${user?._id}`,
-    access_token
-  );
-  return <Customer dataUser={data?.data} user />;
+ 
+  return <Customer  user= {user} />;
 };
 
 export default CustomerPage;

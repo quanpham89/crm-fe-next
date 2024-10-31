@@ -4,7 +4,6 @@ import {
     AppstoreOutlined,
     BookOutlined,
     MenuOutlined,
-    SettingOutlined,
     ShopOutlined,
     ShoppingOutlined,
     TeamOutlined,
@@ -21,7 +20,13 @@ const BusinessSideBar = () => {
     const { Sider } = Layout;
     const { collapseMenu } = useContext(BusinessContext)!;
     const pathName = usePathname();
-    const selectedKey = pathName.split('/').pop()|| "dashboard-business";
+
+    let selectedKey = "business"; // Default key
+    if (pathName.startsWith('/business/restaurant')) {
+        selectedKey = "restaurant"; 
+    } else if (pathName.startsWith('/business/user')) {
+        selectedKey = "user";
+    }
 
     const items: MenuItem[] = [
         {
@@ -29,25 +34,25 @@ const BusinessSideBar = () => {
             label: 'Sidebar Menu',
             type: 'group',
             children: [
-                {
-                    key: "dashboard-business",
-                    label: <Link href={"/dashboard-business"}>Dashboard</Link>,
-                    icon: <AppstoreOutlined />,
-                },
+                // {
+                //     key: "business",
+                //     label: <Link href={"/business"}>Tổng quan</Link>,
+                //     icon: <AppstoreOutlined />,
+                // },
                 {
                     key: "user",
-                    label: <Link href={"/dashboard-business/user"}> Me</Link>,
+                    label: <Link href={"/business/user"}>Tôi</Link>,
                     icon: <TeamOutlined />,
                 },
                 {
                     key: "restaurant",
-                    label: <Link href={"/dashboard-business/restaurant"}> Restaurant</Link>,
+                    label: <Link href={"/business/restaurant"}>Shop của tôi</Link>,
                     icon: <ShopOutlined />,
                     children: [
-                        {key: 'menu', label:<Link href={"/dashboard-business/restaurant/menu"}> Menu</Link>, icon: <MenuOutlined />},
-                        {key: "voucher", label: <Link href={"/dashboard-business/promotion/voucher"}> Voucher</Link>, icon: <BookOutlined />},
-                        {key: "coupon", label: <Link href={"/dashboard-business/promotion/coupon"}> Coupon</Link>, icon: <BookOutlined />},
-                        {key: "order", label: <Link href={"/dashboard-business/restaurant/order"}> Order</Link>, icon: <ShoppingOutlined />},
+                        {key: 'menu', label: <Link href={"/business/restaurant/menu"}>Menu</Link>, icon: <MenuOutlined />},
+                        {key: "voucher", label: <Link href={"/business/promotion/voucher"}>Voucher</Link>, icon: <BookOutlined />},
+                        {key: "coupon", label: <Link href={"/business/promotion/coupon"}>Coupon</Link>, icon: <BookOutlined />},
+                        {key: "order", label: <Link href={"/business/restaurant/order"}>Yêu cầu</Link>, icon: <ShoppingOutlined />},
                     ],
                 },
             ],

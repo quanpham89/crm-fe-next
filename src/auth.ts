@@ -34,7 +34,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     access_token: res.data?.access_token,
                     role: res.data?.user?.role,
                     accountType: res.data?.user?.accountType,
-                    restaurantId: res.data?.user?.restaurantId
+                    restaurantId: res.data?.user?.restaurantId,
+                    isActive: res.data?.user?.isActive
                 }    
             }
             // sai mat khau 401

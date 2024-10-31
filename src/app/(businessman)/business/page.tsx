@@ -11,8 +11,10 @@ const DashboardBussinessPage = async () => {
 
     const session  = await auth()
     let role = session?.user?.role as string
-    return (        
-        <BusinessCard role = {role}/>
+    return (  
+        <>
+            <BusinessCard role = {role}/>
+        </>      
     )
     
     

@@ -17,7 +17,7 @@ const RoleCheck = (props: any) => {
                 break;
             case "BUSINESSMAN":
                 setTimeout(() => {
-                    router.push("/dashboard-business");
+                    router.push("/business/user");
                 }, 1000);
                 break;
 

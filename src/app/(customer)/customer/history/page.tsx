@@ -1,8 +1,8 @@
 import { auth } from "@/auth"
-import AllOrder from "@/components/home/order/all.order.render"
+import AllHistoryRender from "@/components/home/history/history.render"
 import { handleGetDataUserCustomer, handleGetOrderById } from "@/utils/action"
 
-const AllOrderPage = async()=>{
+const AllHistoryPage = async()=>{
     const session = await auth()
     const user = session?.user
     const access_token = session?.user?.access_token as string
@@ -10,11 +10,11 @@ const AllOrderPage = async()=>{
     const customerId = data.data._id
     const dataOrder = customerId ? await handleGetOrderById(`api/v1/orders/get-order-by-id?_id=${customerId}`,access_token ) : []; 
 
-    return <AllOrder
+    return <AllHistoryRender
     access_token = {access_token}
     user = {user}
     orders = {dataOrder}
     />
 }
 
-export default AllOrderPage
+export default AllHistoryPage

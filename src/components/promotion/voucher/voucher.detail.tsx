@@ -7,7 +7,7 @@ import { Button, notification, Spin, Table } from "antd"
 import dayjs from "dayjs"
 import { useRouter } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
-
+import "./voucher.scss"
 const VoucherDetail = (props: any) =>{
     const {id, role, access_token } = props
     const [dataVoucherItem, setDataVoucherItem] = useState<any>([])
@@ -34,10 +34,13 @@ const VoucherDetail = (props: any) =>{
             const formatResult = result.map((item : any) =>{
                 let startDate = dayjs(item.startedDate).format("DD-MM-YYYY")
                 let endDate = dayjs(item.endedDate).format("DD-MM-YYYY") 
+                let time = dayjs(item.useTime).format("DD-MM-YYYY") 
                 return {
                     ...item,
                     startedDate: startDate,
-                    endedDate: endDate
+                    endedDate: endDate,
+                    nameVoucher: res?.data[0].nameVoucher,
+                    useTime: time
                 }
             })
             setDataVoucherItem(formatResult)
@@ -77,13 +80,13 @@ const VoucherDetail = (props: any) =>{
         },
         {
             title: 'Customer Id - userUse',
-            dataIndex: 'customerId',
-            key: 'customerId',
+            dataIndex: 'customer',
+            key: 'customer',
         },
         {
             title: 'Item Id - itemUse',
-            dataIndex: 'itemId',
-            key: 'itemId',
+            dataIndex: 'orderUse',
+            key: 'orderUse',
         },
 
         {
@@ -125,7 +128,7 @@ const VoucherDetail = (props: any) =>{
                     <span>Total: {dataVoucherItem.length}</span>
                 </div>
                 
-                <div style={{ height: "50vh", overflowY: "scroll" }}>
+                <div className="table">
                     <Table
                         bordered
                         dataSource={dataVoucherItem}

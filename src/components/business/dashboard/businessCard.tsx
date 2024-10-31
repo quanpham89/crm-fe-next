@@ -22,7 +22,7 @@ const BusinessCard = (props: any) => {
     // Dữ liệu cho biểu đồ
     const dataDoughnut = {
         datasets: [{
-            label: '% Vote',
+            label: '% Đơn',
             data: [12, 19, 3, 5, 2, 3],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -64,12 +64,11 @@ const BusinessCard = (props: any) => {
         }, 1000);
     }, []);
 
-    if (role === "BUSINESSMAN") {
         return (
             !isLoading ? 
             <div className="container" >
                 
-                    <Card title="Percentage user" bordered={false}>
+                    <Card title="Tổng số lượng đơn hàng" bordered={false}>
                         <div className="custom-bar-width">
 
                             <Doughnut data={dataDoughnut} options={{ responsive: true }} style={{ width: "33%" }} />
@@ -78,7 +77,7 @@ const BusinessCard = (props: any) => {
 
 
                 
-                    <Card title="Card title 2" bordered={false}>
+                    <Card title="Menu được yêu thích" bordered={false}>
                         <div className="custom-bar-width">
 
                             <Radar data={dataRadar} options={{ responsive: true }} style={{ width: "33%" }} />
@@ -86,7 +85,7 @@ const BusinessCard = (props: any) => {
                     </Card>
 
                 
-                    <Card title="Card title 2" bordered={false}>
+                    <Card title="" bordered={false}>
                         <div className="custom-bar-width">
 
                             <Radar data={dataRadar} options={{ responsive: true }} style={{ width: "33%" }} />
@@ -99,9 +98,6 @@ const BusinessCard = (props: any) => {
                     <Spin />
                 </div>
         );
-    } else {
-        return <div>Bạn không có quyền truy cập vào trang web này</div>;
-    }
 }
 
 export default BusinessCard;

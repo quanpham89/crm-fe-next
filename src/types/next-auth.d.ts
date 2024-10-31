@@ -9,7 +9,9 @@ interface IUser {
     type: string;
     role: string;
     access_token: string,
-    restaurantId: string
+    restaurantId: string,
+    isActive: boolean
+
 }
 declare module "next-auth/jwt" {
     /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */

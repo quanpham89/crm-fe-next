@@ -16,11 +16,11 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import Item from "../item/item";
 import { useHasMounted } from "@/utils/customHook";
-import "./order.scss";
+import "./history.scss";
 import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden";
 import { handleReceiveOrder } from "@/utils/action";
 
-const AllOrder = (props: any) => {
+const AllHistoryRender = (props: any) => {
   const { orders, user } = props;
   const [listOrder, setListOrder] = useState([]);
   const [items, setItems] = useState<CollapseProps["items"]>();
@@ -33,14 +33,8 @@ const AllOrder = (props: any) => {
     switch (statusOrder) {
       case "CANCLE":
         return "Hủy đơn";
-      case "PENDING":
-        return "Đang chờ xác nhận";
-      case "ACCEPT":
-        return "Chấp nhận đơn hàng";
-      case "PREPARE":
-        return "Chuẩn bị hàng";
-      case "SENDING":
-        return "Giao hàng";
+      case "COMPLETE":
+        return "Đã nhận đơn hàng.";
       case "DENIED":
         return "Từ chối";
 
@@ -69,7 +63,7 @@ const AllOrder = (props: any) => {
   useEffect(() => {
     if (orders?.data) {
       const allOrder = orders.data.filter((item: any) => {
-        return item.status !== "COMPLETE" && item.status !== "CANCLE";
+        return item.status == "COMPLETE" || item.status == "CANCLE";
       });
       setListOrder(allOrder);
     }
@@ -90,25 +84,6 @@ const AllOrder = (props: any) => {
     setIsOpen(true);
   };
 
-  const handleReceiveProduct = async (item: any) => {
-    const response = await handleReceiveOrder(`api/v1/orders/receive-order?_id=${item._id}`, user?.access_token)
-    if(response && response.statusCode === 200){
-      notification.success({message: "Nhận hàng thành công."})
-      window.location.reload()
-    }else{
-      notification.error({message: "Có lỗi xảy ra, vui lòng kiểm tra lại."})
-    }
-  }
-
-  const handleCloseProduct =  (item: any) => {
-    if(item._id){
-      setCurrentOrderId(item._id)
-      setOpenModalConfirmReceive(true)
-    }else{
-      notification.error({message: "Không xác định được _id order."})
-    }
-
-  }
 
   useEffect(() => {
     if (listOrder && listOrder.length > 0) {
@@ -172,20 +147,10 @@ const AllOrder = (props: any) => {
               <p
                 style={{ display: "flex", justifyContent: "flex-end", gap: 20 }}
               >
-                {getCurrenStep(item?.status) <= 2 && getCurrenStep(item?.status) >= 0 && 
-                  item.paymentForm !== "bank" && (
-                    <Button onClick={() => handleCloseProduct(item)}>
-                      Hủy đơn hàng
-                    </Button>
-                  )}
                 <Button onClick={() => handleOpenModal(item)}>
                   Chi tiết đơn hàng
                 </Button>
-                {getCurrenStep(item?.status) === 3 &&
-                  <Button onClick={() => handleReceiveProduct(item)}>
-                    Nhận hàng
-                  </Button>
-                }
+                
               </p>
             </div>
           ),
@@ -199,7 +164,7 @@ const AllOrder = (props: any) => {
   if (!hasMounted) return <></>;
   return (
     <>
-    <div
+      <div
         style={{
           display: "flex",
           justifyContent: "center",
@@ -209,7 +174,7 @@ const AllOrder = (props: any) => {
           fontWeight: 600,
         }}
       >
-        <span>Đơn hàng của tôi</span>
+        <span>Lịch sử mua hàng của tôi</span>
       </div>
       <Collapse items={items} />
       <Modal
@@ -241,4 +206,4 @@ const AllOrder = (props: any) => {
   );
 };
 
-export default AllOrder;
+export default AllHistoryRender;

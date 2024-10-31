@@ -50,44 +50,44 @@ const RestaurantBusiness = (props: any) => {
                 })
                 const formatData  = [
                     {
-                        label: "Owner",
+                        label: "Chủ sở hữu",
                         children: response?.data[0]?.user?.name
                     },
                     {
-                        label: "Name",
+                        label: "Họ và tên",
                         children: response?.data[0]?.restaurantName
                     },
                     {
-                        label: "Address",
+                        label: "Địa chỉ",
                         children: response?.data[0]?.address
                     },
                     {
-                        label: "Phone",
+                        label: "Số điện thoại",
                         children: response?.data[0]?.phone
                     },
                     {
-                        label: "Status",
+                        label: "Trạng thái",
                         children: response?.data[0]?.isShow ? "Show": "Hidden"
                     },
                     {
-                        label: "Rating",
+                        label: "Đánh giá",
                         children: response?.data[0]?.rating
                     },
                     {
-                        label: "Description",
+                        label: "Mô tả",
                         children: response?.data[0]?.description
                     },
                     {
-                        label: "Create At",
+                        label: "Tạo ngày",
                         children: dayjs(response?.data[0]?.createdAt).format('DD-MM-YYYY')
                          
                     },
                     {
-                        label: "Product Type",
+                        label: "Loại sản phẩm",
                         children: response?.data[0]?.productType
                     },
                     {
-                        label: "Menu",
+                        label: "Số lượng menu",
                         children: response?.data[0]?.menu.length
                     },
                 ]
@@ -123,7 +123,7 @@ const RestaurantBusiness = (props: any) => {
                     fontSize: 20,
                     fontWeight: 600
                 }}>
-                    <span>My Restaurants</span>
+                    <span>Shop của tôi</span>
                     
                 </div>
 

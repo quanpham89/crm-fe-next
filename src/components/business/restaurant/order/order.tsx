@@ -29,7 +29,6 @@ const Order = (props: any) => {
     const [isLoading, setIsLoading] = useState(false)
 
     const [dataRestaurant, setDataRestaurant] = useState<any>([])
-    console.log(data )
     const [form] = Form.useForm()
     const router = useRouter()
     useEffect(() => {

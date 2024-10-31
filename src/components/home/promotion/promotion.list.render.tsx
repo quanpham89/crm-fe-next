@@ -119,7 +119,7 @@ const PromotionListRender = (props: any) => {
   ];
   return (
     <Modal
-      title={type === "VOUCHER"? "Danh sách voucher" : "Danh sách coupon"}
+      title={type === "VOUCHER"? "Danh sách Voucher " : "Danh sách coupon"}
       centered
       open={isOpenModal}
       onCancel={() => handleClose()}
@@ -129,13 +129,14 @@ const PromotionListRender = (props: any) => {
         </Button>,
       ]}
     >
+      <div style={{marginBottom: 5}}><i>Các mã giảm giá chỉ được áp dụng cho sản phẩm thuộc shop.</i></div>
       <Flex gap="middle" align="start" vertical>
         {dataPromotion && dataPromotion.length > 0 ? (
           dataPromotion.map((item: any, index) =>{
               return  (
                 <Card
                   loading={loading}
-                  actions={ item.remain < item.amount ? actions(item) : [] }
+                  actions={ item.remain >0 ? actions(item) : [] }
                   style={{ width: "100%" }}
                   key={item._id}
                 >

@@ -8,8 +8,7 @@ import { Select, Space } from 'antd';
 import { useRouter } from "next/navigation";
 
 const ModalUpdateCustomer =  (props: any) => {
-    const {access_token} = props
-    const { isOpenModalUpdateCustomer, setIsOpenUpdateCustomer, currentCustomer } = props
+    const { isOpenModalUpdateCustomer, setIsOpenUpdateCustomer, currentCustomer, access_token} = props
     const [form] = Form.useForm()
     const router = useRouter()
 
@@ -27,8 +26,7 @@ const ModalUpdateCustomer =  (props: any) => {
         },)
         if(res?.data){
             notification.success({
-                message: "Success",
-                description: "Update user successfull."
+                message: "Cập nhập người dùng thành công.",
             })
             window.location.reload()
         }else{
@@ -39,14 +37,14 @@ const ModalUpdateCustomer =  (props: any) => {
         }
     }
     useEffect(()=>{
-        form.setFieldValue("_id", currentCustomer._id)
-        form.setFieldValue("email", currentCustomer.email)
-        form.setFieldValue("phone", currentCustomer.phone)
-        form.setFieldValue("name", currentCustomer.name)
-        form.setFieldValue("address", currentCustomer.address)
-        form.setFieldValue("accountType", currentCustomer.accountType)
-        form.setFieldValue("role", currentCustomer.role)
-        form.setFieldValue("sex", currentCustomer.sex)
+        form.setFieldValue("_id", currentCustomer?._id)
+        form.setFieldValue("email", currentCustomer?.email)
+        form.setFieldValue("phone", currentCustomer?.phone)
+        form.setFieldValue("name", currentCustomer?.name)
+        form.setFieldValue("address", currentCustomer?.address)
+        form.setFieldValue("accountType", currentCustomer?.accountType)
+        form.setFieldValue("role", currentCustomer?.role)
+        form.setFieldValue("sex", currentCustomer?.sex)
 
 
 
@@ -56,7 +54,7 @@ const ModalUpdateCustomer =  (props: any) => {
     if (!hasMounted) return <></>;
     return (
         <>
-            <Modal title="Update user"
+            <Modal title="Cập nhập người dùng"
                 open={isOpenModalUpdateCustomer}
                 onOk={() => setIsOpenUpdateCustomer(false)}
                 onCancel={() => setIsOpenUpdateCustomer(false)}
@@ -93,7 +91,7 @@ const ModalUpdateCustomer =  (props: any) => {
                             rules={[
                                 {
                                     required: true,
-                                    message: "Email can't be blank!",
+                                    message: "Email không được để trống!",
                                 },
                             ]}
                         >
@@ -101,12 +99,12 @@ const ModalUpdateCustomer =  (props: any) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Phone number"
+                            label="Số điện thoại"
                             name="phone"
                             rules={[
                                 {
                                     required: true,
-                                    message: "Phone number can't be blank!",
+                                    message: "Số điện thoại không được để trống!",
                                 },
                             ]}
                         >
@@ -115,12 +113,12 @@ const ModalUpdateCustomer =  (props: any) => {
 
 
                         <Form.Item
-                            label="Name"
+                            label="Tên"
                             name="name"
                             rules={[
                                 {
                                     required: true,
-                                    message: "Name can't be blank!",
+                                    message: "Tên không được để trống!",
                                 },
                             ]}
                         >
@@ -128,31 +126,32 @@ const ModalUpdateCustomer =  (props: any) => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Address"
+                            label="Địa chỉ"
                             name="address">
                             <Input  />
                         </Form.Item>
 
                         <div style={{display: "flex", justifyContent: "space-between"}}>
                         
-
                         <Form.Item
-                            label="Sex"
+                            label="Giới tính"
                             name="sex"
+                            style={{ width: "100%" }}
+
                         >
                             <Select
-                                style={{ width: 140 }}
+                                style={{ width: "100%" }}
                                 options={[
-                                    { value: 'MALE', label: 'Male' },
-                                    { value: 'FEMALE', label: 'Female' },
-                                    { value: 'OTHER', label: 'Other' },
+                                    { value: 'MALE', label: 'Nam' },
+                                    { value: 'FEMALE', label: 'Nữ' },
+                                    { value: 'OTHER', label: 'Khác' },
                                 ]}
                                 />
                         </Form.Item>
                         </div>
                         <Form.Item style={{display: "flex", justifyContent: "flex-end"}}>
-                            <Button type="primary" htmlType="submit">
-                                Update user
+                            <Button htmlType="submit">
+                                Cập nhập người dùng
                             </Button>
                         </Form.Item>
                 </Form>

@@ -96,7 +96,7 @@ const VoucherTable = (props: any) => {
         if(role === "ADMINS" || role === "ADMIN"){
             router.push(`/dashboard/promotion/voucher/${values._id}`)
         }else{
-            router.push(`/dashboard-business/promotion/voucher/${values._id}`)
+            router.push(`/business/promotion/voucher/${values._id}`)
         }
 
     }
@@ -231,7 +231,7 @@ const VoucherTable = (props: any) => {
                     marginBottom: 20,
                     alignContent: "center"
                 }}>
-                    <span>Manager Voucher</span>
+                    <span>Quản lí Voucher</span>
                     <Button onClick={() => setOpenCreateModal(true)}>Create Voucher</Button>
                 </div>
 
