@@ -167,6 +167,21 @@ export async function handleGetDataOrderDetail(path:string, access_token: string
     
 }
 
+export async function changeStatusOrderDetailItem (path:string,data : any, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "POST",
+        body:{
+            ...data,
+        },
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+    
+}
+
 
 // customer
 export async function handleGetDataUserCustomer(path:string, access_token: string) {

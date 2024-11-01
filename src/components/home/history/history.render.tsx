@@ -26,12 +26,13 @@ const AllHistoryRender = (props: any) => {
   const [items, setItems] = useState<CollapseProps["items"]>();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>({});
-  const [isOpenModalConfirmReceive, setOpenModalConfirmReceive ] = useState(false)
-  const [currentOrderId, setCurrentOrderId] = useState("")
+  const [isOpenModalConfirmReceive, setOpenModalConfirmReceive] =
+    useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState("");
 
   const getCurrentStatus = (statusOrder: string) => {
     switch (statusOrder) {
-      case "CANCLE":
+      case "CANCEL":
         return "Hủy đơn";
       case "COMPLETE":
         return "Đã nhận đơn hàng.";
@@ -44,8 +45,8 @@ const AllHistoryRender = (props: any) => {
   };
   const getCurrenStep = (statusOrder: string) => {
     switch (statusOrder) {
-      case "CANCLE":
-      return -1
+      case "CANCEL":
+        return -1;
       case "PENDING":
         return 0;
       case "ACCEPT":
@@ -63,7 +64,7 @@ const AllHistoryRender = (props: any) => {
   useEffect(() => {
     if (orders?.data) {
       const allOrder = orders.data.filter((item: any) => {
-        return item.status == "COMPLETE" || item.status == "CANCLE";
+        return item.status == "COMPLETE" || item.status == "CANCEL";
       });
       setListOrder(allOrder);
     }
@@ -83,7 +84,6 @@ const AllHistoryRender = (props: any) => {
     setSelectedOrder(formatItem);
     setIsOpen(true);
   };
-
 
   useEffect(() => {
     if (listOrder && listOrder.length > 0) {
@@ -150,7 +150,6 @@ const AllHistoryRender = (props: any) => {
                 <Button onClick={() => handleOpenModal(item)}>
                   Chi tiết đơn hàng
                 </Button>
-                
               </p>
             </div>
           ),
@@ -195,12 +194,12 @@ const AllHistoryRender = (props: any) => {
         </div>
       </Modal>
       <ModalConfirmHidden
-        isOpenModalConfirmHidden = {isOpenModalConfirmReceive}
-        setOpenModalConfirmHidden = {setOpenModalConfirmReceive}
-        title = {"Bạn có chắc chắn muốn hủy đơn hàng này không."}
-        access_token = {user?.access_token}
-        type = "CANCLE"
-        currentItem = {currentOrderId}
+        isOpenModalConfirmHidden={isOpenModalConfirmReceive}
+        setOpenModalConfirmHidden={setOpenModalConfirmReceive}
+        title={"Bạn có chắc chắn muốn hủy đơn hàng này không."}
+        access_token={user?.access_token}
+        type="CANCEL"
+        currentItem={currentOrderId}
       />
     </>
   );

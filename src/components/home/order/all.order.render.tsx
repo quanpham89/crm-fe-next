@@ -26,12 +26,13 @@ const AllOrder = (props: any) => {
   const [items, setItems] = useState<CollapseProps["items"]>();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>({});
-  const [isOpenModalConfirmReceive, setOpenModalConfirmReceive ] = useState(false)
-  const [currentOrderId, setCurrentOrderId] = useState("")
+  const [isOpenModalConfirmReceive, setOpenModalConfirmReceive] =
+    useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState("");
 
   const getCurrentStatus = (statusOrder: string) => {
     switch (statusOrder) {
-      case "CANCLE":
+      case "CANCEL":
         return "Hủy đơn";
       case "PENDING":
         return "Đang chờ xác nhận";
@@ -50,8 +51,8 @@ const AllOrder = (props: any) => {
   };
   const getCurrenStep = (statusOrder: string) => {
     switch (statusOrder) {
-      case "CANCLE":
-      return -1
+      case "CANCEL":
+        return -1;
       case "PENDING":
         return 0;
       case "ACCEPT":
@@ -69,7 +70,7 @@ const AllOrder = (props: any) => {
   useEffect(() => {
     if (orders?.data) {
       const allOrder = orders.data.filter((item: any) => {
-        return item.status !== "COMPLETE" && item.status !== "CANCLE";
+        return item.status !== "COMPLETE" && item.status !== "CANCEL";
       });
       setListOrder(allOrder);
     }
@@ -91,24 +92,26 @@ const AllOrder = (props: any) => {
   };
 
   const handleReceiveProduct = async (item: any) => {
-    const response = await handleReceiveOrder(`api/v1/orders/receive-order?_id=${item._id}`, user?.access_token)
-    if(response && response.statusCode === 200){
-      notification.success({message: "Nhận hàng thành công."})
-      window.location.reload()
-    }else{
-      notification.error({message: "Có lỗi xảy ra, vui lòng kiểm tra lại."})
+    const response = await handleReceiveOrder(
+      `api/v1/orders/receive-order?_id=${item._id}`,
+      user?.access_token
+    );
+    if (response && response.statusCode === 200) {
+      notification.success({ message: "Nhận hàng thành công." });
+      window.location.reload();
+    } else {
+      notification.error({ message: "Có lỗi xảy ra, vui lòng kiểm tra lại." });
     }
-  }
+  };
 
-  const handleCloseProduct =  (item: any) => {
-    if(item._id){
-      setCurrentOrderId(item._id)
-      setOpenModalConfirmReceive(true)
-    }else{
-      notification.error({message: "Không xác định được _id order."})
+  const handleCloseProduct = (item: any) => {
+    if (item._id) {
+      setCurrentOrderId(item._id);
+      setOpenModalConfirmReceive(true);
+    } else {
+      notification.error({ message: "Không xác định được _id order." });
     }
-
-  }
+  };
 
   useEffect(() => {
     if (listOrder && listOrder.length > 0) {
@@ -172,7 +175,8 @@ const AllOrder = (props: any) => {
               <p
                 style={{ display: "flex", justifyContent: "flex-end", gap: 20 }}
               >
-                {getCurrenStep(item?.status) <= 2 && getCurrenStep(item?.status) >= 0 && 
+                {getCurrenStep(item?.status) <= 2 &&
+                  getCurrenStep(item?.status) >= 0 &&
                   item.paymentForm !== "bank" && (
                     <Button onClick={() => handleCloseProduct(item)}>
                       Hủy đơn hàng
@@ -181,11 +185,11 @@ const AllOrder = (props: any) => {
                 <Button onClick={() => handleOpenModal(item)}>
                   Chi tiết đơn hàng
                 </Button>
-                {getCurrenStep(item?.status) === 3 &&
+                {getCurrenStep(item?.status) === 3 && (
                   <Button onClick={() => handleReceiveProduct(item)}>
                     Nhận hàng
                   </Button>
-                }
+                )}
               </p>
             </div>
           ),
@@ -199,7 +203,7 @@ const AllOrder = (props: any) => {
   if (!hasMounted) return <></>;
   return (
     <>
-    <div
+      <div
         style={{
           display: "flex",
           justifyContent: "center",
@@ -230,12 +234,12 @@ const AllOrder = (props: any) => {
         </div>
       </Modal>
       <ModalConfirmHidden
-        isOpenModalConfirmHidden = {isOpenModalConfirmReceive}
-        setOpenModalConfirmHidden = {setOpenModalConfirmReceive}
-        title = {"Bạn có chắc chắn muốn hủy đơn hàng này không."}
-        access_token = {user?.access_token}
-        type = "CANCLE"
-        currentItem = {currentOrderId}
+        isOpenModalConfirmHidden={isOpenModalConfirmReceive}
+        setOpenModalConfirmHidden={setOpenModalConfirmReceive}
+        title={"Bạn có chắc chắn muốn hủy đơn hàng này không."}
+        access_token={user?.access_token}
+        type="CANCEL"
+        currentItem={currentOrderId}
       />
     </>
   );

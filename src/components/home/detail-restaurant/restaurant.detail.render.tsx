@@ -14,13 +14,13 @@ const RestaurantDetailRender = (props: any) => {
   const { dataRestaurant, dataMenu, user } = props;
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenModalOrder, setIsOpenModalOrder] = useState(false);
-  const [currentItem, setCurrentItem] = useState({})
+  const [currentItem, setCurrentItem] = useState({});
   const [type, setType] = useState<string>("");
   const { currentCart, setCurrentCart } = useContext(CustomerContext)!;
   const router = useRouter();
 
   useEffect(() => {
-    const storedCart = localStorage.getItem('cart');
+    const storedCart = localStorage.getItem("cart");
     if (storedCart) {
       const { cart } = JSON.parse(storedCart);
       setCurrentCart(cart);
@@ -40,25 +40,30 @@ const RestaurantDetailRender = (props: any) => {
   ];
 
   const handleOrder = (item: any) => {
-    setIsOpenModalOrder(true)
-    item.restaurantId = dataRestaurant._id
-    item.userId = user._id
-    item.restaurantName = dataRestaurant.restaurantName
-    setCurrentItem(item)
-  }
+    setIsOpenModalOrder(true);
+    item.restaurantId = dataRestaurant._id;
+    item.userId = user._id;
+    item.restaurantName = dataRestaurant.restaurantName;
+    setCurrentItem(item);
+  };
   return (
     <div className="detail-restaurant-container">
-      <div style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 20,
-        fontSize: 20,
-        fontWeight: 600
-      }}>
-        <Button onClick={() => router.back()}>Back</Button>
-        <span style={{cursor: "pointer"}} onClick={() => router.push("/customer/cart")}>
-          <Badge count={currentCart.length} >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 20,
+          fontSize: 20,
+          fontWeight: 600,
+        }}
+      >
+        <Button onClick={() => router.back()}>Quay lại</Button>
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => router.push("/customer/cart")}
+        >
+          <Badge count={currentCart.length}>
             <Avatar shape="square" icon={<ShoppingCartOutlined />} />
           </Badge>
         </span>
@@ -82,7 +87,13 @@ const RestaurantDetailRender = (props: any) => {
             </div>
             <div className="truncate">
               <span className="support-title">Loại sản phẩm: </span>{" "}
-              {dataRestaurant.productType}
+              {dataRestaurant?.productType === "FASTFOOD"
+                ? "Đồ ăn nhanh"
+                : dataRestaurant?.productType === "DRINK"
+                ? "Đồ uống"
+                : dataRestaurant?.productType === "FOOD"
+                ? "Đồ ăn"
+                : "Đồ ăn nhanh và đồ uống"}
             </div>
             <div className="truncate">
               <span className="support-title">Đánh giá: </span>{" "}
@@ -112,7 +123,7 @@ const RestaurantDetailRender = (props: any) => {
         {dataMenu && dataMenu.length > 0 ? (
           dataMenu.map((item: any) =>
             item.menuItem.map((i: any) => (
-              <Card className="menu-card" key={i._id} actions={actions(i)} >
+              <Card className="menu-card" key={i._id} actions={actions(i)}>
                 <div className="image">
                   <Image alt="image" src={i.image} />
                 </div>
