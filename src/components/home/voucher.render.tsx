@@ -61,7 +61,7 @@ const VoucherRender = (props: any) => {
           fontWeight: 600,
         }}
       >
-        <span>Voucher Khuyến mãi</span>
+        <span>Voucher khuyến mãi</span>
       </div>
       <Carousel
         className="slider-voucher"

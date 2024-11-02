@@ -15,31 +15,8 @@ const ModalUpdateRestaurant =  (props: any) => {
 
     const { isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant, currentRestaurant, setCurrentRestaurant } = props
     const [form] = Form.useForm()
-    const [dataUser, setDataUser] = useState([])
 
     const router = useRouter()
-
-    useEffect(()=>{
-        fetchUserId();
-    },[])
-
-    const fetchUserId = async() =>{
-        const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/get-all-users`,
-            method: "GET",
-        })
-        if(res?.data){
-            const formatdata = res?.data.map((item : any) =>{
-                return {
-                    value: item._id,
-                    label: item.name
-                }
-            })
-            setDataUser(formatdata)
-           
-        }
-
-    }
 
     useEffect(()=>{
         form.setFieldValue("_id", currentRestaurant._id)
@@ -67,13 +44,11 @@ const ModalUpdateRestaurant =  (props: any) => {
         },)
         if(res?.data){
             notification.success({
-                message: "Thành công",
-                description: "Cập nhập người dùng thành công."
+                message: "Cập nhập thông tin shop thanhg công.",
             })
             window.location.reload()
-        }else{
             notification.error({
-                message: "Thất bại",
+                message: "Có lỗi xảy ra, vui lòng thử lại sau.",
                 description: res.message
             })
         }
@@ -89,7 +64,7 @@ const ModalUpdateRestaurant =  (props: any) => {
     if (!hasMounted) return <></>;
     return (
         <>
-            <Modal title="Update restaurant"
+            <Modal title="Cập nhập shop"
                 open={isOpenModalUpdateRestaurant}
                 onOk={handleCloseModal }
                 onCancel={handleCloseModal}
@@ -181,7 +156,6 @@ const ModalUpdateRestaurant =  (props: any) => {
                             ]}
                         >
                             <Select
-                                
                                 options={[
                                     { value: 'FOOD', label: 'Đồ ăn' },
                                     { value: 'DRINK', label: 'Đồ uống' },
@@ -194,6 +168,7 @@ const ModalUpdateRestaurant =  (props: any) => {
                         <Form.Item
                             label="Owner"
                             name="userId"
+                            hidden
                             rules={[
                                 {
                                     required: true,
@@ -201,9 +176,8 @@ const ModalUpdateRestaurant =  (props: any) => {
                                 },
                             ]}
                         >
-                            <Select
-                                options={dataUser}
-                                />
+                            <Input disabled/>
+
                         </Form.Item>
 
                         

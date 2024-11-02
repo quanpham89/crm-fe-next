@@ -8,21 +8,22 @@ import { Select } from 'antd';
 import { useRouter } from "next/navigation";
 
 const ModalCreateRestaurant =  (props: any) => {
-    const { isOpenModal, setIsOpenModal, user, role } = props
+    const { isOpenModal, setIsOpenModal, user, role, access_token } = props
     const [form] = Form.useForm()
     const [dataUser, setDataUser] = useState([])
     const router = useRouter()
     if(user ){
         form.setFieldValue("userId", user._id)
     }
-    useEffect(()=>{
-        fetchUserId();
-    },[])
+    
 
     const fetchUserId = async() =>{
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/get-all-users`,
             method: "GET",
+            headers: {
+                "Authorization": `Bearer ${access_token}`
+            }
         })
         if(res?.data){
             const formatdata = res?.data.map((item : any) =>{
@@ -36,25 +37,29 @@ const ModalCreateRestaurant =  (props: any) => {
         }
 
     }
+    useEffect(()=>{
+        fetchUserId();
+    },[isOpenModal])
     
     const createRestaurants =  async(values : any) =>{
-
         const res = await sendRequest<IBackendRes<any>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants`,
             method: "POST",
+            headers: {
+                "Authorization": `Bearer ${access_token}`
+            },
             body: {
               ...values
             },
         },)
         if(res?.data){
             notification.success({
-                message: "Thành công",
-                description: "Tạo thành công."
+                message: "Tạo shop thành công.",
             })
             window.location.reload()
         }else{
             notification.error({
-                message: "Thất bại",
+                message: "Đã xảy ra vấn đề, vui lòng thử lại sau.",
                 description: res.message
             })
         }
@@ -155,7 +160,7 @@ const ModalCreateRestaurant =  (props: any) => {
                         <Form.Item
                         label="Owner"
                         name="userId"
-                        hidden
+                    
                         rules={[
                             {
                                 required: true,

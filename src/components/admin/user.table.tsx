@@ -23,15 +23,17 @@ const UserTable = (props: any) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenModalUpdateUser, setIsOpenUpdateUser] = useState(false);
   const [dataSource, setDataSource] = useState<any>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentLimit, setCurrentLimit] = useState(3);
-  const [totalPages, setTotalPages] = useState<number>(1);
   const [currentUser, setCurrentUser] = useState({});
   const [isLoading, setLoading] = useState(true);
   const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] =
     useState<boolean>(false);
   const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] =
     useState<boolean>(false);
+    const [totalItem, setTotalItem] = useState<number>(1)
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 5,
+    });
   const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
   setRoleUser(role);
 
@@ -71,7 +73,8 @@ const UserTable = (props: any) => {
         ),
       }));
       setDataSource(formatDataUser);
-      setTotalPages(+res?.data?.totalPages);
+      setTotalItem(+res?.data?.totalItems);
+      console.log(res.data)
       setLoading(false);
     } else {
       notification.error({
@@ -83,12 +86,8 @@ const UserTable = (props: any) => {
   <CheckOutlined />;
 
   useEffect(() => {
-    fetchUserPerPage(currentPage, currentLimit);
-  }, [currentPage]);
-
-  const handlePageClick = async (e: any) => {
-    setCurrentPage(e.selected + 1);
-  };
+    fetchUserPerPage(pagination.current, pagination.pageSize);
+  }, [pagination.current, pagination.pageSize]);
 
   const handleEditUser = async (record: any) => {
     setIsOpenUpdateUser(true);
@@ -104,6 +103,13 @@ const UserTable = (props: any) => {
     setOpenModalConfirmDelete(true);
     setCurrentUser(record);
   };
+
+  const handleTableChange = (page: any) => {
+    setPagination((prev) => ({
+        ...prev,
+        current: page,
+    }))
+};
 
   const columns = [
     {
@@ -191,34 +197,14 @@ const UserTable = (props: any) => {
             bordered
             dataSource={dataSource}
             columns={columns}
-            pagination={false}
+            pagination={{
+              pageSize: pagination.pageSize,
+              total: totalItem,
+              onChange: (page) => handleTableChange(page),
+          }}
             rowKey="_id"
           />
         </div>
-        {totalPages && totalPages > 0 && (
-          <div className="user-footer">
-            <ReactPaginate
-              nextLabel=">"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={3}
-              marginPagesDisplayed={2}
-              pageCount={totalPages}
-              previousLabel="<"
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              previousClassName="page-item"
-              previousLinkClassName="page-link"
-              nextClassName="page-item"
-              nextLinkClassName="page-link"
-              breakLabel="..."
-              breakClassName="page-item"
-              breakLinkClassName="page-link"
-              containerClassName="pagination"
-              activeClassName="active"
-              renderOnZeroPageCount={null}
-            />
-          </div>
-        )}
         <ModalCreateUser
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
@@ -250,7 +236,7 @@ const UserTable = (props: any) => {
       </>
     );
   } else {
-    return <>Permission denied.</>;
+    return <h3 style={{textAlign: "center"}}>Xác thực quyền truy cập</h3>;;
   }
 };
 

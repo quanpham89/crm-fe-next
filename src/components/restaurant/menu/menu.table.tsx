@@ -37,9 +37,6 @@ const MenuTable = (props: any) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenModalChooseMenu, setIsOpenChooseMenu] = useState(false);
   const [dataSource, setDataSource] = useState<any>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentLimit, setCurrentLimit] = useState(5);
-  const [totalPages, setTotalPages] = useState<number>(1);
   const [currentMenu, setCurrentMenu] = useState({});
   const [isLoading, setLoading] = useState(true);
   const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] =
@@ -50,6 +47,11 @@ const MenuTable = (props: any) => {
     useState<boolean>(false);
   const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
   setRoleUser(role);
+  const [totalItem, setTotalItem] = useState<number>(1)
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 5,
+    });
   const router = useRouter();
   const pathName = usePathname();
 
@@ -91,7 +93,7 @@ const MenuTable = (props: any) => {
         };
       });
       setDataSource(formatData);
-      setTotalPages(+res?.data?.totalPages);
+      setTotalItem(+res?.data?.totalItems);
       setLoading(false);
     } else {
       notification.error({
@@ -102,12 +104,10 @@ const MenuTable = (props: any) => {
   };
 
   useEffect(() => {
-    fetchMenuPerPage(currentPage, currentLimit);
-  }, [currentPage]);
+    fetchMenuPerPage(pagination.current, pagination.pageSize);
+  }, [pagination.current, pagination.pageSize]);
 
-  const handlePageClick = async (e: any) => {
-    setCurrentPage(e.selected + 1);
-  };
+
 
   const handleEditMenu = async (record: any) => {
     const menuId = record._id;
@@ -133,6 +133,13 @@ const MenuTable = (props: any) => {
     setCurrentMenu(record);
     router.push(`/dashboard/menu/${record._id}/menu`);
   };
+
+  const handleTableChange = (page: any) => {
+    setPagination((prev) => ({
+        ...prev,
+        current: page,
+    }))
+};
 
   const columns = [
     {
@@ -207,34 +214,14 @@ const MenuTable = (props: any) => {
             bordered
             dataSource={dataSource}
             columns={columns}
-            pagination={false}
+            pagination={{
+              pageSize: pagination.pageSize,
+              total: totalItem,
+              onChange: (page) => handleTableChange(page),
+          }}
             rowKey="_id"
           />
         </div>
-        {totalPages && totalPages > 0 && (
-          <div className="footer">
-            <ReactPaginate
-              nextLabel=">"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={3}
-              marginPagesDisplayed={2}
-              pageCount={totalPages}
-              previousLabel="<"
-              pageClassName="page-item"
-              pageLinkClassName="page-link"
-              previousClassName="page-item"
-              previousLinkClassName="page-link"
-              nextClassName="page-item"
-              nextLinkClassName="page-link"
-              breakLabel="..."
-              breakClassName="page-item"
-              breakLinkClassName="page-link"
-              containerClassName="pagination"
-              activeClassName="active"
-              renderOnZeroPageCount={null}
-            />
-          </div>
-        )}
         <ModalCreateMenu
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
@@ -274,7 +261,7 @@ const MenuTable = (props: any) => {
       </>
     );
   } else {
-    return <>Bạn không có quyền truy cập vào chức năng này.</>;
+    return <h3 style={{textAlign: "center"}}>Xác thực quyền truy cập</h3>;
   }
 };
 

@@ -18,7 +18,6 @@ const ModalConfirmDelete =  (props: any) => {
                     headers: {
                         'Authorization': `Bearer ${access_token}`
                     }
-                    
                 })
         
                 if(resUser?.data){          

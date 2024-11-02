@@ -32,6 +32,11 @@ const CouponTable = (props: any) => {
     const [currentCoupon, setCurrentCoupon] = useState<any>("")
     const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState<boolean>(false)
     const [typeAction, setTypeAction] = useState<string>("NORMAL")
+    const [totalItem, setTotalItem] = useState<number>(1)
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 5,
+    });
     const roleUsers = ["ADMINS", "ADMIN", "BUSINESSMAN"]
 
     const fetchCouponsPerPage = async (page: number, limit: number) => {
@@ -43,6 +48,7 @@ const CouponTable = (props: any) => {
             }
         })
         if (res?.data?.results) {
+            setTotalItem(Number(res.data.totalItems))
             const coupons = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
 
             const formatData = coupons.map(item => {
@@ -65,13 +71,11 @@ const CouponTable = (props: any) => {
     }
 
     useEffect(() => {
-        fetchCouponsPerPage(+currentPage, +currentLimit)
+        fetchCouponsPerPage(pagination.current, pagination.pageSize)
 
-    }, [currentPage])
+    }, [pagination.current])
 
-    const handlePageClick = async (e: any) => {
-        setCurrentPage(e.selected + 1)
-    }
+
 
 
     const handleUnActiveCoupon = async (values: any) => {
@@ -163,6 +167,8 @@ const CouponTable = (props: any) => {
         let {time, ...rest} = values
         let formatvalue = {                
             ...rest,
+            belongTo: userCreateId
+
         }
 
         if(values?.time){
@@ -172,14 +178,18 @@ const CouponTable = (props: any) => {
             formatvalue = {
                 ...rest,
                 startedTime: convertStartedDate,
-                endedTime: convertEndedDate
+                endedTime: convertEndedDate,
+                belongTo: userCreateId
             }
 
         }
     
         const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons/search?searchValue=${JSON.stringify(formatvalue)}&belongTo=${userCreateId}`,
-            method: "GET",
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons/search`,
+            method: "POST",
+            body: {
+                ...formatvalue
+            },
             headers: {
                 "Authorization": `Bearer ${access_token}`
             }
@@ -213,7 +223,15 @@ const CouponTable = (props: any) => {
         setLoading(true)
         await fetchCouponsPerPage(+currentPage, +currentLimit)
         form.resetFields()
+        setTypeAction("NORMAL")
     }
+
+    const handleTableChange = (page: any) => {
+        setPagination((prev) => ({
+            ...prev,
+            current: page,
+        }))
+    };
 
     if (roleUsers.includes(role)) {
 
@@ -308,33 +326,14 @@ const CouponTable = (props: any) => {
                         bordered
                         dataSource={dataSource}
                         columns={columns}
-                        pagination={false}
                         rowKey="_id"
+                        pagination={typeAction !== "SEARCH" ?{
+                            pageSize: pagination.pageSize,
+                            total: totalItem,
+                            onChange: (page) => handleTableChange(page),
+                        }: false}
                     />
-                    {totalPages && totalPages > 0 && typeAction !== "SEARCH" &&
-                        <div className="footer">
-                            <ReactPaginate
-                                nextLabel=">"
-                                onPageChange={handlePageClick}
-                                pageRangeDisplayed={3}
-                                marginPagesDisplayed={2}
-                                pageCount={totalPages}
-                                previousLabel="<"
-                                pageClassName="page-item"
-                                pageLinkClassName="page-link"
-                                previousClassName="page-item"
-                                previousLinkClassName="page-link"
-                                nextClassName="page-item"
-                                nextLinkClassName="page-link"
-                                breakLabel="..."
-                                breakClassName="page-item"
-                                breakLinkClassName="page-link"
-                                containerClassName="pagination"
-                                activeClassName="active"
-                                renderOnZeroPageCount={null}
-                            />
-                        </div>
-                    }
+                    
                     <ModalCreateCoupon
                         isOpenModal={isOpenCreateModal}
                         setIsOpenModal={setOpenCreateModal}

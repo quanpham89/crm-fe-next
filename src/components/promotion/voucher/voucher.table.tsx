@@ -21,17 +21,18 @@ const VoucherTable = (props: any) => {
     const { role, access_token, user, userCreateId } = props
     const router = useRouter()
     const [loading, setLoading] = useState<boolean>(true)
-    const [totalPages, setTotalPages] = useState(1)
     const [dataSource, setDataSource] = useState<any>([])
-    const [totalItems, setTotalItems] = useState(0)
-    const [currentPage, setCurrentPage] = useState(1)
-    const [currentLimit, setCurrentLimit] = useState(5)
     const [isOpenCreateModal, setOpenCreateModal] = useState<boolean>(false)
     const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] = useState<boolean>(false)
     const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] = useState<boolean>(false)
     const [currentVoucher, setCurrentVoucher] = useState<any>("")
     const [isOpenModalConfirmActive, setOpenModalConfirmActive] = useState<boolean>(false)
     const [typeAction, setTypeAction] = useState<string>("NORMAL")
+    const [totalItem, setTotalItem] = useState<number>(1)
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 5,
+    });
     const roleUsers = ["ADMINS", "ADMIN", "BUSINESSMAN"]
 
 
@@ -44,6 +45,7 @@ const VoucherTable = (props: any) => {
             }
         })
         if (res?.data?.results) {
+            setTotalItem(Number(res.data.totalItems))
             const vouchers = Array.isArray(res.data.results) ? res.data.results : [res.data.results];
 
             const formatData = vouchers.map(item => {
@@ -53,8 +55,6 @@ const VoucherTable = (props: any) => {
                 })
             });
             setDataSource(formatData)
-            setTotalPages(+res?.data?.totalPages)
-            setTotalItems(+res?.data?.totalItems)
             setLoading(false)
         } else {
             notification.error({
@@ -66,13 +66,10 @@ const VoucherTable = (props: any) => {
     }
 
     useEffect(() => {
-        fetchVouchersPerPage(+currentPage, +currentLimit)
+        fetchVouchersPerPage(pagination.current, pagination.pageSize)
 
-    }, [currentPage])
+    }, [pagination.current])
 
-    const handlePageClick = async (e: any) => {
-        setCurrentPage(e.selected + 1)
-    }
 
 
     const handleUnActiveVoucher = async (values: any) => {
@@ -168,6 +165,8 @@ const VoucherTable = (props: any) => {
         let {time, ...rest} = values
         let formatvalue = {                
             ...rest,
+            belongTo: userCreateId
+
         }
 
         if(values?.time){
@@ -177,22 +176,26 @@ const VoucherTable = (props: any) => {
             formatvalue = {
                 ...rest,
                 startedTime: convertStartedDate,
-                endedTime: convertEndedDate
+                endedTime: convertEndedDate,
+                belongTo: userCreateId
             }
 
         }
     
         const res = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/search?searchValue=${JSON.stringify(formatvalue)}&belongTo=${userCreateId}`,
-            method: "GET",
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/search`,
+            method: "POST",
+            body:{
+                ...formatvalue,
+            },
             headers: {
                 "Authorization": `Bearer ${access_token}`
             }
 
         })
         if (res?.data) {
-            const voucher = Array.isArray(res.data.vouchers) ? res.data.vouchers : [res.data.vouchers];
 
+            const voucher = Array.isArray(res.data.vouchers) ? res.data.vouchers : [res.data.vouchers];
             const formatData = voucher.map((item : any) => {
                 return ({
                     ...item,
@@ -216,9 +219,17 @@ const VoucherTable = (props: any) => {
 
     const handleRefresh = async()=>{
         setLoading(true)
-        await fetchVouchersPerPage(+currentPage, +currentLimit)
+        await fetchVouchersPerPage(pagination.current, pagination.pageSize)
         form.resetFields()
+        setTypeAction("NORMAL")
     }
+
+    const handleTableChange = (page: any) => {
+        setPagination((prev) => ({
+            ...prev,
+            current: page,
+        }))
+    };
 
     if (roleUsers.includes(role)) {
 
@@ -314,35 +325,15 @@ const VoucherTable = (props: any) => {
                         bordered
                         dataSource={dataSource}
                         columns={columns}
-                        pagination={false}
                         rowKey="_id"
+                        pagination={typeAction !== "SEARCH" ?{
+                            pageSize: pagination.pageSize,
+                            total: totalItem,
+                            onChange: (page) => handleTableChange(page),
+                        }: false}
                         
                     />
-                    {totalPages && totalPages > 0 && typeAction !== "SEARCH" &&
-                    
-                        <div className="footer">
-                            <ReactPaginate
-                                nextLabel=">"
-                                onPageChange={handlePageClick}
-                                pageRangeDisplayed={3}
-                                marginPagesDisplayed={2}
-                                pageCount={totalPages}
-                                previousLabel="<"
-                                pageClassName="page-item"
-                                pageLinkClassName="page-link"
-                                previousClassName="page-item"
-                                previousLinkClassName="page-link"
-                                nextClassName="page-item"
-                                nextLinkClassName="page-link"
-                                breakLabel="..."
-                                breakClassName="page-item"
-                                breakLinkClassName="page-link"
-                                containerClassName="pagination"
-                                activeClassName="active"
-                                renderOnZeroPageCount={null}
-                            />
-                        </div>
-                    }
+                   
                     <ModalCreateVoucher
                         isOpenModal={isOpenCreateModal}
                         setIsOpenModal={setOpenCreateModal}
@@ -389,7 +380,7 @@ const VoucherTable = (props: any) => {
 
 
     } else {
-        <div> You must have permission to access this function.</div>
+        return <h3 style={{textAlign: "center"}}>Xác thực quyền truy cập</h3>;
     }
 
 }

@@ -49,13 +49,14 @@ const AdminHeader = (props: any) => {
             width: 64,
             height: 64,
             color: "#fff",
+
           }}
         />
         <Dropdown menu={{ items }}>
           <a
             onClick={(e) => e.preventDefault()}
             style={{
-              color: "unset",
+              color: "#fff",
               lineHeight: "0 !important",
               marginRight: 20,
             }}

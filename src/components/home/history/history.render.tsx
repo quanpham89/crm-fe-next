@@ -34,7 +34,7 @@ const AllHistoryRender = (props: any) => {
     switch (statusOrder) {
       case "CANCEL":
         return "Hủy đơn";
-      case "COMPLETE":
+      case "RECEIVE":
         return "Đã nhận đơn hàng.";
       case "DENIED":
         return "Từ chối";
@@ -55,7 +55,7 @@ const AllHistoryRender = (props: any) => {
         return 2;
       case "SENDING":
         return 3;
-      case "COMPLETE":
+      case "RECEIVE":
         return 4;
       default:
         return 0;
@@ -64,7 +64,7 @@ const AllHistoryRender = (props: any) => {
   useEffect(() => {
     if (orders?.data) {
       const allOrder = orders.data.filter((item: any) => {
-        return item.status == "COMPLETE" || item.status == "CANCEL";
+        return item.status == "RECEIVE" || item.status == "CANCEL";
       });
       setListOrder(allOrder);
     }
@@ -110,7 +110,7 @@ const AllHistoryRender = (props: any) => {
                     title: "Giao hàng",
                   },
                   {
-                    title: "Hoàn thành",
+                    title: "Nhận hàng",
                   },
                 ]}
               />
