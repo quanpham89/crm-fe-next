@@ -40,7 +40,17 @@ const CustomerHeader = (props: any) => {
           background: "rgb(0 21 41 / 91%)",
         }}
       >
-        <div></div>
+        <Button
+          type="text"
+          icon={collapseMenu ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={() => setCollapseMenu(!collapseMenu)}
+          style={{
+            fontSize: "16px",
+            width: 64,
+            height: 64,
+            color: "#fff",
+          }}
+        />
         <Dropdown menu={{ items }}>
           <a
             onClick={(e) => e.preventDefault()}

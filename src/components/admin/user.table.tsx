@@ -29,11 +29,11 @@ const UserTable = (props: any) => {
     useState<boolean>(false);
   const [isOpenModalConfirmHidden, setOpenModalConfirmHidden] =
     useState<boolean>(false);
-    const [totalItem, setTotalItem] = useState<number>(1)
-    const [pagination, setPagination] = useState({
-        current: 1,
-        pageSize: 5,
-    });
+  const [totalItem, setTotalItem] = useState<number>(1);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+  });
   const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
   setRoleUser(role);
 
@@ -52,6 +52,16 @@ const UserTable = (props: any) => {
 
       const formatDataUser = users.map((item) => ({
         ...item,
+        sex:
+          item.sex === "MALE" ? "Nam" : item.sex === "FEMALE" ? "Nữ" : "Khác",
+        role:
+          item.role === "ADMINS"
+            ? "Siêu quản trị viên"
+            : item.role === "ADMIN"
+            ? "Quản trị viên"
+            : item.role === "BUSINESSMAN"
+            ? "Người kinh doanh"
+            : "Khách hàng",
         activeIcon: item.isActive ? (
           <CheckOutlined
             style={{
@@ -74,11 +84,11 @@ const UserTable = (props: any) => {
       }));
       setDataSource(formatDataUser);
       setTotalItem(+res?.data?.totalItems);
-      console.log(res.data)
+      console.log(res.data);
       setLoading(false);
     } else {
       notification.error({
-        message: "Call APIs error",
+        message: "Có lỗi xảy ra, vui lòng thử lại sau.",
         description: res?.message,
       });
     }
@@ -90,26 +100,44 @@ const UserTable = (props: any) => {
   }, [pagination.current, pagination.pageSize]);
 
   const handleEditUser = async (record: any) => {
-    setIsOpenUpdateUser(true);
-    setCurrentUser(record);
+    if (record._id !== "66ed364f573820f44bef5a6a") {
+      setIsOpenUpdateUser(true);
+      setCurrentUser(record);
+    } else {
+      notification.error({
+        message: "Bạn không có quyền chỉnh sửa siêu quản trị viên",
+      });
+    }
   };
 
   const handleUnActiveUser = async (record: any) => {
-    setOpenModalConfirmHidden(true);
-    setCurrentUser(record);
+    if (record._id !== "66ed364f573820f44bef5a6a") {
+      setOpenModalConfirmHidden(true);
+      setCurrentUser(record);
+    } else {
+      notification.error({
+        message: "Bạn không có quyền chỉnh sửa siêu quản trị viên",
+      });
+    }
   };
 
   const handleConfirmDeleteUser = (record: any) => {
-    setOpenModalConfirmDelete(true);
-    setCurrentUser(record);
+    if (record._id !== "66ed364f573820f44bef5a6a") {
+      setOpenModalConfirmDelete(true);
+      setCurrentUser(record);
+    } else {
+      notification.error({
+        message: "Bạn không có quyền chỉnh sửa siêu quản trị viên",
+      });
+    }
   };
 
   const handleTableChange = (page: any) => {
     setPagination((prev) => ({
-        ...prev,
-        current: page,
-    }))
-};
+      ...prev,
+      current: page,
+    }));
+  };
 
   const columns = [
     {
@@ -187,10 +215,17 @@ const UserTable = (props: any) => {
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: 20,
+            fontSize: 20,
+            fontWeight: 600,
           }}
         >
-          <span>Manager Users</span>
-          <Button onClick={() => setIsOpenModal(true)}>Create User</Button>
+          <span>Quản lí người dùng</span>
+          <Button
+            style={{ fontSize: 16, fontWeight: 600, padding: "12px" }}
+            onClick={() => setIsOpenModal(true)}
+          >
+            Tạo mới
+          </Button>
         </div>
         <div style={{ height: "50vh", overflowY: "scroll" }}>
           <Table
@@ -201,7 +236,7 @@ const UserTable = (props: any) => {
               pageSize: pagination.pageSize,
               total: totalItem,
               onChange: (page) => handleTableChange(page),
-          }}
+            }}
             rowKey="_id"
           />
         </div>
@@ -236,7 +271,7 @@ const UserTable = (props: any) => {
       </>
     );
   } else {
-    return <h3 style={{textAlign: "center"}}>Xác thực quyền truy cập</h3>;;
+    return <h3 style={{ textAlign: "center" }}>Xác thực quyền truy cập</h3>;
   }
 };
 

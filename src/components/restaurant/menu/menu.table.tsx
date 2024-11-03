@@ -47,11 +47,11 @@ const MenuTable = (props: any) => {
     useState<boolean>(false);
   const { roleUsers, roleUser, setRoleUser } = useContext(AdminContext)!;
   setRoleUser(role);
-  const [totalItem, setTotalItem] = useState<number>(1)
-    const [pagination, setPagination] = useState({
-        current: 1,
-        pageSize: 5,
-    });
+  const [totalItem, setTotalItem] = useState<number>(1);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+  });
   const router = useRouter();
   const pathName = usePathname();
 
@@ -107,8 +107,6 @@ const MenuTable = (props: any) => {
     fetchMenuPerPage(pagination.current, pagination.pageSize);
   }, [pagination.current, pagination.pageSize]);
 
-
-
   const handleEditMenu = async (record: any) => {
     const menuId = record._id;
     router.push(`${pathName}/detailMenu/${menuId}`);
@@ -136,10 +134,10 @@ const MenuTable = (props: any) => {
 
   const handleTableChange = (page: any) => {
     setPagination((prev) => ({
-        ...prev,
-        current: page,
-    }))
-};
+      ...prev,
+      current: page,
+    }));
+  };
 
   const columns = [
     {
@@ -197,17 +195,25 @@ const MenuTable = (props: any) => {
       </div>
     ) : (
       <>
-        <Button onClick={() => router.back()}>Back</Button>
+        <Button onClick={() => router.back()}>Quay lại</Button>
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: 20,
+            fontSize: 20,
+            fontWeight: 600,
+            marginTop: 20,
           }}
         >
           <span>Quản lí menu</span>
-          <Button onClick={() => setIsOpenModal(true)}>Tạo Menu</Button>
+          <Button
+            style={{ fontSize: 16, fontWeight: 600, padding: "12px" }}
+            onClick={() => setIsOpenModal(true)}
+          >
+            Tạo Menu
+          </Button>
         </div>
         <div className="table">
           <Table
@@ -218,7 +224,7 @@ const MenuTable = (props: any) => {
               pageSize: pagination.pageSize,
               total: totalItem,
               onChange: (page) => handleTableChange(page),
-          }}
+            }}
             rowKey="_id"
           />
         </div>
@@ -261,7 +267,7 @@ const MenuTable = (props: any) => {
       </>
     );
   } else {
-    return <h3 style={{textAlign: "center"}}>Xác thực quyền truy cập</h3>;
+    return <h3 style={{ textAlign: "center" }}>Xác thực quyền truy cập</h3>;
   }
 };
 

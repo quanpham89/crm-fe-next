@@ -175,7 +175,9 @@ const AllHistoryRender = (props: any) => {
       >
         <span>Lịch sử mua hàng của tôi</span>
       </div>
-      <Collapse items={items} />
+      <div className="order-container ">
+        <Collapse items={items} />
+      </div>
       <Modal
         title="Chi tiết đơn hàng"
         open={isOpen}
