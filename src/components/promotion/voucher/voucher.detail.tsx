@@ -34,14 +34,13 @@ const VoucherDetail = (props: any) => {
       const formatResult = result.map((item: any) => {
         let startDate = dayjs(item.startedDate).format("DD-MM-YYYY");
         let endDate = dayjs(item.endedDate).format("DD-MM-YYYY");
-        let time = dayjs(item.usedTime).format("HH:mm_DD-MM-YYYY");
         return {
           ...item,
           customer: item?.customer?.userId.name,
           startedDate: startDate,
           endedDate: endDate,
           nameVoucher: res?.data[0].nameVoucher,
-          usedTime: time,
+          usedTime: item?.usedTme ? dayjs(item.usedTime).format("HH:mm_DD-MM-YYYY"): "",
         };
       });
       setDataVoucherItem(formatResult);

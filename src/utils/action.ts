@@ -64,6 +64,18 @@ export async function handleGetDataPerPage(path:string, access_token: string, ne
     
 }
 
+export async function handleGetFigureUser(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        },
+    })
+    return res
+    
+}
+
 export async function handleGetDataMenu(path:string, access_token: string) {
     const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,

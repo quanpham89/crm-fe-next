@@ -16,6 +16,7 @@ import {
   DatePicker,
   Form,
   Input,
+  InputNumber,
   notification,
   Row,
   Select,
@@ -74,6 +75,13 @@ const VoucherTable = (props: any) => {
       const formatData = vouchers.map((item) => {
         return {
           ...item,
+          type: item.type === "GIFT" ? "Quà tặng" : "Sự kiện",
+          scope:
+            item.scope === "FOOD"
+              ? "Thức ăn"
+              : item.scope === "DRINK"
+              ? "Đồ uống"
+              : "Tất cả",
           activeIcon:
             item.status === "PUBLIC" ? (
               <CheckOutlined
@@ -154,11 +162,11 @@ const VoucherTable = (props: any) => {
     },
     {
       title: "Phạm vi",
-      dataIndex: "forAge",
-      key: "forAge",
+      dataIndex: "scope",
+      key: "scope",
     },
     {
-      title: "Loại",
+      title: "Phân loại",
       dataIndex: "type",
       key: "type",
     },
@@ -244,7 +252,13 @@ const VoucherTable = (props: any) => {
       const formatData = voucher.map((item: any) => {
         return {
           ...item,
-          for: item.type === "GIFT" ? "Quà tặng" : "Sự kiện",
+          type: item.type === "GIFT" ? "Quà tặng" : "Sự kiện",
+          scope:
+            item.scope === "FOOD"
+              ? "Thức ăn"
+              : item.scope === "DRINK"
+              ? "Đồ uống"
+              : "Tất cả",
           activeIcon:
             item.status === "PUBLIC" ? (
               <CheckOutlined
@@ -268,15 +282,14 @@ const VoucherTable = (props: any) => {
         };
       });
       notification.success({
-        message: "Success",
-        description: `Có ${formatData.length} kết quả ứng với giá trị tìm kiếm.`,
+        message: `Có ${formatData.length} kết quả ứng với giá trị tìm kiếm.`
       });
       setDataSource(formatData);
       setLoading(false);
     } else {
       setLoading(false);
       notification.error({
-        message: "Có lỗi xả ra, vui lòng thử lại.",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
         description: res?.message,
       });
     }
@@ -334,7 +347,7 @@ const VoucherTable = (props: any) => {
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="Pin code " name="_id">
+                <Form.Item label="Id " name="_id">
                   <Input />
                 </Form.Item>
               </Col>
@@ -342,17 +355,33 @@ const VoucherTable = (props: any) => {
 
             <Row gutter={16}>
               <Col span={12}>
-                <Form.Item label="Loại" name="type">
-                  <Input />
+                <Form.Item label="Phân loại" name="type">
+                  <Select
+                  options = {[
+                    { value: "GIFT", label: "Quà tặng" },
+                    { value: "EVENT", label: "Sự kiện" },
+                  ]}
+                  ></Select>
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="Phạm vi" name="forAge">
-                  <Input />
+                <Form.Item label="Phạm vi" name="scope">
+                <Select
+                  options = {[
+                    { value: "FOOD", label: "Thức ăn" },
+                    { value: "DRINK", label: "Đồ uống" },
+                    { value: "ALL", label: "Tất cả" },
+                  ]}
+                  ></Select>
                 </Form.Item>
               </Col>
             </Row>
             <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item label="Giảm giá" name="percentage">
+                <InputNumber style={{width : "100%"}}/>
+              </Form.Item>
+            </Col>
               <Col span={12}>
                 <Form.Item label="Khoảng thời gian" name="time">
                   <DatePicker.RangePicker

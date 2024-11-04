@@ -26,7 +26,7 @@ const AllOrder = (props: any) => {
   const [items, setItems] = useState<CollapseProps["items"]>();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>({});
-  const [isOpenModalConfirmReceive, setOpenModalConfirmReceive] =
+  const [isOpenModalConfirmCanel, setOpenModalConfirmCancle] =
     useState(false);
   const [currentOrderId, setCurrentOrderId] = useState("");
 
@@ -107,7 +107,7 @@ const AllOrder = (props: any) => {
   const handleCloseProduct = (item: any) => {
     if (item._id) {
       setCurrentOrderId(item._id);
-      setOpenModalConfirmReceive(true);
+      setOpenModalConfirmCancle(true);
     } else {
       notification.error({ message: "Không xác định được _id order." });
     }
@@ -236,8 +236,8 @@ const AllOrder = (props: any) => {
         </div>
       </Modal>
       <ModalConfirmHidden
-        isOpenModalConfirmHidden={isOpenModalConfirmReceive}
-        setOpenModalConfirmHidden={setOpenModalConfirmReceive}
+        isOpenModalConfirmHidden={isOpenModalConfirmCanel}
+        setOpenModalConfirmHidden={setOpenModalConfirmCancle}
         title={"Bạn có chắc chắn muốn hủy đơn hàng này không."}
         access_token={user?.access_token}
         type="CANCEL"

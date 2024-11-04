@@ -96,97 +96,114 @@ const Cart = (props: any) => {
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     form.setFieldValue("orderTime", dayjs());
+    
     if (storedCart) {
-      const { cart } = JSON.parse(storedCart);
-      setCurrentCart(cart);
+        const parsedCart = JSON.parse(storedCart);
+        
+        // Lấy giỏ hàng cho userId hiện tại
+        const userCart = parsedCart[user?._id] || [];
+        setCurrentCart(userCart);
     }
+
     const emptyOption: optionSelect = {
-      value: "",
-      label: "Bỏ chọn",
+        value: "",
+        label: "Bỏ chọn",
     };
+    
     const formatDataVoucher = vouchers.map((item: any) => {
-      return {
-        value: item._id,
-        label: item.nameVoucher,
-      };
+        return {
+            value: item._id,
+            label: item.nameVoucher,
+        };
     });
     setDataVoucher([emptyOption, ...formatDataVoucher]);
+    
     const formatDataCoupon = coupons.map((item: any) => {
-      return {
-        value: item._id,
-        label: item.nameCoupon,
-      };
+        return {
+            value: item._id,
+            label: item.nameCoupon,
+        };
     });
     setDataCoupon([emptyOption, ...formatDataCoupon]);
-  }, []);
-  useEffect(() => {
+}, [user?._id]); // Thêm user?._id vào dependencies để cập nhật khi user thay đổi
+
+useEffect(() => {
     form.setFieldValue("orderTime", dayjs());
-    const dataCart = currentCart.map((item: any) => {
-      const sellingPrice = +item.sellingPrice;
-      const quantity = +item.quantity;
-      const amount = +item.amount;
-
-      return {
-        key: item.menuItemId,
-        nameItemMenu: item.nameItemMenu,
-        sellingPrice: helper.formatMoneyVND(sellingPrice),
-        quantity,
-        amount,
-        totalPrice: helper.formatMoneyVND(
-          Math.round((amount * sellingPrice) / 1000) * 1000
-        ),
-        voucher: (
-          <Select
-            style={{ width: "100%" }}
-            disabled
-            placeholder="Chức năng này hiện tại vẫn đang được phát triển."
-            options={[
-              { value: "money", label: "Tiền mặt" },
-              { value: "bank", label: "Chuyển khoản" },
-            ]}
-          />
-        ),
-        coupon: (
-          <Select
-            style={{ width: "100%" }}
-            disabled
-            placeholder="Chức năng này hiện tại vẫn đang được phát triển."
-            options={[
-              { value: "money", label: "Tiền mặt" },
-              { value: "card", label: "Thẻ" },
-              { value: "bank", label: "Chuyển khoản" },
-            ]}
-          />
-        ),
-      };
-    });
-    setDataColumn(dataCart);
-    if (dataCart.length > 0) {
-      const totalPrice = dataCart.reduce((accumulator: any, item: any) => {
-        return (
-          accumulator + item.amount * +helper.parsePrice(item.sellingPrice)
-        );
-      }, 0);
-      const roundTotalPrice = Math.round(totalPrice / 1000) * 1000;
-      setTotal(String(roundTotalPrice));
-      setTotalDisplay(String(roundTotalPrice));
-    } else {
-      setTotal("0");
-      setTotalDisplay("0");
-    }
-  }, [currentCart]);
-
-  const handleRemoveAllCart = () =>{
-    form.resetFields()
-    if(localStorage.getItem("cart")){
-        setCurrentCart([])
-        localStorage.removeItem('cart');
-        notification.success({message: "Xóa toàn bộ sản phẩm khỏi giỏ hàng thành công."})
-    }else{
-        notification.error({message: "Giỏ hàng trống."})
-    }
     
+    const dataCart = currentCart.map((item: any) => {
+        const sellingPrice = +item.sellingPrice;
+        const quantity = +item.quantity;
+        const amount = +item.amount;
+
+        return {
+            key: item.menuItemId,
+            nameItemMenu: item.nameItemMenu,
+            sellingPrice: helper.formatMoneyVND(sellingPrice),
+            quantity,
+            amount,
+            totalPrice: helper.formatMoneyVND(
+                Math.round((amount * sellingPrice) / 1000) * 1000
+            ),
+            voucher: (
+                <Select
+                    style={{ width: "100%" }}
+                    disabled
+                    placeholder="Chức năng này hiện tại vẫn đang được phát triển."
+                    options={[
+                        { value: "money", label: "Tiền mặt" },
+                        { value: "bank", label: "Chuyển khoản" },
+                    ]}
+                />
+            ),
+            coupon: (
+                <Select
+                    style={{ width: "100%" }}
+                    disabled
+                    placeholder="Chức năng này hiện tại vẫn đang được phát triển."
+                    options={[
+                        { value: "money", label: "Tiền mặt" },
+                        { value: "card", label: "Thẻ" },
+                        { value: "bank", label: "Chuyển khoản" },
+                    ]}
+                />
+            ),
+        };
+    });
+
+    setDataColumn(dataCart);
+
+    if (dataCart.length > 0) {
+        const totalPrice = dataCart.reduce((accumulator: any, item: any) => {
+            return (
+                accumulator + item.amount * +helper.parsePrice(item.sellingPrice)
+            );
+        }, 0);
+        const roundTotalPrice = Math.round(totalPrice / 1000) * 1000;
+        setTotal(String(roundTotalPrice));
+        setTotalDisplay(String(roundTotalPrice));
+    } else {
+        setTotal("0");
+        setTotalDisplay("0");
+    }
+}, [currentCart]);
+
+
+const handleRemoveAllCart = () => {
+  form.resetFields();
+  const storedCart = localStorage.getItem("cart");
+
+  if (storedCart) {
+      const parsedCart = JSON.parse(storedCart);
+      delete parsedCart[user?._id];
+      localStorage.setItem("cart", JSON.stringify(parsedCart));
+      setCurrentCart([]);
+
+      notification.success({ message: "Xóa toàn bộ sản phẩm khỏi giỏ hàng thành công." });
+  } else {
+      notification.error({ message: "Giỏ hàng trống." });
   }
+};
+
 
   const getColumnSearchProps = (
     dataIndex: DataIndex

@@ -22,10 +22,13 @@ const RestaurantDetailRender = (props: any) => {
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
-      const { cart } = JSON.parse(storedCart);
-      setCurrentCart(cart);
+        const parsedCart = JSON.parse(storedCart);
+        const userCart = parsedCart[user?._id] || [];
+        
+        setCurrentCart(userCart);
     }
-  }, []);
+}, [user?._id]); 
+
   const handleOpenPromotionModal = (type: string) => {
     if (type === "VOUCHER") {
       setIsOpenModal(true);
@@ -63,7 +66,7 @@ const RestaurantDetailRender = (props: any) => {
           style={{ cursor: "pointer" }}
           onClick={() => router.push("/customer/cart")}
         >
-          <Badge count={currentCart.length}>
+          <Badge count={currentCart?.length}>
             <Avatar shape="square" icon={<ShoppingCartOutlined />} />
           </Badge>
         </span>

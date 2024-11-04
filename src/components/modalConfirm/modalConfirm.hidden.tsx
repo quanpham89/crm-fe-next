@@ -202,10 +202,9 @@ const ModalConfirmHidden = (props: any) => {
         break;
 
       case "CANCEL":
-        console.log(currentItem);
         if (currentItem) {
           const cancleOrder = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders/close-order?_id=${currentItem}`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders/cancel-order?_id=${currentItem}`,
             method: "PATCH",
             headers: {
               Authorization: `Bearer ${access_token}`,

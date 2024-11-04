@@ -40,14 +40,13 @@ const CouponDetail = (props: any) => {
       const formatResult = result.map((item: any) => {
         let startDate = dayjs(item.startedDate).format("DD-MM-YYYY");
         let endDate = dayjs(item.endedDate).format("DD-MM-YYYY");
-        let time = dayjs(item.usedTime).format("DD-MM-YYYY");
         return {
           ...item,
           customer: item?.customer?.userId.name,
           startedDate: startDate,
           endedDate: endDate,
           nameCoupon: res?.data[0].nameCoupon,
-          usedTime: time,
+          usedTime: item?.usedTme ? dayjs(item.usedTime).format("HH:mm_DD-MM-YYYY"): "",
         };
       });
       setDataCouponItem(formatResult);

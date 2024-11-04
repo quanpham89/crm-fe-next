@@ -210,7 +210,7 @@ const ModalCreateCoupon = (props: any) => {
               },
             ]}
           >
-            <InputNumber min={1} style={{ width: "100%" }} max={15} />
+            <InputNumber min={1} style={{ width: "100%" }} max={10} />
           </Form.Item>
           <Form.Item
             style={{

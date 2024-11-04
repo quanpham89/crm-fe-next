@@ -16,6 +16,7 @@ import {
   DatePicker,
   Form,
   Input,
+  InputNumber,
   notification,
   Row,
   Select,
@@ -75,6 +76,7 @@ const CouponTable = (props: any) => {
       const formatData = coupons.map((item) => {
         return {
           ...item,
+          type: item.type === "GIFT" ? "Quà tặng" : "Sự kiện",
           scope:
             item.scope === "FOOD"
               ? "Thức ăn"
@@ -104,8 +106,6 @@ const CouponTable = (props: any) => {
         };
       });
       setDataSource(formatData);
-      // setTotalPages(+res?.data?.totalPages)
-      // setTotalItems(+res?.data?.totalItems)
       setLoading(false);
     } else {
       notification.error({
@@ -162,14 +162,14 @@ const CouponTable = (props: any) => {
       width: "25%",
     },
     {
-      title: "Giảm giá",
-      dataIndex: "discount",
-      key: "discount",
-    },
-    {
       title: "Phạm vi",
       dataIndex: "scope",
       key: "scope",
+    },
+    {
+      title: "Phân loại",
+      dataIndex: "type",
+      key: "type",
     },
     {
       title: "Trạng thái",
@@ -180,6 +180,11 @@ const CouponTable = (props: any) => {
       title: "Số lượng",
       dataIndex: "amount",
       key: "amount",
+    },
+    {
+      title: "Giảm giá",
+      dataIndex: "discount",
+      key: "discount",
     },
     {
       title: "Tạo bởi",
@@ -225,6 +230,7 @@ const CouponTable = (props: any) => {
       const convertEndedDate = dayjs(values.time[1].$d).utc().format();
       formatvalue = {
         ...rest,
+        
         startedTime: convertStartedDate,
         endedTime: convertEndedDate,
         belongTo: userCreateId,
@@ -249,6 +255,13 @@ const CouponTable = (props: any) => {
       const formatData = coupon.map((item: any) => {
         return {
           ...item,
+          type: item.type === "GIFT" ? "Quà tặng" : "Sự kiện",
+          scope:
+            item.scope === "FOOD"
+              ? "Thức ăn"
+              : item.scope === "DRINK"
+              ? "Đồ uống"
+              : "Tất cả",
           activeIcon:
             item.status === "PUBLIC" ? (
               <CheckOutlined
@@ -272,15 +285,14 @@ const CouponTable = (props: any) => {
         };
       });
       notification.success({
-        message: "Success",
-        description: `Có ${formatData.length} kết quả ứng với giá trị tìm kiếm.`,
+        message: `Có ${formatData.length} kết quả ứng với giá trị tìm kiếm.`,
       });
       setDataSource(formatData);
       setLoading(false);
     } else {
       setLoading(false);
       notification.error({
-        message: "Call APIs error",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
         description: res?.message,
       });
     }
@@ -337,25 +349,40 @@ const CouponTable = (props: any) => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Pin code" name="_id">
+              <Form.Item label="Id" name="_id">
                 <Input />
               </Form.Item>
             </Col>
           </Row>
-
           <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item label="Phạm vi" name="scope">
-                <Input />
-              </Form.Item>
-            </Col>
+              <Col span={12}>
+                <Form.Item label="Phân loại" name="type">
+                  <Select
+                  options = {[
+                    { value: "GIFT", label: "Quà tặng" },
+                    { value: "EVENT", label: "Sự kiện" },
+                  ]}
+                  ></Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="Phạm vi" name="scope">
+                <Select
+                  options = {[
+                    { value: "FOOD", label: "Thức ăn" },
+                    { value: "DRINK", label: "Đồ uống" },
+                    { value: "ALL", label: "Tất cả" },
+                  ]}
+                  ></Select>
+                </Form.Item>
+              </Col>
+            </Row>
+          <Row gutter={16}>
             <Col span={12}>
               <Form.Item label="Giảm giá" name="discount">
-                <Input />
+              <InputNumber style={{width : "100%"}}/>
               </Form.Item>
             </Col>
-          </Row>
-          <Row gutter={16}>
             <Col span={12}>
               <Form.Item label="Khoảng thời gian" name="time">
                 <DatePicker.RangePicker

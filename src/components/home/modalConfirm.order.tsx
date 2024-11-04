@@ -44,29 +44,42 @@ const ModalConfirmOrder = (props: any) => {
   const router = useRouter()
   const { SVG } = useQRCode();
   const hasMounted = useHasMounted();
-  console.log(data)
-  const pushDataCart =  async ()=>{
-    if(data && data.cart && data.cart.length >0){
-      const response = await handlePostDataBillOfCustomer(`api/v1/orders`, data, user?.access_token)
-      if(response && response.statusCode === 201 ){
-        localStorage.removeItem('cart');
-        notification.success({
-          message: "Đơn hàng của bạn đã được đặt. Vui lòng chờ xác nhận của Shop để thực hiện vận chuyển đơn hàng."
-        })
-        window.location.reload()
-      }else{
-        console.log(response)
-        notification.error({
-          message: response.message ? response.message : "Lỗi hệ thống, vui lòng thử lại sau."
-        })
-      }
-    }else{
-      notification.error({
-        message: "Giỏ hàng của bạn không có sản phẩm, vui lòng chọn sản phẩm để thực hiện thanh toán."
-      })
+  const pushDataCart = async () => {
+    const storedCart = localStorage.getItem("cart");
+    
+    if (data && data.cart && data.cart.length > 0) {
+        try {
+            const response = await handlePostDataBillOfCustomer(`api/v1/orders`, data, user?.access_token);
+            
+            if (response && response.statusCode === 201) {
+                if (storedCart) {
+                    const parsedCart = JSON.parse(storedCart);
+                    delete parsedCart[user?._id];
+                    localStorage.setItem("cart", JSON.stringify(parsedCart));
+                }
 
+                notification.success({
+                    message: "Đơn hàng của bạn đã được đặt. Vui lòng chờ xác nhận của Shop để thực hiện vận chuyển đơn hàng."
+                });
+                window.location.reload();
+                // console.log(response);
+                // notification.error({
+                //     message: response.message ? response.message : "Lỗi hệ thống, vui lòng thử lại sau."
+                // });
+            }
+        } catch (error) {
+            console.error(error);
+            notification.error({
+                message: "Đã xảy ra lỗi trong quá trình đặt hàng. Vui lòng thử lại."
+            });
+        }
+    } else {
+        notification.error({
+            message: "Giỏ hàng của bạn không có sản phẩm, vui lòng chọn sản phẩm để thực hiện thanh toán."
+        });
     }
-  }
+};
+
   useEffect(() => {
 
     if (currentStep < 1) {

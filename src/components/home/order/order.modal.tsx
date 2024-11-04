@@ -54,38 +54,40 @@ const OderModal = (props: any) => {
     }
 
     const handleAddItemToCart = (values: any) => {
-        const checkItemExistInCart = helper.isExistItemInCart(currentCart, values);
+        const storedCart = localStorage.getItem('cart');
+        const currentCart = storedCart ? JSON.parse(storedCart) : {};
+            const userCart = currentCart[user?._id] || [];
+    
+        const checkItemExistInCart = helper.isExistItemInCart(userCart, values);
         let updatedCart;
-        
+    
         if (checkItemExistInCart) {
-            updatedCart = currentCart.map((item: any) => {
+            updatedCart = userCart.map((item: any) => {
                 if (item.menuItemId === values.menuItemId) {
-                    if (+item.amount + +values.amount > +values.quantity) { 
+                    if (+item.amount + +values.amount > +values.quantity) {
                         notification.error({
-                            message: `Hiện tại bạn đã có ${item.amount} sản phẩm trong giỏ hàng. Yêu cầu vượt quá giới hạn sản phẩm đang có(${values.quantity}), vui lòng giảm số lượng sản phẩm để thực hiện yêu cầu.`
+                            message: `Hiện tại bạn đã có ${item.amount} sản phẩm trong giỏ hàng. Yêu cầu vượt quá giới hạn sản phẩm đang có(${values.quantity}), vui lòng giảm số lượng sản phẩm để thực hiện yêu cầu.`,
                         });
-                        return item; 
+                        return item;
                     }
                     return {
                         ...item,
                         amount: item.amount + values.amount,
                     };
                 }
-
-                return item; 
+                return item;
             });
         } else {
-            updatedCart = [...currentCart, values];
+            updatedCart = [...userCart, values];
         }
-        const cart = {
-            userId: user?._id,
-            cart: updatedCart, 
-        };
     
-        setCurrentCart(updatedCart); 
-        localStorage.setItem('cart', JSON.stringify(cart));
-        handleCloseModal()
+        currentCart[user?._id] = updatedCart;
+    
+        localStorage.setItem('cart', JSON.stringify(currentCart));
+        setCurrentCart(updatedCart);
+        handleCloseModal();
     };
+    
     
     return <>
         <Modal title="Đơn hàng"
