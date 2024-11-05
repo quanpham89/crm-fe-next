@@ -49,7 +49,6 @@ const MenuDetail = (props: any) => {
   useEffect(() => {
     setRoleUser(role);
   }, []);
-  console.log(menuInfo);
   const formatItems = [
     {
       key: "1",

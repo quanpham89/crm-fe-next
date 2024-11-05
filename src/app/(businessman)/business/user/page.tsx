@@ -1,25 +1,23 @@
 import { auth } from "@/auth";
 import AdminCard from "@/components/admin/admin.card";
 import BusinessCard from "@/components/business/dashboard/businessCard";
-import MeInfor from "@/components/business/user/me";
+import MeInfo from "@/components/business/user/me";
+import { handleGetFigure } from "@/utils/action";
 import { useState } from "react";
 
-const DashboardBussinessUserPage = async () => {
-    const session = await auth()
-    const user = session?.user
-    return (
-        <>
-            <MeInfor user = {user}/>
-        </>
-    )
-    
-    
-}
+const DashboardBusinessUserPage = async () => {
+  const session = await auth();
+  const user = session?.user;
+  const access_token = user?.access_token as string;
+  const data = await handleGetFigure(
+    `api/v1/order-detail/get-all-figure-order-detail-by-id?_id=${user?.restaurantId}`,
+    access_token
+  );
+  return (
+    <>
+      <MeInfo dataFigureOrder={data.data} user={user} />
+    </>
+  );
+};
 
-export default DashboardBussinessUserPage;
-
-
-
-
-
-
+export default DashboardBusinessUserPage;

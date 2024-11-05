@@ -9,6 +9,7 @@ import {
   notification,
   DatePicker,
 } from "antd";
+import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { sendRequest } from "@/utils/api";
@@ -21,9 +22,6 @@ const ModalCreateRestaurant = (props: any) => {
   const [form] = Form.useForm();
   const [dataUser, setDataUser] = useState([]);
   const router = useRouter();
-  if (user) {
-    form.setFieldValue("userId", user._id);
-  }
 
   const fetchUserId = async () => {
     const res = await sendRequest<IBackendRes<any>>({
@@ -44,7 +42,11 @@ const ModalCreateRestaurant = (props: any) => {
     }
   };
   useEffect(() => {
-    fetchUserId();
+    form.setFieldValue("userId", user._id);
+    if ((user && user?.role !== "ADMINS") || (user && user?.role !== "ADMIN")) {
+      fetchUserId();
+    } else {
+    }
   }, [isOpenModal]);
 
   const createRestaurants = async (values: any) => {
@@ -59,10 +61,21 @@ const ModalCreateRestaurant = (props: any) => {
       },
     });
     if (res?.data) {
-      notification.success({
-        message: "Tạo shop thành công.",
-      });
-      window.location.reload();
+      if (user?.role === "BUSINESSMAN") {
+        notification.success({
+          message:
+            "Tạo shop thành công, hệ thống tự động đăng xuất sau 5s, vui lòng thực hiện đăng nhập lại để thao tác.",
+        });
+        setTimeout(async () => {
+          await signOut({ redirect: false });
+          router.push("/auth/login");
+        }, 5000);
+      } else {
+        notification.success({
+          message: "Tạo shop thành công.",
+        });
+        window.location.reload();
+      }
     } else {
       notification.error({
         message: "Đã xảy ra vấn đề, vui lòng thử lại sau.",

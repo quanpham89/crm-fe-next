@@ -45,7 +45,7 @@ const ModalConfirmHidden = (props: any) => {
           window.location.reload();
         } else {
           notification.error({
-            message: "Call APIs error",
+            message: "Có lỗi xảy ra, vui lòng thử lại",
             description: resUser?.message,
           });
         }
@@ -76,7 +76,7 @@ const ModalConfirmHidden = (props: any) => {
           router.push("/auth/login");
         } else {
           notification.error({
-            message: "Call APIs error",
+            message: "Có lỗi xảy ra, vui lòng thử lại",
             description: resCustomer?.message,
           });
         }
@@ -105,7 +105,7 @@ const ModalConfirmHidden = (props: any) => {
           window.location.reload();
         } else {
           notification.error({
-            message: "Call APIs error",
+            message: "Có lỗi xảy ra, vui lòng thử lại",
             description: res?.message,
           });
         }
@@ -135,7 +135,7 @@ const ModalConfirmHidden = (props: any) => {
           window.location.reload();
         } else {
           notification.error({
-            message: "Call APIs error",
+            message: "Có lỗi xảy ra, vui lòng thử lại",
             description: resMenu?.message,
           });
         }
@@ -165,7 +165,7 @@ const ModalConfirmHidden = (props: any) => {
           window.location.reload();
         } else {
           notification.error({
-            message: "Call APIs error",
+            message: "Có lỗi xảy ra, vui lòng thử lại",
             description: voucher?.message,
           });
         }
@@ -195,7 +195,7 @@ const ModalConfirmHidden = (props: any) => {
           window.location.reload();
         } else {
           notification.error({
-            message: "Call APIs error",
+            message: "Có lỗi xảy ra, vui lòng thử lại",
             description: coupon?.message,
           });
         }
@@ -211,7 +211,6 @@ const ModalConfirmHidden = (props: any) => {
             },
           });
           if (cancleOrder?.data) {
-            console.log(cancleOrder);
             notification.success({
               message: "Hủy đơn hàng thành thành công.",
               description: cancleOrder?.message,
@@ -219,7 +218,7 @@ const ModalConfirmHidden = (props: any) => {
             window.location.reload();
           } else {
             notification.error({
-              message: "Call APIs error",
+              message: "Có lỗi xảy ra, vui lòng thử lại",
               description: cancleOrder?.message,
             });
           }

@@ -43,7 +43,8 @@ const PromotionListRender = (props: any) => {
       setDataPromotion(response.data);
     } else {
       notification.error({
-        message: "Call API error",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
+        description: response.message,
       });
     }
   };
@@ -58,7 +59,8 @@ const PromotionListRender = (props: any) => {
       setDataPromotion(response.data);
     } else {
       notification.error({
-        message: "Call API error",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
+        description: response.message,
       });
     }
   };
@@ -119,58 +121,58 @@ const PromotionListRender = (props: any) => {
   ];
   return (
     <Modal
-      title={type === "VOUCHER"? "Danh sách Voucher " : "Danh sách coupon"}
+      title={type === "VOUCHER" ? "Danh sách Voucher " : "Danh sách coupon"}
       centered
       open={isOpenModal}
       onCancel={() => handleClose()}
       footer={[
         <Button key="cancel" onClick={handleClose}>
-          Cancel
+          Đóng
         </Button>,
       ]}
     >
-      <div style={{marginBottom: 5}}><i>Các mã giảm giá chỉ được áp dụng cho sản phẩm thuộc shop.</i></div>
+      <div style={{ marginBottom: 5 }}>
+        <i>Các mã giảm giá chỉ được áp dụng cho sản phẩm thuộc shop.</i>
+      </div>
       <Flex gap="middle" align="start" vertical>
         {dataPromotion && dataPromotion.length > 0 ? (
-          dataPromotion.map((item: any, index) =>{
-              return  (
-                <Card
-                  loading={loading}
-                  actions={ item.remain >0 ? actions(item) : [] }
-                  style={{ width: "100%" }}
-                  key={item._id}
-                >
-                  <Card.Meta
-                    avatar={<Avatar src={item.image} />}
-                    title={item.nameVoucher ? item.nameVoucher : item.nameCoupon}
-                    description={
-                      <>
-                        <div> {item.description}</div>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            marginTop: 5,
-                          }}
-                        >
-                          <div>
-                            <i>Bắt đầu từ: </i>
-                            <b>{dayjs(item.startedDate).format("DD/MM/YYYY")}</b>
-                          </div>
-                          <div>
-                            <i>Kết thúc: </i>
-                            <b>{dayjs(item.endedDate).format("DD/MM/YYYY")}</b>
-                          </div>
+          dataPromotion.map((item: any, index) => {
+            return (
+              <Card
+                loading={loading}
+                actions={item.remain > 0 ? actions(item) : []}
+                style={{ width: "100%" }}
+                key={item._id}
+              >
+                <Card.Meta
+                  avatar={<Avatar src={item.image} />}
+                  title={item.nameVoucher ? item.nameVoucher : item.nameCoupon}
+                  description={
+                    <>
+                      <div> {item.description}</div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          marginTop: 5,
+                        }}
+                      >
+                        <div>
+                          <i>Bắt đầu từ: </i>
+                          <b>{dayjs(item.startedDate).format("DD/MM/YYYY")}</b>
                         </div>
-                      </>
-                    }
-                  />
-                </Card>
-              )
-          }
-        )
-        ) 
-        : (
+                        <div>
+                          <i>Kết thúc: </i>
+                          <b>{dayjs(item.endedDate).format("DD/MM/YYYY")}</b>
+                        </div>
+                      </div>
+                    </>
+                  }
+                />
+              </Card>
+            );
+          })
+        ) : (
           <>
             {type === "VOUCHER" ? (
               <h2 style={{ textAlign: "center" }}>
@@ -180,8 +182,7 @@ const PromotionListRender = (props: any) => {
               <h2 style={{ textAlign: "center" }}>Chưa có thông tin coupon.</h2>
             )}
           </>
-        )
-        }
+        )}
       </Flex>
     </Modal>
   );

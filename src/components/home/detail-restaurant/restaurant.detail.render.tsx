@@ -22,12 +22,12 @@ const RestaurantDetailRender = (props: any) => {
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
-        const parsedCart = JSON.parse(storedCart);
-        const userCart = parsedCart[user?._id] || [];
-        
-        setCurrentCart(userCart);
+      const parsedCart = JSON.parse(storedCart);
+      const userCart = parsedCart[user?._id] || [];
+
+      setCurrentCart(userCart);
     }
-}, [user?._id]); 
+  }, [user?._id]);
 
   const handleOpenPromotionModal = (type: string) => {
     if (type === "VOUCHER") {
@@ -39,7 +39,11 @@ const RestaurantDetailRender = (props: any) => {
     }
   };
   const actions = (i: any): React.ReactNode[] => [
-    <PlusOutlined key="add" onClick={() => handleOrder(i)} />,
+    i.remain > 0 ? (
+      <PlusOutlined key="add" onClick={() => handleOrder(i)} />
+    ) : (
+      <span key="over">Hết hàng</span>
+    ),
   ];
 
   const handleOrder = (item: any) => {

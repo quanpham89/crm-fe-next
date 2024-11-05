@@ -39,6 +39,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import "./Cart.scss";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import { CustomerContext } from "@/library/customer.context";
@@ -57,7 +58,7 @@ interface DataType {
   pricePerProduct: number;
   amount: number;
   totalPrice: number;
-  quantity: number;
+  remain: number;
   sellingPrice: number;
   voucher: string;
   coupon: string;
@@ -68,7 +69,7 @@ interface optionSelect {
   label: string;
 }
 const Cart = (props: any) => {
-  const { user, vouchers, coupons, domainUrl, customerId} = props;
+  const { user, vouchers, coupons, domainUrl, customerId } = props;
 
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
@@ -96,114 +97,114 @@ const Cart = (props: any) => {
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     form.setFieldValue("orderTime", dayjs());
-    
+
     if (storedCart) {
-        const parsedCart = JSON.parse(storedCart);
-        
-        // Lấy giỏ hàng cho userId hiện tại
-        const userCart = parsedCart[user?._id] || [];
-        setCurrentCart(userCart);
+      const parsedCart = JSON.parse(storedCart);
+
+      // Lấy giỏ hàng cho userId hiện tại
+      const userCart = parsedCart[user?._id] || [];
+      setCurrentCart(userCart);
     }
 
     const emptyOption: optionSelect = {
-        value: "",
-        label: "Bỏ chọn",
+      value: "",
+      label: "Bỏ chọn",
     };
-    
+
     const formatDataVoucher = vouchers.map((item: any) => {
-        return {
-            value: item._id,
-            label: item.nameVoucher,
-        };
+      return {
+        value: item._id,
+        label: item.nameVoucher,
+      };
     });
     setDataVoucher([emptyOption, ...formatDataVoucher]);
-    
+
     const formatDataCoupon = coupons.map((item: any) => {
-        return {
-            value: item._id,
-            label: item.nameCoupon,
-        };
+      return {
+        value: item._id,
+        label: item.nameCoupon,
+      };
     });
     setDataCoupon([emptyOption, ...formatDataCoupon]);
-}, [user?._id]); // Thêm user?._id vào dependencies để cập nhật khi user thay đổi
+  }, [user?._id]); // Thêm user?._id vào dependencies để cập nhật khi user thay đổi
 
-useEffect(() => {
+  useEffect(() => {
     form.setFieldValue("orderTime", dayjs());
-    
-    const dataCart = currentCart.map((item: any) => {
-        const sellingPrice = +item.sellingPrice;
-        const quantity = +item.quantity;
-        const amount = +item.amount;
 
-        return {
-            key: item.menuItemId,
-            nameItemMenu: item.nameItemMenu,
-            sellingPrice: helper.formatMoneyVND(sellingPrice),
-            quantity,
-            amount,
-            totalPrice: helper.formatMoneyVND(
-                Math.round((amount * sellingPrice) / 1000) * 1000
-            ),
-            voucher: (
-                <Select
-                    style={{ width: "100%" }}
-                    disabled
-                    placeholder="Chức năng này hiện tại vẫn đang được phát triển."
-                    options={[
-                        { value: "money", label: "Tiền mặt" },
-                        { value: "bank", label: "Chuyển khoản" },
-                    ]}
-                />
-            ),
-            coupon: (
-                <Select
-                    style={{ width: "100%" }}
-                    disabled
-                    placeholder="Chức năng này hiện tại vẫn đang được phát triển."
-                    options={[
-                        { value: "money", label: "Tiền mặt" },
-                        { value: "card", label: "Thẻ" },
-                        { value: "bank", label: "Chuyển khoản" },
-                    ]}
-                />
-            ),
-        };
+    const dataCart = currentCart.map((item: any) => {
+      const sellingPrice = +item.sellingPrice;
+      const remain = +item.remain;
+      const amount = +item.amount;
+
+      return {
+        key: item.menuItemId,
+        nameItemMenu: item.nameItemMenu,
+        sellingPrice: helper.formatMoneyVND(sellingPrice),
+        remain,
+        amount,
+        totalPrice: helper.formatMoneyVND(
+          Math.round((amount * sellingPrice) / 1000) * 1000
+        ),
+        voucher: (
+          <Select
+            style={{ width: "100%" }}
+            disabled
+            placeholder="Chức năng này hiện tại vẫn đang được phát triển."
+            options={[
+              { value: "money", label: "Tiền mặt" },
+              { value: "bank", label: "Chuyển khoản" },
+            ]}
+          />
+        ),
+        coupon: (
+          <Select
+            style={{ width: "100%" }}
+            disabled
+            placeholder="Chức năng này hiện tại vẫn đang được phát triển."
+            options={[
+              { value: "money", label: "Tiền mặt" },
+              { value: "card", label: "Thẻ" },
+              { value: "bank", label: "Chuyển khoản" },
+            ]}
+          />
+        ),
+      };
     });
 
     setDataColumn(dataCart);
 
     if (dataCart.length > 0) {
-        const totalPrice = dataCart.reduce((accumulator: any, item: any) => {
-            return (
-                accumulator + item.amount * +helper.parsePrice(item.sellingPrice)
-            );
-        }, 0);
-        const roundTotalPrice = Math.round(totalPrice / 1000) * 1000;
-        setTotal(String(roundTotalPrice));
-        setTotalDisplay(String(roundTotalPrice));
+      const totalPrice = dataCart.reduce((accumulator: any, item: any) => {
+        return (
+          accumulator + item.amount * +helper.parsePrice(item.sellingPrice)
+        );
+      }, 0);
+      const roundTotalPrice = Math.round(totalPrice / 1000) * 1000;
+      setTotal(String(roundTotalPrice));
+      setTotalDisplay(String(roundTotalPrice));
     } else {
-        setTotal("0");
-        setTotalDisplay("0");
+      setTotal("0");
+      setTotalDisplay("0");
     }
-}, [currentCart]);
+  }, [currentCart]);
 
+  const handleRemoveAllCart = () => {
+    form.resetFields();
+    const storedCart = localStorage.getItem("cart");
 
-const handleRemoveAllCart = () => {
-  form.resetFields();
-  const storedCart = localStorage.getItem("cart");
-
-  if (storedCart) {
+    if (storedCart) {
       const parsedCart = JSON.parse(storedCart);
       delete parsedCart[user?._id];
       localStorage.setItem("cart", JSON.stringify(parsedCart));
       setCurrentCart([]);
 
-      notification.success({ message: "Xóa toàn bộ sản phẩm khỏi giỏ hàng thành công." });
-  } else {
+      notification.success({
+        message: "Xóa toàn bộ sản phẩm khỏi giỏ hàng thành công.",
+      });
+    } else {
       notification.error({ message: "Giỏ hàng trống." });
-  }
-};
-
+    }
+  };
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
@@ -322,7 +323,7 @@ const handleRemoveAllCart = () => {
   const handleAddItem = (record: any) => {
     if (currentCart && currentCart.length > 0) {
       const cartAfterReduceItem = currentCart.map((item: any) => {
-        if (item.menuItemId === record.key && record.amount < item.quantity) {
+        if (item.menuItemId === record.key && record.amount < item.remain) {
           item.amount += 1;
         }
         return item;
@@ -335,9 +336,9 @@ const handleRemoveAllCart = () => {
   const columns: any = [
     {
       title: "Tổng sản phẩm",
-      dataIndex: "quantity",
-      key: "quantity",
-      sorter: (a: DataType, b: DataType) => a.quantity - b.quantity,
+      dataIndex: "remain",
+      key: "remain",
+      sorter: (a: DataType, b: DataType) => a.remain - b.remain,
     },
     {
       title: "Tên sản phẩm",
@@ -500,7 +501,7 @@ const handleRemoveAllCart = () => {
 
   const handleAddVoucher = (selectedOption: string) => {
     const currentTotal = total;
-    if(dataColumn.length > 0){
+    if (dataColumn.length > 0) {
       if (selectedOption) {
         const voucherSelected = vouchers.filter(
           (item: any) => item._id === selectedOption
@@ -529,7 +530,7 @@ const handleRemoveAllCart = () => {
 
   const handleAddCoupon = (selectedOption: string) => {
     const currentTotal = total;
-    if(dataColumn.length >0){
+    if (dataColumn.length > 0) {
       if (selectedOption) {
         const couponSelected = coupons.filter(
           (item: any) => item._id === selectedOption
@@ -564,14 +565,15 @@ const handleRemoveAllCart = () => {
       ...values,
       totalPrice: totalDisplay,
       totalWithoutDiscount: total,
-      customerId: customerId
+      customerId: customerId,
     });
-    if(currentCart && currentCart.length > 0){
+    if (currentCart && currentCart.length > 0) {
       setIsOpenModalConfirmOrder(true);
-    }else{
+    } else {
       notification.error({
-        message: "Giỏ hàng của bạn không có sản phẩm, vui lòng chọn sản phẩm để thực hiện thanh toán."
-      })
+        message:
+          "Giỏ hàng của bạn không có sản phẩm, vui lòng chọn sản phẩm để thực hiện thanh toán.",
+      });
     }
   };
 
@@ -586,13 +588,12 @@ const handleRemoveAllCart = () => {
       <Spin />
     </div>
   ) : (
-    <>
+    <div className="cart-render-container">
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: 20,
           fontSize: 20,
           fontWeight: 600,
         }}
@@ -717,8 +718,8 @@ const handleRemoveAllCart = () => {
             <div>{helper.formatMoneyVND(Number(totalDisplay))}</div>
           </div>
 
-          <Form.Item style={{ display: "flex", justifyContent: "flex-end", gap: 20 }}>
-            <Button onClick={handleRemoveAllCart} style={{marginRight: 20 }}>
+          <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button onClick={handleRemoveAllCart} style={{ marginRight: 20 }}>
               Xóa toàn bộ giỏ hàng
             </Button>
             <Button type="primary" htmlType="submit">
@@ -733,7 +734,7 @@ const handleRemoveAllCart = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: 20,
+          marginBottom: 10,
           fontSize: 20,
           fontWeight: 600,
         }}
@@ -742,7 +743,7 @@ const handleRemoveAllCart = () => {
       </div>
 
       <Table
-        style={{ marginTop: 50 }}
+        style={{ marginTop: 20 }}
         columns={columns}
         dataSource={dataColumn}
         pagination={{
@@ -757,11 +758,11 @@ const handleRemoveAllCart = () => {
         isOpenModalConfirmOrder={isOpenModalConfirmOrder}
         setIsOpenModalConfirmOrder={setIsOpenModalConfirmOrder}
         data={dataConfirmOrder}
-        domainUrl = {domainUrl}
-        customerId = {customerId}
-        user= {user}
+        domainUrl={domainUrl}
+        customerId={customerId}
+        user={user}
       />
-    </>
+    </div>
   );
 };
 

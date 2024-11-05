@@ -54,7 +54,6 @@ const RestaurantTable = (props: any) => {
       },
     });
     if (res?.data?.results) {
-      console.log(res);
       setTotalItem(Number(res.data.totalItems));
       const restaurants = Array.isArray(res.data.results)
         ? res.data.results
@@ -137,7 +136,6 @@ const RestaurantTable = (props: any) => {
   };
 
   const handleTableChange = (page: any) => {
-    console.log(page);
     setPagination((prev) => ({
       ...prev,
       current: page,

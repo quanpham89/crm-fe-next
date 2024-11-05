@@ -64,7 +64,7 @@ export async function handleGetDataPerPage(path:string, access_token: string, ne
     
 }
 
-export async function handleGetFigureUser(path:string, access_token: string) {
+export async function handleGetFigure(path:string, access_token: string) {
     const res = await sendRequest<IBackendRes<any>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
         method: "GET",
@@ -193,6 +193,8 @@ export async function changeStatusOrderDetailItem (path:string,data : any, acces
     return res
     
 }
+
+
 
 
 // customer

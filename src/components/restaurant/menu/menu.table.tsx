@@ -97,7 +97,7 @@ const MenuTable = (props: any) => {
       setLoading(false);
     } else {
       notification.error({
-        message: "Call APIs error",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
         description: res?.message,
       });
     }

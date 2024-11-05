@@ -48,14 +48,14 @@ const CouponRender = (props: any) => {
   ];
   return (
     <>
-    <div
+      <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: 20,
+          marginTop: 10,
           marginBottom: 10,
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: 600,
         }}
       >
@@ -65,7 +65,7 @@ const CouponRender = (props: any) => {
         className="slider-coupon"
         arrows
         infinite={false}
-        slidesToShow={5}
+        slidesToShow={4}
       >
         {coupon &&
           coupon.length > 0 &&
@@ -76,7 +76,12 @@ const CouponRender = (props: any) => {
                 actions={item.remain > 0 ? actions(item) : []}
                 key={item._id}
               >
-                <Image alt="image" preview={false} src={item.image} width={140} />
+                <Image
+                  alt="image"
+                  preview={false}
+                  src={item.image}
+                  width={140}
+                />
                 <h5 className="truncate">{item.nameCoupon}</h5>
                 <div
                   style={{

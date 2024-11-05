@@ -151,7 +151,7 @@ const RestaurantBusiness = (props: any) => {
       <>
         {!isHaveRestaurant && (
           <Button onClick={() => setIsOpenModalCreateRestaurant(true)}>
-            Create Restaurant
+            Tạo shop
           </Button>
         )}
         <div
@@ -206,6 +206,7 @@ const RestaurantBusiness = (props: any) => {
           setIsOpenUpdateRestaurant={setIsOpenUpdateRestaurant}
           currentRestaurant={currentRestaurant}
           access_token={user?.access_token}
+          user={user}
         />
         <ModalConfirmDelete
           isOpenModalConfirmDelete={isOpenModalConfirmDelete}

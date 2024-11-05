@@ -26,8 +26,9 @@ import { useRouter } from "next/navigation";
 import { auth } from "@/auth";
 
 const ModalUpdateRestaurant = (props: any) => {
-  const { access_token } = props;
   const {
+    access_token,
+    user,
     isOpenModalUpdateRestaurant,
     setIsOpenUpdateRestaurant,
     currentRestaurant,
@@ -36,10 +37,11 @@ const ModalUpdateRestaurant = (props: any) => {
   const [dataUser, setDataUser] = useState([]);
 
   const router = useRouter();
-
   useEffect(() => {
-    fetchUserId();
-  }, []);
+    if (user.role !== "BUSINESSMAN") {
+      fetchUserId();
+    }
+  }, [isOpenModalUpdateRestaurant]);
 
   const fetchUserId = async () => {
     const res = await sendRequest<IBackendRes<any>>({
@@ -80,13 +82,12 @@ const ModalUpdateRestaurant = (props: any) => {
     });
     if (res?.data) {
       notification.success({
-        message: "Thành công",
-        description: "Cập nhập người dùng thành công.",
+        message: "Cập nhập người dùng thành công",
       });
       window.location.reload();
     } else {
       notification.error({
-        message: "Thất bại",
+        message: "Có lỗi xả ra, vui lòng thử lại sau",
         description: res.message,
       });
     }

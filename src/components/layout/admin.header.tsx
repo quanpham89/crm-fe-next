@@ -13,10 +13,10 @@ const AdminHeader = (props: any) => {
   const { collapseMenu, setCollapseMenu } = useContext(AdminContext)!;
 
   const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: <span>Cài đặt</span>,
-    },
+    // {
+    //   key: "1",
+    //   label: <span>Cài đặt</span>,
+    // },
 
     {
       key: "4",
@@ -49,7 +49,6 @@ const AdminHeader = (props: any) => {
             width: 64,
             height: 64,
             color: "#fff",
-
           }}
         />
         <Dropdown menu={{ items }}>

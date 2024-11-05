@@ -158,7 +158,7 @@ const MenuDetailDelete = (props: any) => {
           getMenuItem();
         } else {
           notification.error({
-            message: "Vui lòng lựa chọn ít nhất 1 giá trị để thao tác.",
+            message: "Lựa chọn ít nhất 1 sản phẩm để thao tác",
           });
         }
         break;
@@ -176,7 +176,7 @@ const MenuDetailDelete = (props: any) => {
           getMenuItem();
         } else {
           notification.error({
-            message: "Vui lòng lựa chọn ít nhất 1 giá trị để thao tác.",
+            message: "Lựa chọn ít nhất 1 sản phẩm để thao tác",
           });
         }
         break;

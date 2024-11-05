@@ -38,7 +38,7 @@ const ModalChangePassword = (props: any) => {
       setCurrent(1);
     } else {
       notification.error({
-        message: "Call APIs error",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
         description: res?.message,
       });
     }
@@ -48,7 +48,7 @@ const ModalChangePassword = (props: any) => {
     const { code, password, confirmPassword } = values;
     if (confirmPassword !== password) {
       notification.error({
-        message: "Invalid input",
+        message: "Có lỗi xảy ra",
         description: "Mật khẩu và xác nhận mật khẩu không chính xác.",
       });
     }
@@ -67,7 +67,7 @@ const ModalChangePassword = (props: any) => {
       setCurrent(2);
     } else {
       notification.error({
-        message: "Call APIs error",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
         description: res?.message,
       });
     }

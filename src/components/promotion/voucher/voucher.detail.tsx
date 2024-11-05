@@ -40,13 +40,15 @@ const VoucherDetail = (props: any) => {
           startedDate: startDate,
           endedDate: endDate,
           nameVoucher: res?.data[0].nameVoucher,
-          usedTime: item?.usedTme ? dayjs(item.usedTime).format("HH:mm_DD-MM-YYYY"): "",
+          usedTime: item?.usedTme
+            ? dayjs(item.usedTime).format("HH:mm_DD-MM-YYYY")
+            : "",
         };
       });
       setDataVoucherItem(formatResult);
     } else {
       notification.error({
-        message: "Call APIs error",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
         description: res?.message,
       });
     }

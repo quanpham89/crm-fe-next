@@ -37,7 +37,7 @@ const ModalReactive = (props: any) => {
       setUserId(res?.data?._id);
     } else {
       notification.error({
-        message: "Call APIs error",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
         description: res?.message,
       });
     }
@@ -61,7 +61,7 @@ const ModalReactive = (props: any) => {
       }, 2000);
     } else {
       notification.error({
-        message: "Call APIs error",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
         description: res?.message,
       });
     }

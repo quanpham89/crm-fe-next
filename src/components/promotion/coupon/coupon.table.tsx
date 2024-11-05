@@ -109,7 +109,7 @@ const CouponTable = (props: any) => {
       setLoading(false);
     } else {
       notification.error({
-        message: "Call APIs error",
+        message: "Có lỗi xảy ra, vui lòng thử lại",
         description: res?.message,
       });
     }
@@ -230,7 +230,7 @@ const CouponTable = (props: any) => {
       const convertEndedDate = dayjs(values.time[1].$d).utc().format();
       formatvalue = {
         ...rest,
-        
+
         startedTime: convertStartedDate,
         endedTime: convertEndedDate,
         belongTo: userCreateId,
@@ -355,32 +355,32 @@ const CouponTable = (props: any) => {
             </Col>
           </Row>
           <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item label="Phân loại" name="type">
-                  <Select
-                  options = {[
+            <Col span={12}>
+              <Form.Item label="Phân loại" name="type">
+                <Select
+                  options={[
                     { value: "GIFT", label: "Quà tặng" },
                     { value: "EVENT", label: "Sự kiện" },
                   ]}
-                  ></Select>
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item label="Phạm vi" name="scope">
+                ></Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="Phạm vi" name="scope">
                 <Select
-                  options = {[
+                  options={[
                     { value: "FOOD", label: "Thức ăn" },
                     { value: "DRINK", label: "Đồ uống" },
                     { value: "ALL", label: "Tất cả" },
                   ]}
-                  ></Select>
-                </Form.Item>
-              </Col>
-            </Row>
+                ></Select>
+              </Form.Item>
+            </Col>
+          </Row>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item label="Giảm giá" name="discount">
-              <InputNumber style={{width : "100%"}}/>
+                <InputNumber style={{ width: "100%" }} />
               </Form.Item>
             </Col>
             <Col span={12}>

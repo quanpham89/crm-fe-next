@@ -19,8 +19,8 @@ const RestaurantRender = (props: any) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: 20,
-          fontSize: 20,
+          marginBottom: 10,
+          fontSize: 16,
           fontWeight: 600,
         }}
       >
@@ -36,12 +36,19 @@ const RestaurantRender = (props: any) => {
                   className="slide-card"
                   onClick={() => handleOpenRestaurant(item._id)}
                 >
-                  <Image alt="image" preview={false} src={item.image} />
+                  <div style={{ textAlign: "center" }}>
+                    <Image
+                      alt="image"
+                      preview={false}
+                      src={item.image}
+                      width={150}
+                    />
+                  </div>
                   <h5
                     style={{
                       textAlign: "center",
                       marginBottom: 5,
-                      fontSize: 15,
+                      fontSize: 14,
                     }}
                   >
                     {item.restaurantName}
@@ -78,15 +85,19 @@ const RestaurantRender = (props: any) => {
                 </Card>
 
                 <div className="menu-list">
-                  <h2 className="title" style={{ marginBottom: 0 }}>
-                    Menu
-                  </h2>
                   <div className="menu-item">
                     {item.menu && item.menu.length > 0 ? (
                       item.menu.map((it: any) =>
                         it.menuItemId.map((i: any) => (
                           <div className="menu-card" key={i._id}>
-                            <Image alt="image" preview={false} src={i.image} />
+                            <div style={{ textAlign: "center" }}>
+                              <Image
+                                alt="image"
+                                width={"50%"}
+                                preview={false}
+                                src={i.image}
+                              />
+                            </div>
                             <h5
                               style={{
                                 textAlign: "center",

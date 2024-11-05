@@ -33,7 +33,10 @@ import {
 import { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import { helper } from "@/app/helpers/customize";
-import { changeStatusOrderDetailItem, handleGetDataOrderDetail } from "@/utils/action";
+import {
+  changeStatusOrderDetailItem,
+  handleGetDataOrderDetail,
+} from "@/utils/action";
 
 interface DataType {
   key: string;
@@ -55,17 +58,17 @@ const Order = (props: any) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
-  const[totalItem, setTotalItem] = useState(1)
+  const [totalItem, setTotalItem] = useState(1);
   type NewType = keyof DataType;
   type DataIndex = keyof DataType;
   const [form] = Form.useForm();
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 10,
+    pageSize: 5,
   });
 
   const router = useRouter();
-  const [listStatusDisable, setListDisable] = useState( [
+  const [listStatusDisable, setListDisable] = useState([
     "SENDING",
     "COMPLETE",
     "RECEIVE",
@@ -73,45 +76,45 @@ const Order = (props: any) => {
     "CANCEL",
     "SENDING",
     "REJECT",
-    "ONECANCEL"
-  ])
+    "ONECANCEL",
+  ]);
 
-  const getCurrentStatus = (status : string) =>{
-    if(status === "PENDING"){
-      return "Chờ xác nhận"
+  const getCurrentStatus = (status: string) => {
+    if (status === "PENDING") {
+      return "Chờ xác nhận";
     }
 
-    switch(status){
+    switch (status) {
       case "ACCEPT":
-      return   "Nhận đơn"
+        return "Nhận đơn";
       case "PREPARE":
-      return   "Chuẩn bị"
+        return "Chuẩn bị";
       case "RECEIVE":
-      return   "Nhận hàng"
+        return "Nhận hàng";
       case "COMPLETE":
-      return   "Hoàn thành"
+        return "Hoàn thành";
       case "DENIED":
-      return   "Từ chối"
+        return "Từ chối";
       case "CANCEL":
-      return   "Hủy đơn"
+        return "Hủy đơn";
       case "REJECT":
-      return   "Giao hàng thất bại"
+        return "Giao hàng thất bại";
       case "ONECANCEL":
-      return   "Shop từ chối"
+        return "Shop từ chối";
       case "SENDING":
-      return   "Giao hàng"
+        return "Giao hàng";
     }
-  }
+  };
 
-  const getDataOrderDetail = async() =>{
+  const getDataOrderDetail = async () => {
     if (user?.restaurantId) {
-      const response  = await handleGetDataOrderDetail(
+      const response = await handleGetDataOrderDetail(
         `api/v1/order-detail/get-data-order-detail?_id=${user?.restaurantId}&current=${pagination.current}&pageSize=${pagination.pageSize}`,
         access_token
       );
-      if(response.data){
-        let dataOrderDetail  = response.data.orderDetails
-        setTotalItem(response.data.totalItem)        
+      if (response.data) {
+        let dataOrderDetail = response.data.orderDetails;
+        setTotalItem(response.data.totalItems);
         const formatDataColumn = dataOrderDetail.map((item: any) => {
           return {
             key: item?._id,
@@ -119,15 +122,20 @@ const Order = (props: any) => {
             nameItemMenu: item?.nameItemMenu,
             numberItem: item?.amount,
             sellingPrice: helper.formatMoneyVND(item?.sellingPrice),
-            totalPrice: helper.formatMoneyVND(item?.sellingPrice * item?.amount),
+            totalPrice: helper.formatMoneyVND(
+              item?.sellingPrice * item?.amount
+            ),
             orderTime: item?.orderTime
               ? dayjs(item?.orderTime).format("DD-MM-YYYY")
               : "",
             predictionTime: item?.orderTime
               ? dayjs(item?.orderTime).format("DD-MM-YYYY")
               : "",
-            paymentForm: item?.paymentForm === "bank" ? "chuyển khoản" : "tiền mặt",
-            totalWithoutDiscount: helper.formatMoneyVND(item?.totalWithoutDiscount),
+            paymentForm:
+              item?.paymentForm === "bank" ? "chuyển khoản" : "tiền mặt",
+            totalWithoutDiscount: helper.formatMoneyVND(
+              item?.totalWithoutDiscount
+            ),
             status: (
               <Select
                 defaultValue={getCurrentStatus(item?.status)}
@@ -137,8 +145,6 @@ const Order = (props: any) => {
                   { value: "ACCEPT", label: "Nhận đơn" },
                   { value: "PREPARE", label: "Chuẩn bị" },
                   { value: "SENDING", label: "Giao hàng" },
-
-
                 ]}
                 onChange={(value) => handleChangeSelectOption(item, value)}
               ></Select>
@@ -146,12 +152,11 @@ const Order = (props: any) => {
           };
         });
         setDataColumn(formatDataColumn);
-
       }
     }
-  }
+  };
   useEffect(() => {
-    getDataOrderDetail()
+    getDataOrderDetail();
   }, [pagination.current]);
 
   const getColumnSearchProps = (
@@ -275,14 +280,18 @@ const Order = (props: any) => {
       dataIndex: "sellingPrice",
       key: "sellingPrice",
       sortDirections: ["descend", "ascend"],
-      sorter: (a: any, b: any) => Number(helper.parsePrice(a.sellingPrice)) - Number(helper.parsePrice(b.sellingPrice)),
+      sorter: (a: any, b: any) =>
+        Number(helper.parsePrice(a.sellingPrice)) -
+        Number(helper.parsePrice(b.sellingPrice)),
     },
     {
       title: "Thành tiền",
       dataIndex: "totalPrice",
       key: "totalPrice",
       sortDirections: ["descend", "ascend"],
-      sorter: (a: any, b: any) => Number(helper.parsePrice(a.sellingPrice) * a.numberItem) - Number(helper.parsePrice(b.sellingPrice) * b.numberItem),
+      sorter: (a: any, b: any) =>
+        Number(helper.parsePrice(a.sellingPrice) * a.numberItem) -
+        Number(helper.parsePrice(b.sellingPrice) * b.numberItem),
     },
     {
       title: "Thời gian đặt",
@@ -322,28 +331,28 @@ const Order = (props: any) => {
   };
 
   const handleTableChange = (page: any) => {
-    setPagination({
+    setPagination((prev) => ({
+      ...prev,
       current: page,
-      pageSize: 10,
-    });
+    }));
   };
 
   const handleChangeSelectOption = async (item: any, value: string) => {
     const data = {
       status: value,
       _id: item._id,
-      orderId: item.order
+      orderId: item.order,
     };
     const response = await changeStatusOrderDetailItem(
       "api/v1/order-detail/change-order-detail-status",
       data,
       access_token
     );
-    if(response && response.statusCode ===201){
-      notification.success({message: "Chuyển trạng thái thành công."})
-      getDataOrderDetail()
-    }else{
-      notification.success({message: "Có lỗi xảy ra, vui lòng thử lại."})
+    if (response && response.statusCode === 201) {
+      notification.success({ message: "Chuyển trạng thái thành công." });
+      getDataOrderDetail();
+    } else {
+      notification.success({ message: "Có lỗi xảy ra, vui lòng thử lại." });
     }
   };
 
@@ -378,9 +387,8 @@ const Order = (props: any) => {
         dataSource={dataColumn}
         pagination={{
           pageSize: pagination.pageSize,
-          total: totalItem ,
-          onChange: (page) =>
-            handleTableChange({ page }),
+          total: totalItem,
+          onChange: (page) => handleTableChange(page),
         }}
       />
     </>

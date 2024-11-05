@@ -41,7 +41,7 @@ const ModalConfirmActive = (props: any) => {
           window.location.reload();
         } else {
           notification.error({
-            message: "Call APIs error",
+            message: "Có lỗi xảy ra, vui lòng thử lại",
             description: res?.message,
           });
         }
@@ -71,7 +71,7 @@ const ModalConfirmActive = (props: any) => {
           window.location.reload();
         } else {
           notification.error({
-            message: "Call APIs error",
+            message: "Có lỗi xảy ra, vui lòng thử lại",
             description: resMenu?.message,
           });
         }
@@ -101,7 +101,7 @@ const ModalConfirmActive = (props: any) => {
           window.location.reload();
         } else {
           notification.error({
-            message: "Call APIs error",
+            message: "Có lỗi xảy ra, vui lòng thử lại",
             description: voucher?.message,
           });
         }
@@ -130,7 +130,7 @@ const ModalConfirmActive = (props: any) => {
           window.location.reload();
         } else {
           notification.error({
-            message: "Call APIs error",
+            message: "Có lỗi xảy ra, vui lòng thử lại",
             description: coupon?.message,
           });
         }

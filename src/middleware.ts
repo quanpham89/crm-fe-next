@@ -26,6 +26,12 @@ export  async function middleware (req: any) {
         }
     }
 
+    if (req.nextUrl.pathname.startsWith('/customer')) {
+        if (token.user.role !== 'CUSTOMER') {
+            return NextResponse.redirect(new URL('/auth/login', req.url));
+        }
+    }
+
     if (req.nextUrl.pathname.startsWith('/dashboard')) {
         if (token.user.role !== 'ADMIN' && token.user.role !== 'ADMINS') {
             return NextResponse.redirect(new URL('/auth/login', req.url));

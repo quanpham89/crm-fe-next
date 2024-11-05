@@ -50,14 +50,14 @@ const VoucherRender = (props: any) => {
   ];
   return (
     <>
-    <div
+      <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: 20,
+          marginTop: 10,
           marginBottom: 10,
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: 600,
         }}
       >
@@ -67,7 +67,7 @@ const VoucherRender = (props: any) => {
         className="slider-voucher"
         arrows
         infinite={false}
-        slidesToShow={5}
+        slidesToShow={4}
       >
         {voucher &&
           voucher.length > 0 &&
@@ -110,7 +110,9 @@ const VoucherRender = (props: any) => {
                       <b>{dayjs(item.startedDate).format("DD/MM/YYYY")}</b>
                     </div>
                     <div>
-                      <span className="support-title">Thời gian kết thúc: </span>
+                      <span className="support-title">
+                        Thời gian kết thúc:{" "}
+                      </span>
                       <b>{dayjs(item.endedDate).format("DD/MM/YYYY")}</b>
                     </div>
                   </div>
@@ -119,7 +121,7 @@ const VoucherRender = (props: any) => {
             );
           })}
       </Carousel>
-      </>
+    </>
   );
 };
 

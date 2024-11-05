@@ -13,10 +13,10 @@ const BusinessHeader = (props: any) => {
   const { collapseMenu, setCollapseMenu } = useContext(BusinessContext)!;
 
   const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: <span>Cài đặt</span>,
-    },
+    // {
+    //   key: "1",
+    //   label: <span>Cài đặt</span>,
+    // },
 
     {
       key: "4",

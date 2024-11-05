@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import ModalReactive from "./modal.reactive";
 import { useEffect, useState } from "react";
 import ModalChangePassword from "./modal.change.password";
+import "./Login.scss";
 const Login = () => {
   const router = useRouter();
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -35,79 +36,82 @@ const Login = () => {
   };
 
   return (
-    <>
-      <Row justify={"center"} style={{ marginTop: "30px" }}>
-        <Col xs={24} md={16} lg={8}>
-          <fieldset
-            style={{
-              padding: "15px",
-              margin: "5px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          >
-            <legend>Đăng Nhập</legend>
-            <Form
-              name="basic"
-              onFinish={onFinish}
-              autoComplete="off"
-              layout="vertical"
+    <div className="container">
+      <div className="login-form">
+        <Row>
+          <Col xs={24} sm={20} md={16} lg={12} xl={8}>
+            <fieldset
+              style={{
+                padding: "15px",
+                margin: "5px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                width: "100%",
+              }}
             >
-              <Form.Item
-                label="Email"
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your email!",
-                  },
-                ]}
+              <legend>Đăng Nhập</legend>
+              <Form
+                name="basic"
+                onFinish={onFinish}
+                autoComplete="off"
+                layout="vertical"
               >
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label="Password"
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your password!",
-                  },
-                ]}
-              >
-                <Input.Password />
-              </Form.Item>
-
-              <Form.Item>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
+                <Form.Item
+                  label="Email"
+                  name="username"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng điền email!",
+                    },
+                  ]}
                 >
-                  <Button type="primary" htmlType="submit">
-                    Đăng nhập
-                  </Button>
-                  <Button type="link" onClick={() => setChangePassword(true)}>
-                    {" "}
-                    Quên mật khẩu
-                  </Button>
-                </div>
-              </Form.Item>
-            </Form>
-            <Link href={"/"}>
-              <ArrowLeftOutlined /> Quay lại trang chủ
-            </Link>
-            <Divider />
-            <div style={{ textAlign: "center" }}>
-              Chưa có tài khoản?{" "}
-              <Link href={"/auth/register"}>Đăng ký tại đây</Link>
-            </div>
-          </fieldset>
-        </Col>
-      </Row>
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="Mật khẩu"
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng điền mật khẩu!",
+                    },
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+
+                <Form.Item>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button type="primary" htmlType="submit">
+                      Đăng nhập
+                    </Button>
+                    <Button type="link" onClick={() => setChangePassword(true)}>
+                      {" "}
+                      Quên mật khẩu
+                    </Button>
+                  </div>
+                </Form.Item>
+              </Form>
+              <Link href={"/"}>
+                <ArrowLeftOutlined /> Quay lại trang chủ
+              </Link>
+              <Divider />
+              <div style={{ textAlign: "center" }}>
+                Chưa có tài khoản?{" "}
+                <Link href={"/auth/register"}>Đăng ký tại đây</Link>
+              </div>
+            </fieldset>
+          </Col>
+        </Row>
+      </div>
       <ModalReactive
         isOpenModal={isOpenModal}
         setIsOpenModal={setIsOpenModal}
@@ -118,7 +122,7 @@ const Login = () => {
         isModalOpen={changePassword}
         setIsModalOpen={setChangePassword}
       />
-    </>
+    </div>
   );
 };
 

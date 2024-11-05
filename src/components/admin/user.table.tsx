@@ -84,7 +84,6 @@ const UserTable = (props: any) => {
       }));
       setDataSource(formatDataUser);
       setTotalItem(+res?.data?.totalItems);
-      console.log(res.data);
       setLoading(false);
     } else {
       notification.error({

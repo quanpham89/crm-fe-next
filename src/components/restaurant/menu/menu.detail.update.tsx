@@ -21,6 +21,7 @@ import {
   InputNumber,
   notification,
   Row,
+  Select,
   Space,
   Spin,
   Table,
@@ -53,6 +54,8 @@ const MenuDetailUpdate = (props: any) => {
       description: item.description,
       fixedPrice: item.fixedPrice,
       sellingPrice: item.sellingPrice,
+      remain: item.remain,
+      status: item.status,
       _id: item._id,
       image: [
         {
@@ -67,7 +70,7 @@ const MenuDetailUpdate = (props: any) => {
     menuItem: formatValueMenuItem,
   };
 
-  const valuechange = (changedValues: any, allValues: any) => {
+  const valueChange = (changedValues: any, allValues: any) => {
     for (const key in changedValues.menuItem) {
       if (changedValues.menuItem[key]) {
         setIdItemChange((value: any) => [...value, menuItems[key]._id]);
@@ -135,7 +138,7 @@ const MenuDetailUpdate = (props: any) => {
           onFinish={handleMenuChange}
           initialValues={initialValues}
           onValuesChange={(changedValues, allValues) =>
-            valuechange(changedValues, allValues)
+            valueChange(changedValues, allValues)
           }
         >
           <div style={{ padding: "10px", height: "45vh", overflow: "scroll" }}>
@@ -213,6 +216,28 @@ const MenuDetailUpdate = (props: any) => {
                             ]}
                           >
                             <Input placeholder="Mô tả" />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                      <Row gutter={16}>
+                        <Col span={12}>
+                          <Form.Item name={[name, "remain"]}>
+                            <InputNumber
+                              min={1}
+                              placeholder="Số lượng còn lại"
+                              style={{ width: "100%" }}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                          <Form.Item name={[name, "status"]}>
+                            <Select
+                              placeholder="Trạng thái"
+                              options={[
+                                { value: "HIDDEN", label: "Ẩn sản phẩm" },
+                                { value: "PUBLIC", label: "Hiện sản phẩm" },
+                              ]}
+                            ></Select>
                           </Form.Item>
                         </Col>
                       </Row>
