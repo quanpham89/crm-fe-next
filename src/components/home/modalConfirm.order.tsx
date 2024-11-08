@@ -70,10 +70,6 @@ const ModalConfirmOrder = (props: any) => {
             "Đơn hàng của bạn đã được đặt. Vui lòng chờ xác nhận của Shop để thực hiện vận chuyển đơn hàng.",
         });
         window.location.reload();
-        // console.log(response);
-        // notification.error({
-        //     message: response.message ? response.message : "Lỗi hệ thống, vui lòng thử lại sau."
-        // });
       } else {
         notification.error({
           message: "Đã xảy ra lỗi trong quá trình đặt hàng. Vui lòng thử lại.",
@@ -230,11 +226,6 @@ const ModalConfirmOrder = (props: any) => {
             disabled
             placeholder={`${domainUrl}/customer/cart`}
           />
-          {/* <span >Giao dịch hoàn thành sau 5s</span>
-            <div>
-              <CheckCircleOutlined style={{fontSize: 40, marginTop: 30, color: "green"}}/>
-            </div>
-            <Scanner styles={} onScan={(result) => console.log(result)} /> */}
         </div>
       )}
       {currentStep === 3 ||

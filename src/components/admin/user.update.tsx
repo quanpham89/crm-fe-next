@@ -48,8 +48,6 @@ const ModalUpdateUser = (props: any) => {
     }
   };
   useEffect(() => {
-    console.log(currentUser);
-
     form.setFieldValue("_id", currentUser._id);
     form.setFieldValue("email", currentUser.email);
     form.setFieldValue("phone", currentUser.phone);

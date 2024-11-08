@@ -19,7 +19,6 @@ const DashboardBusinessUserPage = async () => {
     access_token
   );
 
-  console.log(dataFigureOrderBelongToMenu);
   return (
     <>
       <MeInfo

@@ -75,8 +75,6 @@ const BusinessCard = (props: any) => {
       },
     ],
   };
-
-  console.log(dataFigureOrderBelongToMenu);
   const dataDoughnutOrderBelongToMenu = {
     labels: dataFigureOrderBelongToMenu.map((item: any) => {
       return item.count > 0 && item.nameMenu;
