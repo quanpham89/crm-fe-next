@@ -16,6 +16,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(...registerables);
 
 const AdminCard = (props: any) => {
+  console.log("dashboard");
   const {
     role,
     dataFigureUser,

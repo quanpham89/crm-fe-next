@@ -5,24 +5,20 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
 const RoleCheck = (props: any) => {
-  console.log("Hello role");
   const router = useRouter();
   const { role } = props;
   const checkRole = (role: string) => {
     switch (role) {
       case "ADMIN":
       case "ADMINS":
-        console.log(`Role ${role}`);
         router.push("/dashboard");
         break;
       case "BUSINESSMAN":
-        router.push("/business/user");
         console.log(`Role ${role}`);
 
         break;
 
       case "CUSTOMER":
-        router.push("/customer");
         console.log(`Role ${role}`);
 
         break;
