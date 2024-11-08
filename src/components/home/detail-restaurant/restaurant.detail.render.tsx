@@ -18,7 +18,6 @@ const RestaurantDetailRender = (props: any) => {
   const [type, setType] = useState<string>("");
   const { currentCart, setCurrentCart } = useContext(CustomerContext)!;
   const router = useRouter();
-
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -100,7 +99,7 @@ const RestaurantDetailRender = (props: any) => {
                 ? "Đồ uống"
                 : dataRestaurant?.productType === "FOOD"
                 ? "Đồ ăn"
-                : "Đồ ăn nhanh và đồ uống"}
+                : "Đồ ăn và đồ uống"}
             </div>
             <div className="truncate">
               <span className="support-title">Đánh giá: </span>{" "}

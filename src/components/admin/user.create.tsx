@@ -8,6 +8,8 @@ import {
   message,
   notification,
   DatePicker,
+  Row,
+  Col,
 } from "antd";
 import { useState } from "react";
 import { useForm } from "antd/es/form/Form";
@@ -37,7 +39,6 @@ const ModalCreateUser = (props: any) => {
       notification.success({
         message: "Tạo người dùng thành công",
       });
-      // router.push("/dashboard/user")
       window.location.reload();
     } else {
       notification.error({
@@ -130,56 +131,68 @@ const ModalCreateUser = (props: any) => {
             <Input />
           </Form.Item>
 
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Form.Item
-              style={{ marginBottom: "10px" }}
-              label="Loại tài khoản"
-              name="accountType"
-            >
-              <Select
-                style={{ width: 140 }}
-                options={[
-                  { value: "FREE", label: "Miễn phí" },
-                  { value: "PREMIUM", label: "Cao cấp" },
-                  { value: "BUSINESS", label: "Kinh Doanh" },
-                ]}
-              />
-            </Form.Item>
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item
+                style={{ marginBottom: "10px" }}
+                label="Loại tài khoản"
+                name="accountType"
+              >
+                <Select
+                  style={{ width: "100%" }}
+                  options={[
+                    { value: "FREE", label: "Miễn phí" },
+                    { value: "PREMIUM", label: "Cao cấp" },
+                    { value: "BUSINESS", label: "Kinh Doanh" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                style={{ marginBottom: "10px" }}
+                label="Phân quyền"
+                name="role"
+              >
+                <Select
+                  style={{ width: "100%" }}
+                  options={[
+                    { value: "ADMIN", label: "Quản trị viên" },
+                    { value: "CUSTOMER", label: "khách hàng" },
+                    { value: "BUSINESSMAN", label: "Người kinh doanh" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                style={{ marginBottom: "10px" }}
+                label="Giới tính"
+                name="sex"
+              >
+                <Select
+                  style={{ width: "100%" }}
+                  options={[
+                    { value: "MALE", label: "Nam" },
+                    { value: "FEMALE", label: "Nữ" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          {/* <div style={{ display: "flex", justifyContent: "space-between" }}>
+            
 
-            <Form.Item
-              style={{ marginBottom: "10px" }}
-              label="Phân quyền"
-              name="role"
-            >
-              <Select
-                style={{ width: 140 }}
-                options={[
-                  { value: "ADMIN", label: "Quản trị viên" },
-                  { value: "CUSTOMER", label: "khách hàng" },
-                  { value: "BUSINESSMAN", label: "Người bán hàng" },
-                ]}
-              />
-            </Form.Item>
+            
 
-            <Form.Item
-              style={{ marginBottom: "10px" }}
-              label="Giới tính"
-              name="sex"
-            >
-              <Select
-                style={{ width: 140 }}
-                options={[
-                  { value: "MALE", label: "Nam" },
-                  { value: "FEMALE", label: "Nữ" },
-                ]}
-              />
-            </Form.Item>
-          </div>
+            
+          </div> */}
           <Form.Item
             style={{
               display: "flex",
               justifyContent: "flex-end",
               marginTop: 10,
+              marginBottom: 0,
             }}
           >
             <Button type="primary" htmlType="submit">

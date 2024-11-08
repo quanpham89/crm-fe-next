@@ -13,9 +13,20 @@ const DashboardBusinessUserPage = async () => {
     `api/v1/order-detail/get-all-figure-order-detail-by-id?_id=${user?.restaurantId}`,
     access_token
   );
+
+  const dataFigureOrderBelongToMenu = await handleGetFigure(
+    `api/v1/order-detail/get-all-figure-order-detail-booking-belong-to-menu-by-id?_id=${user?.restaurantId}`,
+    access_token
+  );
+
+  console.log(dataFigureOrderBelongToMenu);
   return (
     <>
-      <MeInfo dataFigureOrder={data.data} user={user} />
+      <MeInfo
+        dataFigureOrder={data.data}
+        user={user}
+        dataFigureOrderBelongToMenu={dataFigureOrderBelongToMenu.data}
+      />
     </>
   );
 };

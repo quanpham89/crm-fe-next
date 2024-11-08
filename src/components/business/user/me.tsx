@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import BusinessCard from "../dashboard/businessCard";
 
 const MeInfo = (props: any) => {
-  const { user, dataFigureOrder } = props;
+  const { user, dataFigureOrder, dataFigureOrderBelongToMenu } = props;
   const [isLoading, setIsLoading] = useState(true);
   const [items, setItems] = useState<any>([]);
 
@@ -84,7 +84,11 @@ const MeInfo = (props: any) => {
         layout="horizontal"
         items={items}
       />
-      <BusinessCard dataFigureOrder={dataFigureOrder} role={user?.role} />
+      <BusinessCard
+        dataFigureOrder={dataFigureOrder}
+        role={user?.role}
+        dataFigureOrderBelongToMenu={dataFigureOrderBelongToMenu}
+      />
     </>
   );
 };

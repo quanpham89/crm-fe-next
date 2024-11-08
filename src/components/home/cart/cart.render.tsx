@@ -126,7 +126,7 @@ const Cart = (props: any) => {
       };
     });
     setDataCoupon([emptyOption, ...formatDataCoupon]);
-  }, [user?._id]); // Thêm user?._id vào dependencies để cập nhật khi user thay đổi
+  }, [user?._id]);
 
   useEffect(() => {
     form.setFieldValue("orderTime", dayjs());

@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 import ModalConfirmActive from "../modalConfirm/modalConfirm.active";
 
 const RestaurantTable = (props: any) => {
-  const { role, access_token } = props;
+  const { role, access_token, user } = props;
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant] =
     useState(false);
@@ -267,6 +267,7 @@ const RestaurantTable = (props: any) => {
           setIsOpenModal={setIsOpenModal}
           role={role}
           access_token={access_token}
+          user={user}
         />
         <ModalUpdateRestaurant
           isOpenModalUpdateRestaurant={isOpenModalUpdateRestaurant}

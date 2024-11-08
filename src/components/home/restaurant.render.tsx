@@ -70,7 +70,7 @@ const RestaurantRender = (props: any) => {
                         ? "Đồ uống"
                         : item?.productType === "FOOD"
                         ? "Đồ ăn"
-                        : "Đồ ăn nhanh và đồ uống"}
+                        : "Đồ ăn và đồ uống"}
                     </div>
                     <div className="truncate">
                       <span className="support-title">Đánh giá: </span>

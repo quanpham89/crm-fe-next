@@ -20,6 +20,7 @@ const AllRestaurant = async () => {
   const coupons = await handleGetAllCouponRender(
     `api/v1/coupons/get-all-coupon`
   );
+
   return (
     <HomeRender
       restaurant={restaurants?.data}

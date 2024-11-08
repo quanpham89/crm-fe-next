@@ -15,7 +15,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(...registerables);
 
 const BusinessCard = (props: any) => {
-  const { role, dataFigureOrder } = props;
+  const { role, dataFigureOrder, dataFigureOrderBelongToMenu } = props;
   const [isLoading, setLoading] = useState(false);
 
   // config doughnut
@@ -76,6 +76,34 @@ const BusinessCard = (props: any) => {
     ],
   };
 
+  console.log(dataFigureOrderBelongToMenu);
+  const dataDoughnutOrderBelongToMenu = {
+    labels: dataFigureOrderBelongToMenu.map((item: any) => {
+      return item.count > 0 && item.nameMenu;
+    }),
+    datasets: [
+      {
+        data: dataFigureOrderBelongToMenu.map((item: any) => item.count),
+
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
+          "rgba(153, 102, 255, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
   const filteredLabelsOrder = dataDoughnutOrder.labels.filter(
     (_: any, index: number) => {
       return dataDoughnutOrder.datasets[0].data[index] > 0;
@@ -87,33 +115,20 @@ const BusinessCard = (props: any) => {
       return dataDoughnutOrder.datasets[0].data[index] > 0;
     });
 
+  const filteredLabelsOrderBelongToMenu =
+    dataDoughnutOrderBelongToMenu.labels.filter((_: any, index: number) => {
+      return dataDoughnutOrderBelongToMenu.datasets[0].data[index] > 0;
+    });
+
+  const filteredColorsOrderBelongToMenu =
+    dataDoughnutOrderBelongToMenu.datasets[0].backgroundColor.filter(
+      (_, index) => {
+        return dataDoughnutOrderBelongToMenu.datasets[0].data[index] > 0;
+      }
+    );
+
   return !isLoading ? (
     <div className="dashboard-container">
-      {/* <div className="card">
-              <h3>Tổng số người dùng</h3>
-              <div className="chart-container">
-                <div className="doughnut-chart">
-                  <Doughnut
-                    data={dataDoughnutUser}
-                    options={optionConfigDoughnut}
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                </div>
-                <ul className="chart-legend">
-                  {filteredLabelsUser.map((label: string, index: number) => (
-                    <li key={index} className="legend-item">
-                      <span
-                        className="legend-color"
-                        style={{
-                          backgroundColor: filteredColorsUser[index],
-                        }}
-                      ></span>
-                      {label}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div> */}
       {dataFigureOrder && dataFigureOrder.length > 0 && (
         <div className="card">
           <h3>Yêu cầu</h3>
@@ -149,6 +164,33 @@ const BusinessCard = (props: any) => {
           </div>
         </div>
       )}
+      <div className="card">
+        <h3>Đơn hàng menu</h3>
+        <div className="chart-container">
+          <div className="doughnut-chart">
+            <Doughnut
+              data={dataDoughnutOrderBelongToMenu}
+              options={optionConfigDoughnut}
+              style={{ width: "100%", height: "100%" }}
+            />
+          </div>
+          <ul className="chart-legend">
+            {filteredLabelsOrderBelongToMenu.map(
+              (label: string, index: number) => (
+                <li key={index} className="legend-item">
+                  <span
+                    className="legend-color"
+                    style={{
+                      backgroundColor: filteredColorsOrderBelongToMenu[index],
+                    }}
+                  ></span>
+                  {label}
+                </li>
+              )
+            )}
+          </ul>
+        </div>
+      </div>
     </div>
   ) : (
     <div

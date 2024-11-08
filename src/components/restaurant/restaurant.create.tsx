@@ -42,10 +42,10 @@ const ModalCreateRestaurant = (props: any) => {
     }
   };
   useEffect(() => {
-    form.setFieldValue("userId", user._id);
-    if ((user && user?.role !== "ADMINS") || (user && user?.role !== "ADMIN")) {
+    if ((user && user?.role === "ADMINS") || (user && user?.role === "ADMIN")) {
       fetchUserId();
     } else {
+      form.setFieldValue("userId", user?._id);
     }
   }, [isOpenModal]);
 
@@ -170,7 +170,7 @@ const ModalCreateRestaurant = (props: any) => {
                 { value: "FOOD", label: "Đồ ăn" },
                 { value: "DRINK", label: "Đồ uống" },
                 { value: "FASTFOOD", label: "Đồ ăn nhanh" },
-                { value: "FASTFOOD + DRINK", label: "Đồ ăn nhanh + Đồ uống" },
+                { value: "FOOD + DRINK", label: "Đồ ăn + Đồ uống" },
               ]}
             />
           </Form.Item>

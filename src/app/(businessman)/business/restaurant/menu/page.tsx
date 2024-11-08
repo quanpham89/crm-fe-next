@@ -21,7 +21,7 @@ const MenuBusiness = async () => {
       />
     );
   } else {
-    return <>Có lỗi xảy ra, vui lòng tạo nhà hàng trước.</>;
+    return <h4 style={{ textAlign: "center" }}>Tạo shop trước khi tạo menu</h4>;
   }
 };
 

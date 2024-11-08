@@ -8,6 +8,8 @@ import {
   message,
   notification,
   DatePicker,
+  Row,
+  Col,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
@@ -46,6 +48,8 @@ const ModalUpdateUser = (props: any) => {
     }
   };
   useEffect(() => {
+    console.log(currentUser);
+
     form.setFieldValue("_id", currentUser._id);
     form.setFieldValue("email", currentUser.email);
     form.setFieldValue("phone", currentUser.phone);
@@ -131,41 +135,63 @@ const ModalUpdateUser = (props: any) => {
             <Input />
           </Form.Item>
 
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Form.Item label="Loại tài khoản" name="accountType">
-              <Select
-                style={{ width: 140 }}
-                options={[
-                  { value: "FREE", label: "Miễn phí" },
-                  { value: "PREMIUM", label: "Cao cấp" },
-                  { value: "BUSINESS", label: "Kinh doanh" },
-                ]}
-              />
-            </Form.Item>
-
-            <Form.Item label="Phân quyền" name="role">
-              <Select
-                style={{ width: 140 }}
-                options={[
-                  { value: "ADMIN", label: "Quản trị viên" },
-                  { value: "CUSTOMER", label: "Khách hàng" },
-                  { value: "BUSINESSMAN", label: "Người bán hàng" },
-                ]}
-              />
-            </Form.Item>
-
-            <Form.Item label="Giới tính" name="sex">
-              <Select
-                style={{ width: 140 }}
-                options={[
-                  { value: "MALE", label: "Nam" },
-                  { value: "FEMALE", label: "Nữ" },
-                  { value: "OTHER", label: "Khác" },
-                ]}
-              />
-            </Form.Item>
-          </div>
-          <Form.Item style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item
+                style={{ marginBottom: "10px" }}
+                label="Loại tài khoản"
+                name="accountType"
+              >
+                <Select
+                  style={{ width: "100%" }}
+                  options={[
+                    { value: "FREE", label: "Miễn phí" },
+                    { value: "PREMIUM", label: "Cao cấp" },
+                    { value: "BUSINESS", label: "Kinh Doanh" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                style={{ marginBottom: "10px" }}
+                label="Phân quyền"
+                name="role"
+              >
+                <Select
+                  style={{ width: "100%" }}
+                  options={[
+                    { value: "ADMIN", label: "Quản trị viên" },
+                    { value: "CUSTOMER", label: "khách hàng" },
+                    { value: "BUSINESSMAN", label: "Người kinh doanh" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                style={{ marginBottom: "10px" }}
+                label="Giới tính"
+                name="sex"
+              >
+                <Select
+                  style={{ width: "100%" }}
+                  options={[
+                    { value: "MALE", label: "Nam" },
+                    { value: "FEMALE", label: "Nữ" },
+                  ]}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: 0,
+              marginTop: 10,
+            }}
+          >
             <Button type="primary" htmlType="submit">
               Cập nhập người dùng
             </Button>

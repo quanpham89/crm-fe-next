@@ -192,7 +192,7 @@ const ModalUpdateRestaurant = (props: any) => {
                 { value: "FOOD", label: "Đồ ăn" },
                 { value: "DRINK", label: "Đồ uống" },
                 { value: "FASTFOOD", label: "Đồ ăn nhanh" },
-                { value: "FASTFOOD + DRINK", label: "Đồ ăn nhanh + Đồ uống" },
+                { value: "FOOD + DRINK", label: "Đồ ăn + Đồ uống" },
               ]}
             />
           </Form.Item>

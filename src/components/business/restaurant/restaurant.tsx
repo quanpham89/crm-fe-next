@@ -116,7 +116,7 @@ const RestaurantBusiness = (props: any) => {
                 ? "Đồ uống"
                 : response?.data[0]?.productType === "FOOD"
                 ? "Đồ ăn"
-                : "Đồ ăn nhanh và đồ uống",
+                : "Đồ ăn và đồ uống",
           },
           {
             label: "Số lượng menu",

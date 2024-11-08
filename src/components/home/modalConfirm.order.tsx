@@ -212,7 +212,7 @@ const ModalConfirmOrder = (props: any) => {
           }}
         >
           <h2 style={{ textAlign: "center" }}>
-            Quét qr code để thực hiển chuyển khoản.
+            Quét qr code để thực hiển chuyển khoản
           </h2>
           <SVG
             text={`${domainUrl}/customer/cart`}
