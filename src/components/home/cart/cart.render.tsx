@@ -469,7 +469,7 @@ const Cart = (props: any) => {
 
   const disabledTime: DatePickerProps["disabledTime"] = (date) => {
     const currentTime = dayjs();
-    const minTime = currentTime.add(20, "minute");
+    const minTime = currentTime.add(45, "minute");
 
     if (date && date.isSame(currentTime, "day")) {
       return {
