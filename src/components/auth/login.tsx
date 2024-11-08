@@ -31,8 +31,8 @@ const Login = () => {
         return;
       }
     } else {
-      // router.push("/auth/role");
-      router.push("/dashboard");
+      router.push("/auth/role");
+      // router.push("/dashboard");
     }
   };
 
