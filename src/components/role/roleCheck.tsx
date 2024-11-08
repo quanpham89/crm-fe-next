@@ -11,16 +11,20 @@ const RoleCheck = (props: any) => {
     switch (role) {
       case "ADMIN":
       case "ADMINS":
-        router.push("/dashboard");
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 1000);
         break;
       case "BUSINESSMAN":
-        console.log(`Role ${role}`);
-
+        setTimeout(() => {
+          router.push("/business/user");
+        }, 1000);
         break;
 
       case "CUSTOMER":
-        console.log(`Role ${role}`);
-
+        setTimeout(() => {
+          router.push("/customer");
+        }, 1000);
         break;
     }
   };
