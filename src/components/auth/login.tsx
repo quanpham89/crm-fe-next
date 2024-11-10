@@ -20,13 +20,17 @@ const Login = () => {
     // trigger sign-in
     const res = await authenticate(username, password);
     console.log(res);
+
     if (res?.error) {
       // error
+      console.log(">>>", res);
+
       notification.error({
-        message: "Error login",
+        message: "Lỗi đăng nhập",
         description: res?.error,
       });
       if (res?.code === 2) {
+        console.log(">", res);
         setIsOpenModal(true);
         setUserEmail(username);
         return;

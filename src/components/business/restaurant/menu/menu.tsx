@@ -39,9 +39,6 @@ const MenuRestaurant = (props: any) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenModalUpdateMenu, setIsOpenUpdateMenu] = useState(false);
   const [dataSource, setDataSource] = useState<any>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentLimit, setCurrentLimit] = useState(3);
-  const [totalPages, setTotalPages] = useState<number>(1);
   const [currentMenu, setCurrentMenu] = useState({});
   const [isLoading, setLoading] = useState(true);
   const [isOpenModalConfirmDelete, setOpenModalConfirmDelete] =
@@ -55,7 +52,6 @@ const MenuRestaurant = (props: any) => {
   const pathName = usePathname();
 
   useEffect(() => {
-    setLoading(false);
     const formatData = menu.map((item: any) => {
       const { user, ...rest } = item;
       return {
@@ -84,6 +80,7 @@ const MenuRestaurant = (props: any) => {
       };
     });
     setDataSource(formatData);
+    setLoading(false);
   }, []);
 
   const handleEditMenu = async (record: any) => {

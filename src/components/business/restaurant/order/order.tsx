@@ -53,7 +53,7 @@ interface DataType {
 
 const Order = (props: any) => {
   const { user, access_token } = props;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [dataColumn, setDataColumn] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -113,6 +113,7 @@ const Order = (props: any) => {
         access_token
       );
       if (response.data) {
+        setIsLoading(false);
         let dataOrderDetail = response.data.orderDetails;
         setTotalItem(response.data.totalItems);
         const formatDataColumn = dataOrderDetail.map((item: any) => {
@@ -152,6 +153,11 @@ const Order = (props: any) => {
           };
         });
         setDataColumn(formatDataColumn);
+      } else {
+        notification.error({
+          message: "Có lỗi xảy ra, vui lòng thử lại sau",
+          description: response.message,
+        });
       }
     }
   };

@@ -11,20 +11,20 @@ const RoleCheck = (props: any) => {
     switch (role) {
       case "ADMIN":
       case "ADMINS":
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 1000);
+        router.push("/dashboard");
+        // setTimeout(() => {
+        // }, 1000);
         break;
       case "BUSINESSMAN":
-        setTimeout(() => {
-          router.push("/business/user");
-        }, 1000);
+        router.push("/business/user");
+        // setTimeout(() => {
+        // }, 1000);
         break;
 
       case "CUSTOMER":
-        setTimeout(() => {
-          router.push("/customer");
-        }, 1000);
+        router.push("/customer");
+        // setTimeout(() => {
+        // }, 1000);
         break;
     }
   };
@@ -66,8 +66,15 @@ const RoleCheck = (props: any) => {
         height: "100vh",
         justifyContent: "center",
         alignItems: "center",
+        flexDirection: "column",
       }}
     >
+      <h3>
+        {" "}
+        Lần đầu đăng nhập sẽ mất khoảng 2-3 phút, thực hiện đăng nhập lại lần
+        nữa để truy cập.(Lần sau đăng nhập sau sẽ không mất thời gian để khởi
+        động lại back end.){" "}
+      </h3>
       <Flex align="center" gap="middle">
         <Spin percent={percent} size="large" />
       </Flex>
