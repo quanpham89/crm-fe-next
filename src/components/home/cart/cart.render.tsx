@@ -71,7 +71,7 @@ interface optionSelect {
 const Cart = (props: any) => {
   const { user, vouchers, coupons, domainUrl, customerId } = props;
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<InputRef>(null);
@@ -94,6 +94,9 @@ const Cart = (props: any) => {
     current: 1,
     pageSize: 5,
   });
+  setTimeout(() => {
+    setIsLoading(false);
+  }, 800);
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     form.setFieldValue("orderTime", dayjs());
@@ -583,6 +586,7 @@ const Cart = (props: any) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        height: "100vh",
       }}
     >
       <Spin />
@@ -643,7 +647,7 @@ const Cart = (props: any) => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label="Dự kiến thời gian nhận hàng"
+                label="Thời gian nhận hàng"
                 name="predictionTime"
                 rules={[
                   {

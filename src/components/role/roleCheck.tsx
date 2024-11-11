@@ -33,32 +33,6 @@ const RoleCheck = (props: any) => {
     checkRole(role);
   }, [role]);
 
-  const [percent, setPercent] = useState(-50);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
-
-  useEffect(() => {
-    const totalUpdates = 20;
-    const incrementValue = 5;
-    const updateInterval = 1000 / totalUpdates;
-
-    let updatesCount = 0;
-
-    const updatePercent = () => {
-      setPercent((v) => {
-        const nextPercent = v + incrementValue;
-        return nextPercent > 150 ? -50 : nextPercent;
-      });
-
-      updatesCount += 1;
-      if (updatesCount < totalUpdates) {
-        timerRef.current = setTimeout(updatePercent, updateInterval);
-      }
-    };
-
-    updatePercent();
-    return () => clearTimeout(timerRef.current);
-  }, []);
-
   return (
     <div
       style={{
@@ -67,6 +41,7 @@ const RoleCheck = (props: any) => {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
+        gap: 50,
       }}
     >
       <h3>
@@ -75,9 +50,11 @@ const RoleCheck = (props: any) => {
         nữa để truy cập.(Lần sau đăng nhập sau sẽ không mất thời gian để khởi
         động lại back end.){" "}
       </h3>
-      <Flex align="center" gap="middle">
-        <Spin percent={percent} size="large" />
-      </Flex>
+      <span>
+        <Flex align="center" gap="middle">
+          <Spin size="large" />
+        </Flex>
+      </span>
     </div>
   );
 };

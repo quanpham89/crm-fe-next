@@ -9,6 +9,7 @@ import {
   notification,
   Popover,
   Select,
+  Spin,
   Steps,
   StepsProps,
 } from "antd";
@@ -29,6 +30,10 @@ const AllHistoryRender = (props: any) => {
   const [isOpenModalConfirmReceive, setOpenModalConfirmReceive] =
     useState(false);
   const [currentOrderId, setCurrentOrderId] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  setTimeout(() => {
+    setIsLoading(false);
+  }, 800);
 
   const getCurrentStatus = (statusOrder: string) => {
     switch (statusOrder) {
@@ -161,7 +166,19 @@ const AllHistoryRender = (props: any) => {
 
   const hasMounted = useHasMounted();
   if (!hasMounted) return <></>;
-  return (
+  return isLoading ? (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "75vh",
+        overflow: "hidden",
+      }}
+    >
+      <Spin />
+    </div>
+  ) : (
     <>
       <div
         style={{

@@ -172,21 +172,25 @@ const BusinessCard = (props: any) => {
               style={{ width: "100%", height: "100%" }}
             />
           </div>
-          <ul className="chart-legend">
-            {filteredLabelsOrderBelongToMenu.map(
-              (label: string, index: number) => (
-                <li key={index} className="legend-item">
-                  <span
-                    className="legend-color"
-                    style={{
-                      backgroundColor: filteredColorsOrderBelongToMenu[index],
-                    }}
-                  ></span>
-                  {label}
-                </li>
-              )
-            )}
-          </ul>
+          {filteredLabelsOrderBelongToMenu.length > 0 ? (
+            <ul className="chart-legend">
+              {filteredLabelsOrderBelongToMenu.map(
+                (label: string, index: number) => (
+                  <li key={index} className="legend-item">
+                    <span
+                      className="legend-color"
+                      style={{
+                        backgroundColor: filteredColorsOrderBelongToMenu[index],
+                      }}
+                    ></span>
+                    {label}
+                  </li>
+                )
+              )}
+            </ul>
+          ) : (
+            <div className="no-data-message">Không có dữ liệu để hiển thị</div>
+          )}
         </div>
       </div>
     </div>

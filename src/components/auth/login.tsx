@@ -1,5 +1,15 @@
 "use client";
-import { Button, Col, Divider, Form, Input, notification, Row } from "antd";
+import {
+  Button,
+  Col,
+  Collapse,
+  CollapseProps,
+  Divider,
+  Form,
+  Input,
+  notification,
+  Row,
+} from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { authenticate } from "@/utils/action";
@@ -11,7 +21,6 @@ import "./Login.scss";
 const Login = () => {
   const router = useRouter();
   const [isOpenModal, setIsOpenModal] = useState(false);
-
   const [userEmail, setUserEmail] = useState("");
   const [changePassword, setChangePassword] = useState(false);
 
@@ -19,18 +28,13 @@ const Login = () => {
     const { username, password } = values;
     // trigger sign-in
     const res = await authenticate(username, password);
-    console.log(res);
-
     if (res?.error) {
       // error
-      console.log(">>>", res);
-
       notification.error({
         message: "Lỗi đăng nhập",
         description: res?.error,
       });
       if (res?.code === 2) {
-        console.log(">", res);
         setIsOpenModal(true);
         setUserEmail(username);
         return;
@@ -40,6 +44,20 @@ const Login = () => {
       // router.push("/dashboard");
     }
   };
+
+  const items: CollapseProps["items"] = [
+    {
+      key: "1",
+      label: "Tài khoản - Mật khẩu",
+      children: (
+        <>
+          <p>Tài khoản admin: admin@gmail.com - Mật khẩu: 123456 </p>
+          <p>Tài khoản bán hàng: hoangthanhnhi@gmail.com - Mật khẩu: 123456 </p>
+          <p>Tài khoản khách hàng : nguyenvana@gmail.com - Mật khẩu: 123456 </p>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="container">
@@ -117,6 +135,7 @@ const Login = () => {
             </fieldset>
           </Col>
         </Row>
+        <Collapse items={items} />
       </div>
       <ModalReactive
         isOpenModal={isOpenModal}

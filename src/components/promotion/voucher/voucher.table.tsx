@@ -282,7 +282,7 @@ const VoucherTable = (props: any) => {
         };
       });
       notification.success({
-        message: `Có ${formatData.length} kết quả ứng với giá trị tìm kiếm.`
+        message: `Có ${formatData.length} kết quả ứng với giá trị tìm kiếm.`,
       });
       setDataSource(formatData);
       setLoading(false);
@@ -357,31 +357,31 @@ const VoucherTable = (props: any) => {
               <Col span={12}>
                 <Form.Item label="Phân loại" name="type">
                   <Select
-                  options = {[
-                    { value: "GIFT", label: "Quà tặng" },
-                    { value: "EVENT", label: "Sự kiện" },
-                  ]}
+                    options={[
+                      { value: "GIFT", label: "Quà tặng" },
+                      { value: "EVENT", label: "Sự kiện" },
+                    ]}
                   ></Select>
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label="Phạm vi" name="scope">
-                <Select
-                  options = {[
-                    { value: "FOOD", label: "Thức ăn" },
-                    { value: "DRINK", label: "Đồ uống" },
-                    { value: "ALL", label: "Tất cả" },
-                  ]}
+                  <Select
+                    options={[
+                      { value: "FOOD", label: "Thức ăn" },
+                      { value: "DRINK", label: "Đồ uống" },
+                      { value: "ALL", label: "Tất cả" },
+                    ]}
                   ></Select>
                 </Form.Item>
               </Col>
             </Row>
             <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item label="Giảm giá" name="percentage">
-                <InputNumber style={{width : "100%"}}/>
-              </Form.Item>
-            </Col>
+              <Col span={12}>
+                <Form.Item label="Giảm giá" name="percentage">
+                  <InputNumber style={{ width: "100%" }} />
+                </Form.Item>
+              </Col>
               <Col span={12}>
                 <Form.Item label="Khoảng thời gian" name="time">
                   <DatePicker.RangePicker
@@ -475,6 +475,7 @@ const VoucherTable = (props: any) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          height: "100vh",
         }}
       >
         <Spin />

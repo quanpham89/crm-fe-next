@@ -22,7 +22,8 @@
 
 .order-container {
     overflow-y: scroll; /* Ẩn thanh cuộn */
-    height: 84vh ;
+    height: 75vh ;
+    padding-right: 5px;
     &::-webkit-scrollbar {
         width: 5px;
     }

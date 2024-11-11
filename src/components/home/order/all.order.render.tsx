@@ -9,6 +9,7 @@ import {
   notification,
   Popover,
   Select,
+  Spin,
   Steps,
   StepsProps,
 } from "antd";
@@ -22,12 +23,12 @@ import { handleReceiveOrder } from "@/utils/action";
 
 const AllOrder = (props: any) => {
   const { orders, user } = props;
+  const [isLoading, setIsLoading] = useState(true);
   const [listOrder, setListOrder] = useState([]);
   const [items, setItems] = useState<CollapseProps["items"]>();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>({});
-  const [isOpenModalConfirmCanel, setOpenModalConfirmCancle] =
-    useState(false);
+  const [isOpenModalConfirmCanel, setOpenModalConfirmCancel] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState("");
 
   const getCurrentStatus = (statusOrder: string) => {
@@ -107,7 +108,7 @@ const AllOrder = (props: any) => {
   const handleCloseProduct = (item: any) => {
     if (item._id) {
       setCurrentOrderId(item._id);
-      setOpenModalConfirmCancle(true);
+      setOpenModalConfirmCancel(true);
     } else {
       notification.error({ message: "Không xác định được _id order." });
     }
@@ -199,9 +200,24 @@ const AllOrder = (props: any) => {
     }
   }, [listOrder]);
 
+  setTimeout(() => {
+    setIsLoading(false);
+  }, 800);
   const hasMounted = useHasMounted();
   if (!hasMounted) return <></>;
-  return (
+  return isLoading ? (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "75vh",
+        overflow: "hidden",
+      }}
+    >
+      <Spin />
+    </div>
+  ) : (
     <>
       <div
         style={{
@@ -237,7 +253,7 @@ const AllOrder = (props: any) => {
       </Modal>
       <ModalConfirmHidden
         isOpenModalConfirmHidden={isOpenModalConfirmCanel}
-        setOpenModalConfirmHidden={setOpenModalConfirmCancle}
+        setOpenModalConfirmHidden={setOpenModalConfirmCancel}
         title={"Bạn có chắc chắn muốn hủy đơn hàng này không."}
         access_token={user?.access_token}
         type="CANCEL"

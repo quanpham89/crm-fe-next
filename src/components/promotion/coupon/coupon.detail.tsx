@@ -46,7 +46,9 @@ const CouponDetail = (props: any) => {
           startedDate: startDate,
           endedDate: endDate,
           nameCoupon: res?.data[0].nameCoupon,
-          usedTime: item?.usedTme ? dayjs(item.usedTime).format("HH:mm_DD-MM-YYYY"): "",
+          usedTime: item?.usedTme
+            ? dayjs(item.usedTime).format("HH:mm_DD-MM-YYYY")
+            : "",
         };
       });
       setDataCouponItem(formatResult);
@@ -147,6 +149,7 @@ const CouponDetail = (props: any) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        height: "100vh",
       }}
     >
       <Spin />

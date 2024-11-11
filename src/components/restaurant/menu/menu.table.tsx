@@ -189,6 +189,7 @@ const MenuTable = (props: any) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          height: "100vh",
         }}
       >
         <Spin />
