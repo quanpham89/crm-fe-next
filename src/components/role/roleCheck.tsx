@@ -47,7 +47,7 @@ const RoleCheck = (props: any) => {
       <h3>
         {" "}
         Lần đầu đăng nhập sẽ mất khoảng 2-3 phút, thực hiện đăng nhập lại lần
-        nữa để truy cập.(Lần sau đăng nhập sau sẽ không mất thời gian để khởi
+        nữa để truy cập(Lần sau đăng nhập sau sẽ không mất thời gian để khởi
         động lại back end.){" "}
       </h3>
       <span>

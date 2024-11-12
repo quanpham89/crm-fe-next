@@ -32,7 +32,9 @@ const Login = () => {
       // error
       notification.error({
         message: "Lỗi đăng nhập",
-        description: res?.error,
+        // description: res?.error,
+        description:
+          "Vui lòng kiểm tra lại tài khoản, mật khẩu và tài khoản không bị vô hiệu hóa.",
       });
       if (res?.code === 2) {
         setIsOpenModal(true);
