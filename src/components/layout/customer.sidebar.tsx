@@ -58,6 +58,11 @@ const CustomerSideBar = () => {
           label: <Link href={"/customer/history"}> Lịch sử mua hàng</Link>,
           icon: <ReadOutlined />,
         },
+        {
+          key: "error",
+          label: <Link href={"/customer/error"}>Góp ý</Link>,
+          icon: <ReadOutlined />,
+        },
       ],
     },
   ];

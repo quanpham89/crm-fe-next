@@ -7,6 +7,7 @@ import {
   ShopOutlined,
   ShoppingOutlined,
   TeamOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import React, { useContext } from "react";
 import { BusinessContext } from "@/library/business.context";
@@ -21,12 +22,7 @@ const BusinessSideBar = () => {
   const { collapseMenu } = useContext(BusinessContext)!;
   const pathName = usePathname();
 
-  let selectedKey = "business"; // Default key
-  if (pathName.startsWith("/business/restaurant")) {
-    selectedKey = "restaurant";
-  } else if (pathName.startsWith("/business/user")) {
-    selectedKey = "user";
-  }
+  const selectedKey = pathName.split("/").pop() || "user";
 
   const items: MenuItem[] = [
     {
@@ -35,15 +31,10 @@ const BusinessSideBar = () => {
       type: "group",
 
       children: [
-        // {
-        //     key: "business",
-        //     label: <Link href={"/business"}>Tổng quan</Link>,
-        //     icon: <AppstoreOutlined />,
-        // },
         {
           key: "user",
           label: <Link href={"/business/user"}>Tôi</Link>,
-          icon: <TeamOutlined />,
+          icon: <UserOutlined />,
         },
         {
           key: "restaurant",
@@ -71,6 +62,11 @@ const BusinessSideBar = () => {
               icon: <ShoppingOutlined />,
             },
           ],
+        },
+        {
+          key: "error",
+          label: <Link href={"/business/error"}>Góp ý</Link>,
+          icon: <TeamOutlined />,
         },
       ],
     },

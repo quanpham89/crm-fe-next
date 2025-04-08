@@ -49,6 +49,22 @@ export async function handleGetData(path:string, access_token: string,) {
     
 }
 
+export async function handleCreateShop(path:string, access_token: string, values: any) {
+    const res = await sendRequest<IBackendRes<IUserPerPage>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        body: {
+          ...values,
+        },
+    })
+    revalidateTag("data-shop")
+    return res
+    
+}
+
 export async function handleGetDataPerPage(path:string, access_token: string, nextOptions : any) {
     const res = await sendRequest<IBackendRes<IUserPerPage>>({
         url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
@@ -365,4 +381,44 @@ export async function handleReceiveOrder(path:string,access_token: string) {
     return res
 }
 
+export async function handleSendError(path:string, data:any) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "POST",
+        body:{
+            ...data
+        },
+    })
+    return res
+}
+
+export async function handleGetErrorForAdmin(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        },
+        nextOption: {
+            next: {
+                next: { tags: ["data-error"] },
+            }
+        }
+        
+    })
+    return res
+}
+
+
+export async function handleChangeStatusError(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        },
+    })
+    revalidateTag("data-error")
+    return res
+}
 

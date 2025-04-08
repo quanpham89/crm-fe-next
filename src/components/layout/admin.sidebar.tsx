@@ -57,6 +57,11 @@ const AdminSideBar = () => {
             },
           ],
         },
+        {
+          key: "error",
+          label: <Link href={"/dashboard/error"}>Góp ý</Link>,
+          icon: <TeamOutlined />,
+        },
       ],
     },
   ];
