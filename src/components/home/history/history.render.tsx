@@ -20,9 +20,13 @@ import { useHasMounted } from "@/utils/customHook";
 import "./history.scss";
 import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden";
 import { handleReceiveOrder } from "@/utils/action";
+import FeedbackModal from "../feedback/feedback";
 
 const AllHistoryRender = (props: any) => {
   const { orders, user } = props;
+
+  const [openModalFeedback, setOpenModalFeedback] = useState(false);
+
   const [listOrder, setListOrder] = useState([]);
   const [items, setItems] = useState<CollapseProps["items"]>();
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +34,8 @@ const AllHistoryRender = (props: any) => {
   const [isOpenModalConfirmReceive, setOpenModalConfirmReceive] =
     useState(false);
   const [currentOrderId, setCurrentOrderId] = useState("");
+  const [orderDetail, setOrderDetail] = useState();
+
   const [isLoading, setIsLoading] = useState(true);
   setTimeout(() => {
     setIsLoading(false);
@@ -88,6 +94,12 @@ const AllHistoryRender = (props: any) => {
     });
     setSelectedOrder(formatItem);
     setIsOpen(true);
+  };
+
+  const handleOpenModalFeedback = (item: any) => {
+    item.restaurant = item?.orderDetail[0].restaurant;
+    setOrderDetail(item);
+    setOpenModalFeedback(true);
   };
 
   useEffect(() => {
@@ -149,9 +161,13 @@ const AllHistoryRender = (props: any) => {
                 <span>Địa chỉ: </span>
                 <span>{item.address}</span>
               </p>
+
               <p
                 style={{ display: "flex", justifyContent: "flex-end", gap: 20 }}
               >
+                <Button onClick={() => handleOpenModalFeedback(item)}>
+                  Đánh giá
+                </Button>
                 <Button onClick={() => handleOpenModal(item)}>
                   Chi tiết đơn hàng
                 </Button>
@@ -219,6 +235,15 @@ const AllHistoryRender = (props: any) => {
         access_token={user?.access_token}
         type="CANCEL"
         currentItem={currentOrderId}
+      />
+      <FeedbackModal
+        openModalFeedback={openModalFeedback}
+        setOpenModalFeedback={setOpenModalFeedback}
+        title={"Đánh giá"}
+        user={user}
+        order={orderDetail}
+        access_token={user?.access_token}
+        option={"update"}
       />
     </>
   );

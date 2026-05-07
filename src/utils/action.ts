@@ -422,3 +422,55 @@ export async function handleChangeStatusError(path:string, access_token: string)
     return res
 }
 
+
+export async function handlePostDataFeedback(path:string, access_token: string, data: any) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "POST",
+        body:{
+            ...data
+        },
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+}
+
+export async function handlePatchDataFeedback(path:string, access_token: string, data: any) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "PATCH",
+        body:{
+            ...data
+        },
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+}
+
+
+export async function handleGetDataFeedback(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+}
+
+
+export async function handleGetDataFeedbackById(path:string, access_token: string) {
+    const res = await sendRequest<IBackendRes<any>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${path}`,
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${access_token}`
+        }
+    })
+    return res
+}

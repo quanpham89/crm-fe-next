@@ -4,6 +4,7 @@ import {
   AppstoreOutlined,
   BookOutlined,
   MenuOutlined,
+  MessageOutlined,
   ShopOutlined,
   ShoppingOutlined,
   TeamOutlined,
@@ -60,6 +61,14 @@ const BusinessSideBar = () => {
               key: "order",
               label: <Link href={"/business/restaurant/order"}>Yêu cầu</Link>,
               icon: <ShoppingOutlined />,
+            },
+
+            {
+              key: "feedback",
+              label: (
+                <Link href={"/business/restaurant/feedback"}>Phản hồi</Link>
+              ),
+              icon: <MessageOutlined />,
             },
           ],
         },

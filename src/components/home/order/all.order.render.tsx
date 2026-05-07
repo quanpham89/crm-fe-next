@@ -20,6 +20,7 @@ import { useHasMounted } from "@/utils/customHook";
 import "./order.scss";
 import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden";
 import { handleReceiveOrder } from "@/utils/action";
+import FeedbackModal from "../feedback/feedback";
 
 const AllOrder = (props: any) => {
   const { orders, user } = props;
@@ -28,7 +29,9 @@ const AllOrder = (props: any) => {
   const [items, setItems] = useState<CollapseProps["items"]>();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>({});
-  const [isOpenModalConfirmCanel, setOpenModalConfirmCancel] = useState(false);
+  const [isOpenModalConfirmCancel, setOpenModalConfirmCancel] = useState(false);
+  const [openModalFeedback, setOpenModalFeedback] = useState(false);
+  const [orderDetail, setOrderDetail] = useState();
   const [currentOrderId, setCurrentOrderId] = useState("");
 
   const getCurrentStatus = (statusOrder: string) => {
@@ -93,13 +96,16 @@ const AllOrder = (props: any) => {
   };
 
   const handleReceiveProduct = async (item: any) => {
+    item.restaurant = item?.orderDetail[0].restaurant;
+    setOrderDetail(item);
+    setOpenModalFeedback(true);
     const response = await handleReceiveOrder(
       `api/v1/orders/receive-order?_id=${item._id}`,
       user?.access_token
     );
     if (response && response.statusCode === 200) {
       notification.success({ message: "Nhận hàng thành công." });
-      window.location.reload();
+      setOpenModalFeedback(true);
     } else {
       notification.error({ message: "Có lỗi xảy ra, vui lòng kiểm tra lại." });
     }
@@ -252,12 +258,20 @@ const AllOrder = (props: any) => {
         </div>
       </Modal>
       <ModalConfirmHidden
-        isOpenModalConfirmHidden={isOpenModalConfirmCanel}
+        isOpenModalConfirmHidden={isOpenModalConfirmCancel}
         setOpenModalConfirmHidden={setOpenModalConfirmCancel}
         title={"Bạn có chắc chắn muốn hủy đơn hàng này không."}
         access_token={user?.access_token}
         type="CANCEL"
         currentItem={currentOrderId}
+      />
+      <FeedbackModal
+        openModalFeedback={openModalFeedback}
+        setOpenModalFeedback={setOpenModalFeedback}
+        title={"Đánh giá"}
+        user={user}
+        order={orderDetail}
+        access_token={user?.access_token}
       />
     </>
   );
