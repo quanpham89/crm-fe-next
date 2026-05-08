@@ -20,7 +20,10 @@ const BusinessLayout = async ({
                     <BusinessSideBar />
                 </div>
                 <div className='right-side' style={{ flex: 1 }}>
-                    <BusinessHeader userName = {session?.user?.name ? session?.user?.name : session?.user?.email}/>
+                    <BusinessHeader
+                        session={session}
+                        userName = {session?.user?.name ? session?.user?.name : session?.user?.email}
+                    />
                     <BusinessContent>
                         {children}
                     </BusinessContent>

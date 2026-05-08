@@ -20,7 +20,10 @@ const AdminLayout = async ({
                     <AdminSideBar />
                 </div>
                 <div className='right-side' style={{ flex: 1 }}>
-                    <AdminHeader userName = {session?.user?.name ? session?.user?.name : session?.user?.email}/>
+                    <AdminHeader
+                        session={session}
+                        userName = {session?.user?.name ? session?.user?.name : session?.user?.email}
+                    />
                     <AdminContent>
                         {children}
                     </AdminContent>

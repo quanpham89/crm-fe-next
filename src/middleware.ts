@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
 // export { auth as middleware } from "@/auth"
@@ -10,9 +9,8 @@ export  async function middleware (req: any) {
     if (!token || !token.user?.role) {
         return NextResponse.redirect(new URL('/auth/login', req.url));
     }
-    
 
-    if (!token || !token.user?.role) {
+    if (token.error === "RefreshAccessTokenError") {
         return NextResponse.redirect(new URL('/auth/login', req.url));
     }
 

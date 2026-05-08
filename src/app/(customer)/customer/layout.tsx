@@ -20,6 +20,7 @@ const CustomerLayout = async ({
         </div>
         <div className="right-side" style={{ flex: 1 }}>
           <CustomerHeader
+            session={session}
             userName={
               session?.user?.name ? session?.user?.name : session?.user?.email
             }

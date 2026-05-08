@@ -40,6 +40,7 @@ declare global {
             isActive: boolean
         },
         access_token: string
+        refresh_token: string
     }
 
     interface IUserPerPage {

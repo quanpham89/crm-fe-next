@@ -12,6 +12,19 @@ const BusinessHeader = (props: any) => {
   const { session } = props;
   const { collapseMenu, setCollapseMenu } = useContext(BusinessContext)!;
 
+  const handleLogout = async () => {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/logout`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session?.user?.access_token}`,
+        },
+      });
+    } finally {
+      signOut({ callbackUrl: "/auth/login" });
+    }
+  };
+
   const items: MenuProps["items"] = [
     // {
     //   key: "1",
@@ -22,7 +35,7 @@ const BusinessHeader = (props: any) => {
       key: "4",
       danger: true,
       label: (
-        <span onClick={() => signOut({ callbackUrl: "/auth/login" })}>
+        <span onClick={handleLogout}>
           Đăng xuất
         </span>
       ),
