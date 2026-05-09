@@ -2,13 +2,18 @@
 import { Modal, Form, Button, Input, message, notification } from "antd";
 import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
+import {
+  handleActiveCoupon,
+  handleActiveMenu,
+  handleActiveRestaurant,
+  handleActiveVoucher,
+} from "@/utils/action";
 
 const ModalConfirmActive = (props: any) => {
   const {
     isOpenModalConfirmActive,
     setOpenModalConfirmActive,
     title,
-    access_token,
     type,
     currentItem,
   } = props;
@@ -26,13 +31,11 @@ const ModalConfirmActive = (props: any) => {
           setOpenModalConfirmActive(false);
           return;
         }
-        const res = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/active-restaurant?_id=${currentItem._id}`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const res = await handleActiveRestaurant(
+          `/api/v1/restaurants/active-restaurant?_id=${currentItem._id}`,
+          "restaurants",
+        );
+
         if (res?.data) {
           notification.success({
             message: "Kích hoạt tài khoản thành công.",
@@ -56,13 +59,10 @@ const ModalConfirmActive = (props: any) => {
           setOpenModalConfirmActive(false);
           return;
         }
-        const resMenu = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menus/active-menu?_id=${currentItem._id}`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const resMenu = await handleActiveMenu(
+          `/api/v1/menus/active-menu?_id=${currentItem._id}`,
+          "menus",
+        );
         if (resMenu?.data) {
           notification.success({
             message: "Kích hoạt tài khoản thành công.",
@@ -86,13 +86,11 @@ const ModalConfirmActive = (props: any) => {
           setOpenModalConfirmActive(false);
           return;
         }
-        const voucher = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/active-voucher?_id=${currentItem._id}`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const voucher = await handleActiveVoucher(
+          `/api/v1/vouchers/active-voucher?_id=${currentItem._id}`,
+          "vouchers",
+        );
+
         if (voucher?.data) {
           notification.success({
             message: "Kích hoạt voucher thành công.",
@@ -115,13 +113,11 @@ const ModalConfirmActive = (props: any) => {
           setOpenModalConfirmActive(false);
           return;
         }
-        const coupon = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons/active-coupon?_id=${currentItem._id}`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const coupon = await handleActiveCoupon(
+          `/api/v1/coupons/active-coupon?_id=${currentItem._id}`,
+          "coupons",
+        );
+
         if (coupon?.data) {
           notification.success({
             message: "Kích hoạt coupon thành công.",

@@ -17,9 +17,10 @@ import { auth } from "@/auth";
 import ModalConfirmDelete from "@/components/modalConfirm/modalConfirm.delete";
 import ModalConfirmHidden from "../modalConfirm/modalConfirm.hidden";
 import { AdminContext } from "@/library/admin.context";
+import { handleGetUserPerPage } from "@/utils/action";
 
 const UserTable = (props: any) => {
-  const { role, access_token } = props;
+  const { role } = props;
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenModalUpdateUser, setIsOpenUpdateUser] = useState(false);
   const [dataSource, setDataSource] = useState<any>([]);
@@ -38,13 +39,10 @@ const UserTable = (props: any) => {
   setRoleUser(role);
 
   const fetchUserPerPage = async (page: number, limit: number) => {
-    const res = await sendRequest<IBackendRes<IUserPerPage>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users?current=${page}&pageSize=${limit}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleGetUserPerPage(
+      `api/v1/users?current=${page}&pageSize=${limit}`,
+    );
+
     if (res?.data?.results) {
       const users = Array.isArray(res.data.results)
         ? res.data.results
@@ -58,10 +56,10 @@ const UserTable = (props: any) => {
           item.role === "ADMINS"
             ? "Siêu quản trị viên"
             : item.role === "ADMIN"
-            ? "Quản trị viên"
-            : item.role === "BUSINESSMAN"
-            ? "Người kinh doanh"
-            : "Khách hàng",
+              ? "Quản trị viên"
+              : item.role === "BUSINESSMAN"
+                ? "Người kinh doanh"
+                : "Khách hàng",
         activeIcon: item.isActive ? (
           <CheckOutlined
             style={{
@@ -243,13 +241,11 @@ const UserTable = (props: any) => {
         <ModalCreateUser
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
-          access_token={access_token}
         />
 
         <ModalUpdateUser
           isOpenModalUpdateUser={isOpenModalUpdateUser}
           setIsOpenUpdateUser={setIsOpenUpdateUser}
-          access_token={access_token}
           currentUser={currentUser}
         />
         <ModalConfirmDelete
@@ -257,7 +253,6 @@ const UserTable = (props: any) => {
           setOpenModalConfirmDelete={setOpenModalConfirmDelete}
           title={`Bạn chắc chắn muốn xóa người dùng này vĩnh viễn ?`}
           currentItem={currentUser}
-          access_token={access_token}
           type="USER"
         />
         <ModalConfirmHidden
@@ -265,7 +260,6 @@ const UserTable = (props: any) => {
           setOpenModalConfirmHidden={setOpenModalConfirmHidden}
           title={`Bạn chắc chắn muốn ẩn hủy kích hoạt người dùng này?`}
           currentItem={currentUser}
-          access_token={access_token}
           type="USER"
         />
       </>

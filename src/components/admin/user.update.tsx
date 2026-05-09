@@ -17,29 +17,21 @@ import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
 import { Select, Space } from "antd";
 import { useRouter } from "next/navigation";
+import { handleUpdateUser } from "@/utils/action";
 
 const ModalUpdateUser = (props: any) => {
-  const { access_token } = props;
+  const {} = props;
   const { isOpenModalUpdateUser, setIsOpenUpdateUser, currentUser } = props;
   const [form] = Form.useForm();
   const router = useRouter();
 
   const updateUser = async (values: any) => {
-    const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/update`,
-      method: "PATCH",
-      body: {
-        ...values,
-      },
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleUpdateUser(`api/v1/users/update`, values);
+
     if (res?.data) {
       notification.success({
         message: "Cập nhập người dùng thành công",
       });
-      window.location.reload();
     } else {
       notification.error({
         message: "Có lỗi xảy ra, vui lòng thử lại sau",

@@ -1,6 +1,10 @@
 "use client";
 
-import { handleGetData, handleGetDataPerPage } from "@/utils/action";
+import {
+  handleGetData,
+  handleGetDataPerPage,
+  handleUpdateMenuItems,
+} from "@/utils/action";
 import { sendRequest } from "@/utils/api";
 import {
   BarsOutlined,
@@ -32,7 +36,7 @@ import { useContext, useEffect, useState } from "react";
 import "../Pagination.scss";
 
 const MenuDetailUpdate = (props: any) => {
-  const { role, menuItems, user, access_token } = props;
+  const { role, menuItems, user } = props;
   const [isLoading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -79,28 +83,26 @@ const MenuDetailUpdate = (props: any) => {
   };
 
   const handleMenuChange = async (values: any) => {
+    console.log("[menuItem][client] update items submit", values);
     const uniqueIdItemsFilter = idItemChange.filter(
-      (item: any, index: any) => idItemChange.indexOf(item) === index
+      (item: any, index: any) => idItemChange.indexOf(item) === index,
     );
     const filteredMenuItemChange = values.menuItem.filter((item: any) =>
-      uniqueIdItemsFilter.includes(item._id)
+      uniqueIdItemsFilter.includes(item._id),
     );
+    console.log("[menuItem][client] changed items", filteredMenuItemChange);
     if (filteredMenuItemChange && filteredMenuItemChange.length > 0) {
-      const response = await sendRequest<IBackendRes<any>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menu-items/update-menu-item`,
-        method: "POST",
-        body: {
+      const response = await handleUpdateMenuItems(
+        `api/v1/menu-items/update-menu-item`,
+        {
           ...filteredMenuItemChange,
         },
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
+        "menuItem",
+      );
       if (response && response.statusCode === 201) {
         notification.success({
           message: "Cập nhập thành công.",
         });
-        window.location.reload();
       } else {
         notification.success({
           message: "có lỗi xảy ra, vui lòng thử lại sau.",

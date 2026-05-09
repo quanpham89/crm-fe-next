@@ -1,7 +1,11 @@
 "use client";
 
 import { AdminContext } from "@/library/admin.context";
-import { handleGetData, handleGetDataPerPage } from "@/utils/action";
+import {
+  handleCreateMenuItem,
+  handleGetData,
+  handleGetDataPerPage,
+} from "@/utils/action";
 import { sendRequest } from "@/utils/api";
 import {
   BarsOutlined,
@@ -33,8 +37,9 @@ import { useContext, useEffect, useState } from "react";
 import "../Pagination.scss";
 
 const MenuDetailCreate = (props: any) => {
-  const { restaurantId, role, access_token, menuInfo } = props;
+  const { restaurantId, role, menuInfo } = props;
   const [form] = Form.useForm();
+  const router = useRouter();
   const author = {
     nameMenu: menuInfo?.nameMenu,
     restaurantId: menuInfo?.restaurantId,
@@ -50,19 +55,18 @@ const MenuDetailCreate = (props: any) => {
 
   const handleCreateItem = async (values: any) => {
     if (values.menuItem && values.menuItem.length > 0) {
-      const res = await sendRequest<IBackendRes<any>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menu-items`,
-        method: "POST",
-        body: {
+      const res = await handleCreateMenuItem(
+        `api/v1/menu-items`,
+        {
           ...values,
           ...author,
         },
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
+        "menuItem",
+      );
+
       if (res.data?.EC === 0) {
         form.resetFields();
+        router.refresh();
         notification.success({
           message: "Tạo sản phẩm thành công.",
         });

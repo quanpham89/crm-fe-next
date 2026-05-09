@@ -2,7 +2,14 @@
 import { Modal, Form, Button, Input, message, notification } from "antd";
 import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
-import { handleDeleteDataMenu } from "@/utils/action";
+import {
+  handleDeleteDataMenu,
+  handleRemoveCouponById,
+  handleRemoveMenu,
+  handleRemoveRestaurantById,
+  handleRemoveUserById,
+  handleRemoveVoucherById,
+} from "@/utils/action";
 
 const ModalConfirmDelete = (props: any) => {
   const {
@@ -10,7 +17,6 @@ const ModalConfirmDelete = (props: any) => {
     setOpenModalConfirmDelete,
     title,
     currentItem,
-    access_token,
     type,
     setIsLoading,
   } = props;
@@ -20,13 +26,9 @@ const ModalConfirmDelete = (props: any) => {
   const confirmDelete = async () => {
     switch (type) {
       case "USER":
-        const resUser = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/remove-user?_id=${currentItem._id}`,
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const resUser = await handleRemoveUserById(
+          `api/v1/users/remove-user?_id=${currentItem._id}`,
+        );
 
         if (resUser?.data) {
           notification.success({
@@ -42,13 +44,9 @@ const ModalConfirmDelete = (props: any) => {
         }
         break;
       case "RESTAURANTS":
-        const resRestaurant = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/remove-restaurant?_id=${currentItem._id}`,
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const resRestaurant = await handleRemoveRestaurantById(
+          `api/v1/restaurants/remove-restaurant?_id=${currentItem._id}`,
+        );
 
         if (resRestaurant?.data) {
           notification.success({
@@ -64,13 +62,9 @@ const ModalConfirmDelete = (props: any) => {
         }
         break;
       case "MENU":
-        const resMenu = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menus/remove-menu?_id=${currentItem._id}`,
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const resMenu = await handleRemoveMenu(
+          `api/v1/menus/remove-menu?_id=${currentItem._id}`,
+        );
 
         if (resMenu?.data) {
           notification.success({
@@ -86,13 +80,9 @@ const ModalConfirmDelete = (props: any) => {
         }
         break;
       case "VOUCHER":
-        const voucher = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/remove?_id=${currentItem._id}`,
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const voucher = await handleRemoveVoucherById(
+          `api/v1/vouchers/remove?_id=${currentItem._id}`,
+        );
 
         if (voucher?.data) {
           notification.success({
@@ -108,13 +98,9 @@ const ModalConfirmDelete = (props: any) => {
         }
         break;
       case "COUPON":
-        const coupon = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons/remove?_id=${currentItem._id}`,
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const coupon = await handleRemoveCouponById(
+          `api/v1/coupons/remove?_id=${currentItem._id}`,
+        );
 
         if (coupon?.data) {
           notification.success({
@@ -135,11 +121,9 @@ const ModalConfirmDelete = (props: any) => {
           const response = await handleDeleteDataMenu(
             `api/v1/menu-items/delete-item-menu`,
             currentItem,
-            access_token,
-            "menuItem"
+            "menuItem",
           );
           if (response.data.EC === 0) {
-            window.location.reload();
           } else {
             notification.error({
               message: "Có lỗi xảy ra, vui lòng thử lại",

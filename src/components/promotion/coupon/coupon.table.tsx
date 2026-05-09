@@ -35,10 +35,11 @@ import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden";
 import ModalConfirmActive from "@/components/modalConfirm/modalConfirm.active";
 import { useRouter } from "next/navigation";
 import { AdminContext } from "@/library/admin.context";
+import { handleGetCouponPerPage, handleSearchCoupon } from "@/utils/action";
 
 const CouponTable = (props: any) => {
   const [form] = Form.useForm();
-  const { role, access_token, user, userCreateId } = props;
+  const { role, user, userCreateId } = props;
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   // const [totalPages, setTotalPages] = useState(1)
@@ -58,16 +59,12 @@ const CouponTable = (props: any) => {
     current: 1,
     pageSize: 5,
   });
-  const roleUsers = ["ADMINS", "ADMIN", "BUSINESSMAN"];
 
   const fetchCouponsPerPage = async (page: number, limit: number) => {
-    const res = await sendRequest<IBackendRes<IUserPerPage>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons?current=${page}&pageSize=${limit}&belongTo=${userCreateId}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleGetCouponPerPage(
+      `/api/v1/coupons?current=${page}&pageSize=${limit}&belongTo=${userCreateId}`,
+    );
+
     if (res?.data?.results) {
       setTotalItem(Number(res.data.totalItems));
       const coupons = Array.isArray(res.data.results)
@@ -81,8 +78,8 @@ const CouponTable = (props: any) => {
             item.scope === "FOOD"
               ? "Thức ăn"
               : item.scope === "DRINK"
-              ? "Đồ uống"
-              : "Tất cả",
+                ? "Đồ uống"
+                : "Tất cả",
           activeIcon:
             item.status === "PUBLIC" ? (
               <CheckOutlined
@@ -219,7 +216,7 @@ const CouponTable = (props: any) => {
     setTypeAction("SEARCH");
 
     let { time, ...rest } = values;
-    let formatvalue = {
+    let formatValue = {
       ...rest,
       belongTo: userCreateId,
     };
@@ -228,7 +225,7 @@ const CouponTable = (props: any) => {
       dayjs.extend(utc);
       const convertStartedDate = dayjs(values.time[0].$d).utc().format();
       const convertEndedDate = dayjs(values.time[1].$d).utc().format();
-      formatvalue = {
+      formatValue = {
         ...rest,
 
         startedTime: convertStartedDate,
@@ -237,16 +234,8 @@ const CouponTable = (props: any) => {
       };
     }
 
-    const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons/search`,
-      method: "POST",
-      body: {
-        ...formatvalue,
-      },
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleSearchCoupon(`api/v1/coupons/search`, formatValue);
+
     if (res?.data) {
       const coupon = Array.isArray(res.data.coupons)
         ? res.data.coupons
@@ -260,8 +249,8 @@ const CouponTable = (props: any) => {
             item.scope === "FOOD"
               ? "Thức ăn"
               : item.scope === "DRINK"
-              ? "Đồ uống"
-              : "Tất cả",
+                ? "Đồ uống"
+                : "Tất cả",
           activeIcon:
             item.status === "PUBLIC" ? (
               <CheckOutlined
@@ -441,7 +430,6 @@ const CouponTable = (props: any) => {
         <ModalCreateCoupon
           isOpenModal={isOpenCreateModal}
           setIsOpenModal={setOpenCreateModal}
-          access_token={access_token}
           user={user}
         />
         <ModalConfirmDelete
@@ -449,7 +437,6 @@ const CouponTable = (props: any) => {
           setOpenModalConfirmDelete={setOpenModalConfirmDelete}
           title={`Bạn chắc chắn muốn xóa coupon này vĩnh viễn ?`}
           currentItem={currentCoupon}
-          access_token={access_token}
           type="COUPON"
         />
         <ModalConfirmActive
@@ -457,7 +444,6 @@ const CouponTable = (props: any) => {
           setOpenModalConfirmActive={setOpenModalConfirmActive}
           title={`Bạn chắc chắn muốn kích hoạt coupon này?`}
           currentItem={currentCoupon}
-          access_token={access_token}
           type="COUPON"
         />
 
@@ -466,7 +452,6 @@ const CouponTable = (props: any) => {
           setOpenModalConfirmHidden={setOpenModalConfirmHidden}
           title={`Bạn chắc chắn muốn hủy kích hoạt coupon này?`}
           currentItem={currentCoupon}
-          access_token={access_token}
           type="COUPON"
         />
       </div>

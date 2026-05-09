@@ -21,9 +21,10 @@ import ModalConfirmHidden from "../modalConfirm/modalConfirm.hidden";
 import { AdminContext } from "@/library/admin.context";
 import { useRouter } from "next/navigation";
 import ModalConfirmActive from "../modalConfirm/modalConfirm.active";
+import { handleGetRestaurantPage } from "@/utils/action";
 
 const RestaurantTable = (props: any) => {
-  const { role, access_token, user } = props;
+  const { role, user } = props;
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isOpenModalUpdateRestaurant, setIsOpenUpdateRestaurant] =
     useState(false);
@@ -46,20 +47,17 @@ const RestaurantTable = (props: any) => {
   const router = useRouter();
 
   const fetchRestaurantPerPage = async (page: number, limit: number) => {
-    const res = await sendRequest<IBackendRes<IUserPerPage>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants?current=${page}&pageSize=${limit}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleGetRestaurantPage(
+      `api/v1/restaurants?current=${page}&pageSize=${limit}`,
+    );
+
     if (res?.data?.results) {
       setTotalItem(Number(res.data.totalItems));
       const restaurants = Array.isArray(res.data.results)
         ? res.data.results
         : [res.data.results];
 
-      const formatData = restaurants.map((item) => {
+      const formatData = restaurants.map((item: any) => {
         const { user, ...rest } = item;
         return {
           ...rest,
@@ -71,10 +69,10 @@ const RestaurantTable = (props: any) => {
             item?.productType === "FASTFOOD"
               ? "Đồ ăn nhanh"
               : item?.productType === "FOOD"
-              ? "Đồ ăn"
-              : item?.productType === "DRINK"
-              ? "Đồ uống"
-              : "Đồ ăn + Đồ uống",
+                ? "Đồ ăn"
+                : item?.productType === "DRINK"
+                  ? "Đồ uống"
+                  : "Đồ ăn + Đồ uống",
           activeIcon: item.isShow ? (
             <CheckOutlined
               style={{

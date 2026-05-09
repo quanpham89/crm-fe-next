@@ -26,7 +26,7 @@ import ModalConfirmActive from "@/components/modalConfirm/modalConfirm.active";
 import Restaurant from "@/app/(admin)/dashboard/restaurant/[id]/page";
 
 const MenuTable = (props: any) => {
-  const { role, access_token, dataRestaurant, user } = props;
+  const { role, dataRestaurant, user } = props;
 
   const author = {
     userCreateId: user._id,
@@ -58,8 +58,7 @@ const MenuTable = (props: any) => {
   const fetchMenuPerPage = async (page: number, limit: number) => {
     const res = await handleGetDataPerPage(
       `api/v1/menus?current=${page}&pageSize=${limit}&belongTo=${author.restaurantId}`,
-      access_token,
-      { next: { tags: "dataMenu" } }
+      "dataMenu",
     );
     if (res?.data?.results) {
       const menus = Array.isArray(res.data.results)
@@ -232,21 +231,18 @@ const MenuTable = (props: any) => {
         <ModalCreateMenu
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
-          access_token={access_token}
           author={author}
           setLoading={setLoading}
         />
         <ModalChooseMenu
           isOpenModalChooseMenu={isOpenModalChooseMenu}
           setIsOpenChooseMenu={setIsOpenChooseMenu}
-          access_token={access_token}
         />
         <ModalConfirmDelete
           isOpenModalConfirmDelete={isOpenModalConfirmDelete}
           setOpenModalConfirmDelete={setOpenModalConfirmDelete}
           title={`Bạn chắc chắn muốn menu này vĩnh viễn ?`}
           currentItem={currentMenu}
-          access_token={access_token}
           type="MENU"
         />
         <ModalConfirmHidden
@@ -254,7 +250,6 @@ const MenuTable = (props: any) => {
           setOpenModalConfirmHidden={setOpenModalConfirmHidden}
           title={`Bạn chắc chắn muốn ẩn menu này?`}
           currentItem={currentMenu}
-          access_token={access_token}
           type="MENU"
         />
         <ModalConfirmActive
@@ -262,7 +257,6 @@ const MenuTable = (props: any) => {
           setOpenModalConfirmActive={setOpenModalConfirmActive}
           title={`Bạn chắc chắn hiển thị menu này?`}
           currentItem={currentMenu}
-          access_token={access_token}
           type="MENU"
         />
       </>

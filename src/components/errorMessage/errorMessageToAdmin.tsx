@@ -28,7 +28,6 @@ const ErrorMessageForAdminPage = (props: any) => {
   const handleChangeSelectOption = async (item: any, value: string) => {
     const response = await handleChangeStatusError(
       `api/v1/error-message?_id=${item._id}`,
-      user?.access_token
     );
     if (response && response.data) {
       notification.success({ message: "Chuyển trạng thái thành công." });

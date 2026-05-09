@@ -21,16 +21,11 @@ import { useHasMounted } from "@/utils/customHook";
 import { Select } from "antd";
 import { useRouter } from "next/navigation";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { handleUpdateMenuById } from "@/utils/action";
 
 const ModalMenuUpdate = (props: any) => {
-  const {
-    isOpenModal,
-    setIsOpenModal,
-    access_token,
-    author,
-    setLoading,
-    currentMenu,
-  } = props;
+  const { isOpenModal, setIsOpenModal, author, setLoading, currentMenu } =
+    props;
   const [form] = Form.useForm();
   const [dataUser, setDataUser] = useState([]);
   const router = useRouter();
@@ -45,16 +40,12 @@ const ModalMenuUpdate = (props: any) => {
   if (!hasMounted) return <></>;
 
   const handleUpdateMenu = async (values: any) => {
-    const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menus/update`,
-      method: "PATCH",
-      body: {
-        ...values,
-      },
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleUpdateMenuById(
+      "/api/v1/menus/update",
+      { ...values },
+      "menu",
+    );
+
     if (res?.data) {
       setIsOpenModal(false);
       notification.success({

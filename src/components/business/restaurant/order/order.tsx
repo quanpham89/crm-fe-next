@@ -52,7 +52,7 @@ interface DataType {
 }
 
 const Order = (props: any) => {
-  const { user, access_token } = props;
+  const { user } = props;
   const [isLoading, setIsLoading] = useState(true);
   const [dataColumn, setDataColumn] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -110,7 +110,6 @@ const Order = (props: any) => {
     if (user?.restaurantId) {
       const response = await handleGetDataOrderDetail(
         `api/v1/order-detail/get-data-order-detail?_id=${user?.restaurantId}&current=${pagination.current}&pageSize=${pagination.pageSize}`,
-        access_token
       );
       if (response.data) {
         setIsLoading(false);
@@ -124,7 +123,7 @@ const Order = (props: any) => {
             numberItem: item?.amount,
             sellingPrice: helper.formatMoneyVND(item?.sellingPrice),
             totalPrice: helper.formatMoneyVND(
-              item?.sellingPrice * item?.amount
+              item?.sellingPrice * item?.amount,
             ),
             orderTime: item?.orderTime
               ? dayjs(item?.orderTime).format("DD-MM-YYYY")
@@ -135,7 +134,7 @@ const Order = (props: any) => {
             paymentForm:
               item?.paymentForm === "bank" ? "chuyển khoản" : "tiền mặt",
             totalWithoutDiscount: helper.formatMoneyVND(
-              item?.totalWithoutDiscount
+              item?.totalWithoutDiscount,
             ),
             status: (
               <Select
@@ -166,7 +165,7 @@ const Order = (props: any) => {
   }, [pagination.current]);
 
   const getColumnSearchProps = (
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ): TableColumnType<DataType> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -324,7 +323,7 @@ const Order = (props: any) => {
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps["confirm"],
-    dataIndex: NewType
+    dataIndex: NewType,
   ) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -352,7 +351,6 @@ const Order = (props: any) => {
     const response = await changeStatusOrderDetailItem(
       "api/v1/order-detail/change-order-detail-status",
       data,
-      access_token
     );
     if (response && response.statusCode === 201) {
       notification.success({ message: "Chuyển trạng thái thành công." });

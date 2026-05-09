@@ -21,10 +21,10 @@ import { useHasMounted } from "@/utils/customHook";
 import { Select } from "antd";
 import { useRouter } from "next/navigation";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { handleCreateMenu } from "@/utils/action";
 
 const ModalCreateMenu = (props: any) => {
-  const { isOpenModal, setIsOpenModal, access_token, author, setLoading } =
-    props;
+  const { isOpenModal, setIsOpenModal, author, setLoading } = props;
 
   const [form] = Form.useForm();
   const [dataUser, setDataUser] = useState([]);
@@ -42,17 +42,11 @@ const ModalCreateMenu = (props: any) => {
   // }, [currentMenu])
 
   const createMenus = async (values: any) => {
-    const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menus`,
-      method: "POST",
-      body: {
-        ...values,
-        ...author,
-      },
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleCreateMenu(
+      `api/v1/menus`,
+      { ...values, ...author },
+      "menu",
+    );
 
     // setLoading(true)
     if (res?.data) {

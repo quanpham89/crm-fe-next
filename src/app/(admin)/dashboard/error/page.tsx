@@ -5,12 +5,8 @@ import { handleGetErrorForAdmin } from "@/utils/action";
 const ManageErrorPage = async () => {
   const session = await auth();
   const user = session?.user;
-  const access_token = user?.access_token as string;
 
-  const response = await handleGetErrorForAdmin(
-    "api/v1/error-message",
-    access_token
-  );
+  const response = await handleGetErrorForAdmin("api/v1/error-message");
   if (user?.role === "ADMINS") {
     return (
       <ErrorMessageForAdminPage

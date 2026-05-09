@@ -9,14 +9,8 @@ import {
 const DetailOrderRestaurant = async () => {
   const session = await auth();
   const user = session?.user;
-  const access_token = session?.user?.access_token as string;
-  
-  return (
-    <Order
-      access_token={access_token}
-      user = {user}
-    />
-  );
+
+  return <Order user={user} />;
 };
 
 export default DetailOrderRestaurant;

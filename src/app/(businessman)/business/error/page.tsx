@@ -4,7 +4,6 @@ import ErrorMessageFromUserPage from "@/components/errorMessage/errorMessageFrom
 const ManageErrorBusinessmanPage = async () => {
   const session = await auth();
   const user = session?.user;
-  const access_token = user?.access_token;
   return <ErrorMessageFromUserPage user={user} />;
 };
 

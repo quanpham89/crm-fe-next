@@ -42,7 +42,6 @@ const FeedbackModal = (props: any) => {
   const getDataFeedback = async () => {
     const response = await handleGetDataFeedbackById(
       `api/v1/feedbacks/get-feedback-by-order-id/${order._id}`,
-      user?.access_token
     );
 
     if (response && response.data) {
@@ -54,7 +53,6 @@ const FeedbackModal = (props: any) => {
           _id: item._id,
         },
       }));
-      console.log(">>>>>>>>>>>>>initial", initial);
       setInitialFeedbacks(initial);
     } else {
       notification.error({ message: "Có lỗi xảy ra, vui lòng thử lại sau." });
@@ -94,7 +92,7 @@ const FeedbackModal = (props: any) => {
 
     feedback.forEach((fb) => {
       const idx = merged.findIndex(
-        (item) => item.feedback._id === fb.feedback._id
+        (item) => item.feedback._id === fb.feedback._id,
       );
       if (idx !== -1) {
         merged[idx] = fb;
@@ -113,8 +111,7 @@ const FeedbackModal = (props: any) => {
     if (option === "update" && updateFeedBack.length > 0) {
       const response = await handlePatchDataFeedback(
         "api/v1/feedbacks/bulk-update",
-        user?.access_token,
-        updateFeedBack
+        updateFeedBack,
       );
 
       if (response && response.statusCode === 200) {
@@ -124,11 +121,7 @@ const FeedbackModal = (props: any) => {
         notification.error({ message: "Có lỗi xảy ra, vui lòng thử lại sau." });
       }
     } else {
-      const response = await handlePostDataFeedback(
-        "api/v1/feedbacks",
-        user?.access_token,
-        values
-      );
+      const response = await handlePostDataFeedback("api/v1/feedbacks", values);
       if (response && response.statusCode === 201) {
         notification.success({ message: "Đánh giá thành công" });
         window.location.reload();
@@ -272,7 +265,7 @@ const FeedbackModal = (props: any) => {
                   <Input />
                 </Form.Item>
               </Card>
-            )
+            ),
           )}
         </div>
 

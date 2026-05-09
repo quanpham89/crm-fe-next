@@ -35,10 +35,11 @@ import ModalConfirmHidden from "@/components/modalConfirm/modalConfirm.hidden";
 import ModalConfirmActive from "@/components/modalConfirm/modalConfirm.active";
 import { useRouter } from "next/navigation";
 import { AdminContext } from "@/library/admin.context";
+import { handleGetVoucherPerPage, handleSearchVoucher } from "@/utils/action";
 
 const VoucherTable = (props: any) => {
   const [form] = Form.useForm();
-  const { role, access_token, user, userCreateId } = props;
+  const { role, user, userCreateId } = props;
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [dataSource, setDataSource] = useState<any>([]);
@@ -59,20 +60,17 @@ const VoucherTable = (props: any) => {
   const roleUsers = ["ADMINS", "ADMIN", "BUSINESSMAN"];
 
   const fetchVouchersPerPage = async (page: number, limit: number) => {
-    const res = await sendRequest<IBackendRes<IUserPerPage>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers?current=${page}&pageSize=${limit}&belongTo=${userCreateId}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleGetVoucherPerPage(
+      `api/v1/vouchers?current=${page}&pageSize=${limit}&belongTo=${userCreateId}`,
+    );
+
     if (res?.data?.results) {
       setTotalItem(Number(res.data.totalItems));
       const vouchers = Array.isArray(res.data.results)
         ? res.data.results
         : [res.data.results];
 
-      const formatData = vouchers.map((item) => {
+      const formatData = vouchers.map((item: any) => {
         return {
           ...item,
           type: item.type === "GIFT" ? "Quà tặng" : "Sự kiện",
@@ -80,8 +78,8 @@ const VoucherTable = (props: any) => {
             item.scope === "FOOD"
               ? "Thức ăn"
               : item.scope === "DRINK"
-              ? "Đồ uống"
-              : "Tất cả",
+                ? "Đồ uống"
+                : "Tất cả",
           activeIcon:
             item.status === "PUBLIC" ? (
               <CheckOutlined
@@ -218,7 +216,7 @@ const VoucherTable = (props: any) => {
     setTypeAction("SEARCH");
 
     let { time, ...rest } = values;
-    let formatvalue = {
+    let formatValue = {
       ...rest,
       belongTo: userCreateId,
     };
@@ -227,7 +225,7 @@ const VoucherTable = (props: any) => {
       dayjs.extend(utc);
       const convertStartedDate = dayjs(values.time[0].$d).utc().format();
       const convertEndedDate = dayjs(values.time[1].$d).utc().format();
-      formatvalue = {
+      formatValue = {
         ...rest,
         startedTime: convertStartedDate,
         endedTime: convertEndedDate,
@@ -235,16 +233,10 @@ const VoucherTable = (props: any) => {
       };
     }
 
-    const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/search`,
-      method: "POST",
-      body: {
-        ...formatvalue,
-      },
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
+    const res = await handleSearchVoucher(`/api/v1/vouchers/search`, {
+      ...formatValue,
     });
+
     if (res?.data) {
       const voucher = Array.isArray(res.data.vouchers)
         ? res.data.vouchers
@@ -257,8 +249,8 @@ const VoucherTable = (props: any) => {
             item.scope === "FOOD"
               ? "Thức ăn"
               : item.scope === "DRINK"
-              ? "Đồ uống"
-              : "Tất cả",
+                ? "Đồ uống"
+                : "Tất cả",
           activeIcon:
             item.status === "PUBLIC" ? (
               <CheckOutlined
@@ -439,7 +431,6 @@ const VoucherTable = (props: any) => {
           <ModalCreateVoucher
             isOpenModal={isOpenCreateModal}
             setIsOpenModal={setOpenCreateModal}
-            access_token={access_token}
             user={user}
           />
           <ModalConfirmDelete
@@ -447,7 +438,6 @@ const VoucherTable = (props: any) => {
             setOpenModalConfirmDelete={setOpenModalConfirmDelete}
             title={`Bạn chắc chắn muốn xóa voucher này vĩnh viễn ?`}
             currentItem={currentVoucher}
-            access_token={access_token}
             type="VOUCHER"
           />
           <ModalConfirmActive
@@ -455,7 +445,6 @@ const VoucherTable = (props: any) => {
             setOpenModalConfirmActive={setOpenModalConfirmActive}
             title={`Bạn chắc chắn muốn kích hoạt voucher này?`}
             currentItem={currentVoucher}
-            access_token={access_token}
             type="VOUCHER"
           />
 
@@ -464,7 +453,6 @@ const VoucherTable = (props: any) => {
             setOpenModalConfirmHidden={setOpenModalConfirmHidden}
             title={`Bạn chắc chắn muốn hủy kích hoạt voucher này?`}
             currentItem={currentVoucher}
-            access_token={access_token}
             type="VOUCHER"
           />
         </div>

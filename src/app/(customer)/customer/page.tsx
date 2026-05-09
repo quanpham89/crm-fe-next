@@ -9,9 +9,8 @@ import {
 const CustomerPage = async () => {
   const session = await auth();
   const user = session?.user;
-  const access_token = session?.user?.access_token as string;
- 
-  return <Customer  user= {user} />;
+
+  return <Customer user={user} />;
 };
 
 export default CustomerPage;

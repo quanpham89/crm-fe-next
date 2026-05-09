@@ -13,21 +13,19 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import "./voucher.scss";
+import { handleGetVoucherById } from "@/utils/action";
 const VoucherDetail = (props: any) => {
-  const { id, role, access_token } = props;
+  const { id, role } = props;
   const [dataVoucherItem, setDataVoucherItem] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
 
   const fetchVoucherItem = async () => {
-    const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/get-voucher-by-id?_id=${id}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleGetVoucherById(
+      `api/v1/vouchers/get-voucher-by-id?_id=${id}`,
+    );
+
     if (res?.data) {
       setLoading(false);
       const result = res?.data[0].voucherItems;

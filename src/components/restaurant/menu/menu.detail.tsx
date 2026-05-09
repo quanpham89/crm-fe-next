@@ -37,7 +37,7 @@ import MenuDetailCreate from "./menu.detail.create";
 import MenuDetailDelete from "./menu.detail.delete";
 
 const MenuDetail = (props: any) => {
-  const { role, menuInfo, menuItems, user, access_token, restaurantId } = props;
+  const { role, menuInfo, menuItems, user, restaurantId } = props;
   const author = {
     userCreateId: menuInfo.userCreateId,
     createdBy: menuInfo.createdBy,
@@ -120,7 +120,6 @@ const MenuDetail = (props: any) => {
                   menuInfo={menuInfo}
                   menuItems={menuItems}
                   user={user}
-                  access_token={access_token}
                 />
               ),
             },
@@ -131,7 +130,6 @@ const MenuDetail = (props: any) => {
                 <MenuDetailCreate
                   restaurantId={restaurantId}
                   role={role}
-                  access_token={access_token}
                   author={author}
                   menuInfo={menuInfo}
                 />
@@ -140,13 +138,7 @@ const MenuDetail = (props: any) => {
             {
               label: "Xóa",
               key: "3",
-              children: (
-                <MenuDetailDelete
-                  role={role}
-                  access_token={access_token}
-                  menuInfo={menuInfo}
-                />
-              ),
+              children: <MenuDetailDelete role={role} menuInfo={menuInfo} />,
             },
           ]}
         />

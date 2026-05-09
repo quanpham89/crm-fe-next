@@ -232,7 +232,6 @@ const AllHistoryRender = (props: any) => {
         isOpenModalConfirmHidden={isOpenModalConfirmReceive}
         setOpenModalConfirmHidden={setOpenModalConfirmReceive}
         title={"Bạn có chắc chắn muốn hủy đơn hàng này không."}
-        access_token={user?.access_token}
         type="CANCEL"
         currentItem={currentOrderId}
       />
@@ -242,7 +241,6 @@ const AllHistoryRender = (props: any) => {
         title={"Đánh giá"}
         user={user}
         order={orderDetail}
-        access_token={user?.access_token}
         option={"update"}
       />
     </>

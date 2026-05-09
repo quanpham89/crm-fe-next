@@ -17,29 +17,21 @@ import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
 import { Select } from "antd";
 import { useRouter } from "next/navigation";
+import { handleCreateUser } from "@/utils/action";
 
 const ModalCreateUser = (props: any) => {
-  const { isOpenModal, setIsOpenModal, access_token } = props;
+  const { isOpenModal, setIsOpenModal } = props;
   const [form] = Form.useForm();
   const [dataCreateUser, setDataCreateUser] = useState({});
   const router = useRouter();
 
   const createUser = async (values: any) => {
-    const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`,
-      method: "POST",
-      body: {
-        ...values,
-      },
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleCreateUser("api/v1/auth/register", values);
+
     if (res?.data) {
       notification.success({
         message: "Tạo người dùng thành công",
       });
-      window.location.reload();
     } else {
       notification.error({
         message: "Có lỗi xảy ra, vui lòng thử lại sau",

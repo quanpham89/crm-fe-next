@@ -55,7 +55,6 @@ const ModalConfirmOrder = (props: any) => {
       const response = await handlePostDataBillOfCustomer(
         `api/v1/orders`,
         data,
-        user?.access_token
       );
 
       if (response && response.statusCode === 201) {

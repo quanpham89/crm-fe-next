@@ -6,19 +6,11 @@ import { useState } from "react";
 const DashboardPage = async () => {
   const session = await auth();
   let role = (session?.user?.role as string) || "";
-  const access_token = session?.user?.access_token as string;
-  const users = await handleGetFigure(
-    "api/v1/users/get-all-figure-users",
-    access_token,
-  );
+  const users = await handleGetFigure("api/v1/users/get-all-figure-users");
   const restaurant = await handleGetFigure(
     "api/v1/restaurants/get-all-figure-restaurant",
-    access_token,
   );
-  const order = await handleGetFigure(
-    "api/v1/orders/get-all-figure-order",
-    access_token,
-  );
+  const order = await handleGetFigure("api/v1/orders/get-all-figure-order");
   return (
     <div>
       <AdminCard

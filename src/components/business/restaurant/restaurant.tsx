@@ -59,7 +59,6 @@ const RestaurantBusiness = (props: any) => {
     if (user) {
       const response: any = await handleGetDataRestaurantById(
         `api/v1/restaurants/get-restaurant-by-id?_id=${user._id}`,
-        user?.access_token
       );
       if (response?.data.length > 0) {
         setIsHaveRestaurant(true);
@@ -113,10 +112,10 @@ const RestaurantBusiness = (props: any) => {
               response?.data[0]?.productType === "FASTFOOD"
                 ? "Đồ ăn nhanh"
                 : response?.data[0]?.productType === "DRINK"
-                ? "Đồ uống"
-                : response?.data[0]?.productType === "FOOD"
-                ? "Đồ ăn"
-                : "Đồ ăn và đồ uống",
+                  ? "Đồ uống"
+                  : response?.data[0]?.productType === "FOOD"
+                    ? "Đồ ăn"
+                    : "Đồ ăn và đồ uống",
           },
           {
             label: "Số lượng menu",
@@ -205,7 +204,6 @@ const RestaurantBusiness = (props: any) => {
           isOpenModalUpdateRestaurant={isOpenModalUpdateRestaurant}
           setIsOpenUpdateRestaurant={setIsOpenUpdateRestaurant}
           currentRestaurant={currentRestaurant}
-          access_token={user?.access_token}
           user={user}
         />
         <ModalConfirmDelete
@@ -213,7 +211,6 @@ const RestaurantBusiness = (props: any) => {
           setOpenModalConfirmDelete={setOpenModalConfirmDelete}
           title={`Bạn chắc chắn muốn xóa tài khoản bán hàng này vĩnh viễn ?`}
           currentItem={currentRestaurant}
-          access_token={user?.access_token}
           type="RESTAURANTS"
         />
         <ModalConfirmActive
@@ -221,7 +218,6 @@ const RestaurantBusiness = (props: any) => {
           setOpenModalConfirmActive={setOpenModalConfirmActive}
           title={`Bạn chắc chắn hiển thị tài khoản bán hàng này?`}
           currentItem={currentRestaurant}
-          access_token={user?.access_token}
           type="RESTAURANTS"
         />
         <ModalConfirmHidden
@@ -229,7 +225,6 @@ const RestaurantBusiness = (props: any) => {
           setOpenModalConfirmHidden={setOpenModalConfirmHidden}
           title={`Bạn chắc chắn muốn ẩn tài khoản bán hàng này?`}
           currentItem={currentRestaurant}
-          access_token={user?.access_token}
           type="RESTAURANTS"
         />
       </>

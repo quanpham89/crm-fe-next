@@ -8,15 +8,12 @@ import { useState } from "react";
 const DashboardBusinessUserPage = async () => {
   const session = await auth();
   const user = session?.user;
-  const access_token = user?.access_token as string;
   const data = await handleGetFigure(
     `api/v1/order-detail/get-all-figure-order-detail-by-id?_id=${user?.restaurantId}`,
-    access_token
   );
 
   const dataFigureOrderBelongToMenu = await handleGetFigure(
     `api/v1/order-detail/get-all-figure-order-detail-booking-belong-to-menu-by-id?_id=${user?.restaurantId}`,
-    access_token
   );
 
   return (

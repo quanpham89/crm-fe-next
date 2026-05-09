@@ -6,7 +6,6 @@ import { sendRequest } from "@/utils/api";
 const ManageRestaurantPage = async () => {
   const session = await auth();
   let role = session?.user?.role as string;
-  let access_token = session?.user?.access_token;
   let user = session?.user;
 
   // tag and revalidateTag chi o server neu dung trong client thi se khong re rendered
@@ -22,9 +21,7 @@ const ManageRestaurantPage = async () => {
   // });
 
   // console.log("rewssss", res?.data);
-  return (
-    <RestaurantTable role={role} access_token={access_token} user={user} />
-  );
+  return <RestaurantTable role={role} user={user} />;
 };
 
 export default ManageRestaurantPage;

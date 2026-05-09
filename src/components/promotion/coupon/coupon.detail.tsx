@@ -13,9 +13,10 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import "./coupon.scss";
+import { handleGetCouponById } from "@/utils/action";
 
 const CouponDetail = (props: any) => {
-  const { id, role, access_token } = props;
+  const { id, role } = props;
   const [dataCouponItem, setDataCouponItem] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentCoupon, setCurrentCoupon] = useState("");
@@ -27,13 +28,10 @@ const CouponDetail = (props: any) => {
   const router = useRouter();
 
   const fetchCouponItem = async () => {
-    const res = await sendRequest<IBackendRes<any>>({
-      url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons/get-coupon-by-id?_id=${id}`,
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+    const res = await handleGetCouponById(
+      `/api/v1/coupons/get-coupon-by-id?_id=${id}`,
+    );
+
     if (res?.data) {
       setLoading(false);
       const result = res?.data[0].couponItems;

@@ -101,7 +101,6 @@ const AllOrder = (props: any) => {
     setOpenModalFeedback(true);
     const response = await handleReceiveOrder(
       `api/v1/orders/receive-order?_id=${item._id}`,
-      user?.access_token
     );
     if (response && response.statusCode === 200) {
       notification.success({ message: "Nhận hàng thành công." });

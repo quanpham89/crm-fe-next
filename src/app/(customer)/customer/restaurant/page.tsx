@@ -10,15 +10,14 @@ import {
 const AllRestaurant = async () => {
   const session = await auth();
   const user = session?.user;
-  const access_token = session?.user?.access_token as string;
   const restaurants = await handleGetAllRestaurantRender(
-    `api/v1/restaurants/get-all-restaurant`
+    `api/v1/restaurants/get-all-restaurant`,
   );
   const vouchers = await handleGetAllVoucherRender(
-    `api/v1/vouchers/get-all-voucher`
+    `api/v1/vouchers/get-all-voucher`,
   );
   const coupons = await handleGetAllCouponRender(
-    `api/v1/coupons/get-all-coupon`
+    `api/v1/coupons/get-all-coupon`,
   );
 
   return (

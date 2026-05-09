@@ -4,13 +4,20 @@ import { sendRequest } from "@/utils/api";
 import { useHasMounted } from "@/utils/customHook";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import {
+  handleCancelOrder,
+  handleSoftDeleteCoupon,
+  handleSoftDeleteCustomer,
+  handleSoftDeleteMenu,
+  handleSoftDeleteRestaurant,
+  handleSoftDeleteVoucher,
+} from "@/utils/action";
 
 const ModalConfirmHidden = (props: any) => {
   const {
     isOpenModalConfirmHidden,
     setOpenModalConfirmHidden,
     title,
-    access_token,
     type,
     currentItem,
   } = props;
@@ -29,13 +36,11 @@ const ModalConfirmHidden = (props: any) => {
           setOpenModalConfirmHidden(false);
           return;
         }
-        const resUser = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/soft-delete?_id=${currentItem._id}`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const resUser = await handleSoftDeleteMenu(
+          `api/v1/users/soft-delete?_id=${currentItem._id}`,
+          { isActive: false },
+          "menu",
+        );
 
         if (resUser?.data) {
           notification.success({
@@ -59,13 +64,10 @@ const ModalConfirmHidden = (props: any) => {
           setOpenModalConfirmHidden(false);
           return;
         }
-        const resCustomer = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/soft-delete?_id=${currentItem?.user._id}`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const resCustomer = await handleSoftDeleteCustomer(
+          `api/v1/users/soft-delete?_id=${currentItem?.user._id}`,
+          "user",
+        );
 
         if (resCustomer?.data) {
           notification.success({
@@ -90,13 +92,11 @@ const ModalConfirmHidden = (props: any) => {
           setOpenModalConfirmHidden(false);
           return;
         }
-        const res = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/restaurants/soft-delete?_id=${currentItem._id}`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const res = await handleSoftDeleteRestaurant(
+          `api/v1/restaurants/soft-delete?_id=${currentItem._id}`,
+          "restaurant",
+        );
+
         if (res?.data) {
           notification.success({
             message: "Hủy kích hoạt tài khoản thành công.",
@@ -120,13 +120,12 @@ const ModalConfirmHidden = (props: any) => {
           setOpenModalConfirmHidden(false);
           return;
         }
-        const resMenu = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/menus/soft-delete?_id=${currentItem._id}`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const resMenu = await handleSoftDeleteMenu(
+          `api/v1/menus/soft-delete?_id=${currentItem._id}`,
+          { status: "HIDDEN" },
+          "menu",
+        );
+
         if (resMenu?.data) {
           notification.success({
             message: "Ẩn menu thành công.",
@@ -150,13 +149,11 @@ const ModalConfirmHidden = (props: any) => {
           setOpenModalConfirmHidden(false);
           return;
         }
-        const voucher = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/vouchers/soft-delete?_id=${currentItem._id}`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const voucher = await handleSoftDeleteVoucher(
+          `api/v1/vouchers/soft-delete?_id=${currentItem._id}`,
+          "voucher",
+        );
+
         if (voucher?.data) {
           notification.success({
             message: "Hủy kích hoạt voucher thành công.",
@@ -180,13 +177,11 @@ const ModalConfirmHidden = (props: any) => {
           setOpenModalConfirmHidden(false);
           return;
         }
-        const coupon = await sendRequest<IBackendRes<any>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/coupons/soft-delete?_id=${currentItem._id}`,
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        });
+        const coupon = await handleSoftDeleteCoupon(
+          `api/v1/coupons/soft-delete?_id=${currentItem._id}`,
+          "coupon",
+        );
+
         if (coupon?.data) {
           notification.success({
             message: "Hủy kích hoạt coupon thành công.",
@@ -203,23 +198,21 @@ const ModalConfirmHidden = (props: any) => {
 
       case "CANCEL":
         if (currentItem) {
-          const cancleOrder = await sendRequest<IBackendRes<any>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/orders/cancel-order?_id=${currentItem}`,
-            method: "PATCH",
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-            },
-          });
-          if (cancleOrder?.data) {
+          const cancelOrder = await handleCancelOrder(
+            `api/v1/orders/cancel-order?_id=${currentItem}`,
+            "order",
+          );
+
+          if (cancelOrder?.data) {
             notification.success({
               message: "Hủy đơn hàng thành thành công.",
-              description: cancleOrder?.message,
+              description: cancelOrder?.message,
             });
             window.location.reload();
           } else {
             notification.error({
               message: "Có lỗi xảy ra, vui lòng thử lại",
-              description: cancleOrder?.message,
+              description: cancelOrder?.message,
             });
           }
         } else {

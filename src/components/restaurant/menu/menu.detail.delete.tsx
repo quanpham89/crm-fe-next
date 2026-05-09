@@ -50,7 +50,7 @@ interface DataType {
   image: any;
 }
 const MenuDetailDelete = (props: any) => {
-  const { menuInfo, role, access_token } = props;
+  const { menuInfo, role } = props;
   const [dataSource, setDataSource] = useState<any>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -61,10 +61,15 @@ const MenuDetailDelete = (props: any) => {
   });
 
   const getMenuItem = async () => {
+    console.log("[menuItem][client] getMenuItem start", {
+      menuId: menuInfo.menuId,
+      pagination,
+      at: new Date().toISOString(),
+    });
     const response = await handleGetDataMenu(
       `api/v1/menus/get-menu-by-id?_id=${menuInfo.menuId}`,
-      access_token
     );
+
     if (response) {
       const formatData = response?.data[0]?.menuItem.map(
         (item: any, index: number) => {
@@ -77,10 +82,13 @@ const MenuDetailDelete = (props: any) => {
             description: item.description,
             status: item.status === "HIDDEN" ? "Ẩn" : "Hiển thị",
           };
-        }
+        },
       );
       setDataSource(formatData);
       setIsLoading(false);
+      console.log("[menuItem][client] table data updated", {
+        rowCount: formatData?.length ?? 0,
+      });
     } else {
       setTimeout(() => {
         setIsLoading(false);
@@ -140,6 +148,10 @@ const MenuDetailDelete = (props: any) => {
 
   const handleMenuItem = async (type: string) => {
     let itemHandle = [...selectedRowKeys];
+    console.log("[menuItem][client] action clicked", {
+      type,
+      selectedIds: itemHandle,
+    });
     switch (type) {
       case "DELETE":
         setOpenModalConfirmDelete(true);
@@ -150,9 +162,9 @@ const MenuDetailDelete = (props: any) => {
           await handleSoftDeleteDataMenu(
             `api/v1/menu-items/soft-delete`,
             itemHandle,
-            access_token,
-            "menuItem"
+            "menuItem",
           );
+
           setIsLoading(true);
           setSelectedRowKeys([]);
           getMenuItem();
@@ -168,9 +180,9 @@ const MenuDetailDelete = (props: any) => {
           await handleActiveItemDataMenu(
             `api/v1/menu-items/active-item`,
             itemHandle,
-            access_token,
-            "menuItem"
+            "menuItem",
           );
+
           setIsLoading(true);
           setSelectedRowKeys([]);
           getMenuItem();
@@ -209,7 +221,6 @@ const MenuDetailDelete = (props: any) => {
         setOpenModalConfirmDelete={setOpenModalConfirmDelete}
         title={`Bạn chắc chắn muốn xóa vĩnh viễn ?`}
         currentItem={[...selectedRowKeys]}
-        access_token={access_token}
         type="MENUITEM"
         setIsLoading={setIsLoading}
       />

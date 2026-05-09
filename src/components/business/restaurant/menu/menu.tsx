@@ -29,7 +29,7 @@ import ModalMenuUpdate from "@/components/restaurant/menu/menu.update";
 import dayjs from "dayjs";
 
 const MenuRestaurant = (props: any) => {
-  const { role, access_token, dataRestaurant, menu } = props;
+  const { role, dataRestaurant, menu } = props;
   const author = {
     userCreateId: dataRestaurant?.user._id,
     createdBy: dataRestaurant?.user.name,
@@ -195,14 +195,12 @@ const MenuRestaurant = (props: any) => {
         <ModalCreateMenu
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
-          access_token={access_token}
           author={author}
           setLoading={setLoading}
         />
         <ModalMenuUpdate
           isOpenModal={isOpenModalUpdateMenu}
           setIsOpenModal={setIsOpenUpdateMenu}
-          access_token={access_token}
           currentMenu={currentMenu}
         />
         <ModalConfirmDelete
@@ -210,7 +208,6 @@ const MenuRestaurant = (props: any) => {
           setOpenModalConfirmDelete={setOpenModalConfirmDelete}
           title={`Bạn chắc chắn muốn menu này vĩnh viễn ?`}
           currentItem={currentMenu}
-          access_token={access_token}
           type="MENU"
         />
         <ModalConfirmHidden
@@ -218,7 +215,6 @@ const MenuRestaurant = (props: any) => {
           setOpenModalConfirmHidden={setOpenModalConfirmHidden}
           title={`Bạn chắc chắn muốn ẩn menu này?`}
           currentItem={currentMenu}
-          access_token={access_token}
           type="MENU"
         />
         <ModalConfirmActive
@@ -226,7 +222,6 @@ const MenuRestaurant = (props: any) => {
           setOpenModalConfirmActive={setOpenModalConfirmActive}
           title={`Bạn chắc chắn hiển thị menu này?`}
           currentItem={currentMenu}
-          access_token={access_token}
           type="MENU"
         />
       </>
